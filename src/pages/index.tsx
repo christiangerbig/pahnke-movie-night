@@ -15,9 +15,10 @@ interface PropTypes {
     email: string;
   };
   reservations: Database["public"]["Tables"]["reservations"]["Row"];
+  shows: Database["public"]["Tables"]["shows"]["Row"];
 }
 
-const HomePage: NextPage<PropTypes> = ({ user, reservations }) => {
+const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -28,7 +29,8 @@ const HomePage: NextPage<PropTypes> = ({ user, reservations }) => {
     }
   };
 
-  console.log(reservations);
+  console.log("Reservations: ", reservations);
+  console.log("Shows: ", shows);
 
   return (
     <Box component="main">
@@ -67,11 +69,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .select(`*, show!inner (*)`)
     .eq("show.date", "2023-05-02");
 
+  const { data: shows } = await supabaseAuthServer.from("shows").select();
+
   return {
     props: {
       initialSession: session,
       user: session.user,
       reservations,
+      shows,
     },
   };
 };
