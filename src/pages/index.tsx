@@ -15,11 +15,11 @@ interface PropTypes {
   user: {
     email: string;
   };
-  reservations: Database["public"]["Tables"]["reservations"]["Row"][];
   shows: Database["public"]["Tables"]["shows"]["Row"][];
+  reservations: Database["public"]["Tables"]["reservations"]["Row"][];
 }
 
-const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
+const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -41,7 +41,7 @@ const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
         <Text component="pre" size="sm">
           {JSON.stringify(user, null, 2)}
         </Text>
-        <ReservationForm shows={shows} />
+        <ReservationForm shows={shows} reservations={reservations} />
       </Container>
     </Box>
   );
@@ -76,8 +76,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       initialSession: session,
       user: session.user,
-      reservations,
       shows,
+      reservations,
     },
   };
 };
