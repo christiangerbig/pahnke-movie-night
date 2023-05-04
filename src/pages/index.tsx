@@ -67,8 +67,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { data: reservations } = await supabaseAuthServer
     .from("reservations")
-    .select(`*, show!inner (*)`)
-    .eq("show.date", "2023-05-02");
+    .select(`*, show!inner (*)`);
+  // .eq("show.date", "2023-05-02");
 
   const { data: shows } = await supabaseAuthServer.from("shows").select();
 

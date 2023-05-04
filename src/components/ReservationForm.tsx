@@ -8,29 +8,68 @@ interface ReservationFormProps {
   reservations: Database["public"]["Tables"]["reservations"]["Row"][];
 }
 
-const ReservationForm = ({ shows, reservations }: ReservationFormProps) => {
-  const [selectedShow, setSelectedShow] = useState<string | null>(null);
+interface ShowDateEntry {
+  value: string;
+  label: string;
+}
 
-  const showDates = shows.map((entry) => {
-    return {
-      value: entry.id.toString(),
-      label: entry.date,
-    };
-  });
+const ReservationForm = ({ shows, reservations }: ReservationFormProps) => {
+  const [showDatesSelection, setShowDatesSelection] = useState<ShowDateEntry[]>(
+    [],
+  );
+  const [selectedShow, setSelectedShow] = useState<string | null>(null);
+  const [freePlacesSelection, setFreePlacesSelection] = useState<string[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(selectedShow);
+    setShowDatesSelection(
+      shows.map((entry) => {
+        return {
+          value: entry.id.toString(),
+          label: entry.date,
+        };
+      }),
+    );
+  }, []);
+
+  useEffect(() => {
+    const reservedPlaceNumbers = reservations.map((reservation) => {
+      if ((reservation.show as any).id.toString() === selectedShow) {
+        return reservation.seat;
+      }
+      return null;
+    });
+
+    let freePlaces = [];
+    for (let placeNumber = 1; placeNumber < 11; placeNumber++) {
+      if (!reservedPlaceNumbers.includes(placeNumber)) {
+        freePlaces.push(placeNumber.toString());
+      }
+    }
+    setFreePlacesSelection(freePlaces);
   }, [selectedShow]);
 
-  // reservations.show.id
+  useEffect(() => {
+    console.log("Selected place: ", selectedPlace);
+  }, [selectedPlace]);
 
   return (
-    <Box>
+    <Box mt="4rem" mb="4rem">
       <Select
-        data={showDates}
-        label="Shows"
+        data={showDatesSelection}
+        label="Show"
         placeholder="Choose a show..."
         onChange={setSelectedShow}
+        mb="1.5rem"
+        maw="10rem"
+      />
+
+      <Select
+        data={freePlacesSelection}
+        label="Free Places"
+        placeholder="Choose a place..."
+        onChange={setSelectedPlace}
+        maw="10rem"
       />
     </Box>
   );
