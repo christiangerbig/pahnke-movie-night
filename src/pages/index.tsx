@@ -7,6 +7,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { Box, Button, Container, Title, Text } from "@mantine/core";
 
 import type { Database } from "~/lib/database.types";
+import ReservationForm from "~/components/ReservationForm";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -14,8 +15,8 @@ interface PropTypes {
   user: {
     email: string;
   };
-  reservations: Database["public"]["Tables"]["reservations"]["Row"];
-  shows: Database["public"]["Tables"]["shows"]["Row"];
+  reservations: Database["public"]["Tables"]["reservations"]["Row"][];
+  shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
 const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
@@ -30,7 +31,6 @@ const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
   };
 
   console.log("Reservations: ", reservations);
-  console.log("Shows: ", shows);
 
   return (
     <Box component="main">
@@ -41,6 +41,7 @@ const HomePage: NextPage<PropTypes> = ({ user, reservations, shows }) => {
         <Text component="pre" size="sm">
           {JSON.stringify(user, null, 2)}
         </Text>
+        <ReservationForm shows={shows} />
       </Container>
     </Box>
   );
