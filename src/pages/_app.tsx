@@ -6,6 +6,7 @@ import {
   type Session,
 } from "@supabase/auth-helpers-react";
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 import "~/styles/globals.css";
 
@@ -27,6 +28,7 @@ const App = ({
           colorScheme: "dark",
         }}
       >
+        <Notifications />
         <Component {...pageProps} />
       </MantineProvider>
     </SessionContextProvider>
