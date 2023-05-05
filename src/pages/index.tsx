@@ -30,18 +30,18 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
     }
   };
 
-  console.log("Reservations: ", reservations);
+  // console.log("Reservations: ", reservations);
 
   return (
     <Box component="main">
       <Container>
         <Title>Hello {user.email}</Title>
         <Button onClick={() => void handleLogout()}>Logout</Button>
-        <Text>Session User:</Text>
-        <Text component="pre" size="sm">
-          {JSON.stringify(user, null, 2)}
-        </Text>
-        <ReservationForm shows={shows} reservations={reservations} />
+        <ReservationForm
+          user={user}
+          shows={shows}
+          reservations={reservations}
+        />
       </Container>
     </Box>
   );
