@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
 import { Box, Select, Button, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { Database } from "~/lib/database.types";
+import type { Database } from "~/lib/database.types";
+import type { User } from "@supabase/supabase-js";
+import { addReservation } from "~/api/addReservation";
 
 interface ReservationFormProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
   reservations: Database["public"]["Tables"]["reservations"]["Row"][];
-  user: {};
+  user: object;
 }
 
 interface ShowDateEntry {
   value: string;
   label: string;
+}
+
+interface HandleSubmitArgs {
+  show: string;
+  seat: string;
+  guestFirstName: string;
+  guestSurname: string;
 }
 
 const ReservationForm = ({
@@ -38,13 +47,14 @@ const ReservationForm = ({
 
   useEffect(() => {
     const reservedPlaceNumbers = reservations.map((reservation) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if ((reservation.show as any).id.toString() === selectedShow) {
         return reservation.seat;
       }
       return null;
     });
 
-    let freeSeats = [];
+    const freeSeats = [];
     for (let placeNumber = 1; placeNumber < 11; placeNumber++) {
       if (!reservedPlaceNumbers.includes(placeNumber)) {
         freeSeats.push(placeNumber.toString());
@@ -66,9 +76,22 @@ const ReservationForm = ({
     },
   });
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = ({
+    show,
+    seat,
+    guestFirstName,
+    guestSurname,
+  }: HandleSubmitArgs) => {
     form.reset();
-    console.log("Submit", values);
+    addReservation({
+      guest_name: guestFirstName,
+      guest_surname: guestSurname,
+      seat: parseInt(seat),
+      show: parseInt(show),
+      user: (user as User).id,
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   return (

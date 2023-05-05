@@ -4,12 +4,11 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import type { GetServerSideProps, NextPage } from "next";
-import { Box, Button, Container, Title, Text } from "@mantine/core";
-
+import { Box, Button, Container, Title } from "@mantine/core";
 import type { Database } from "~/lib/database.types";
 import ReservationForm from "~/components/ReservationForm";
 
-const supabaseAuthClient = createBrowserSupabaseClient<Database>();
+export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 interface PropTypes {
   user: {
