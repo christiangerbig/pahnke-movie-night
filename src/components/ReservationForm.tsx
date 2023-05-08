@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Select, Button, TextInput, Text } from "@mantine/core";
+import { Box, Select, Button, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
@@ -46,10 +46,10 @@ const ReservationForm = ({
   }, []);
 
   useEffect(() => {
-    const reservedPlaceNumbers = reservations.map((reservation) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if ((reservation.show as any).id.toString() === selectedShow) {
-        return reservation.seat;
+    const reservedPlaceNumbers = reservations.map(({ show, seat }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      if ((show as any).id === Number(selectedShow)) {
+        return seat;
       }
       return null;
     });

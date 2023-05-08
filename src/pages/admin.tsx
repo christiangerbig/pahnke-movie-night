@@ -102,7 +102,7 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
       "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
 
     const { data, error } = await supabaseAuthClient.from("shows").insert({
-      date: values.date,
+      date: values.date.toString(),
       movie_title: values.title,
       movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
     });
