@@ -4,10 +4,13 @@ import { useForm } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
+export type Show = Database["public"]["Tables"]["shows"]["Row"];
+export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
+export type ReservationWithShow = Reservation & { show: Show };
 
 interface ReservationFormProps {
-  shows: Database["public"]["Tables"]["shows"]["Row"][];
-  reservations: Database["public"]["Tables"]["reservations"]["Row"][];
+  shows: Show[];
+  reservations: ReservationWithShow[];
   user: object;
 }
 
@@ -46,10 +49,9 @@ const ReservationForm = ({
   }, []);
 
   useEffect(() => {
-    const reservedPlaceNumbers = reservations.map(({ show, seat }) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-      if ((show as any).id === Number(selectedShow)) {
-        return seat;
+    const reservedPlaceNumbers = reservations?.map((reservation) => {
+      if (reservation.show.id === Number(selectedShow)) {
+        return reservation.seat;
       }
       return null;
     });
