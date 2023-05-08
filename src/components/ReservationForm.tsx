@@ -36,10 +36,10 @@ const ReservationForm = ({
 
   useEffect(() => {
     setShowDatesSelection(
-      shows.map((entry) => {
+      shows.map(({ id, date }): ShowDateEntry => {
         return {
-          value: entry.id.toString(),
-          label: entry.date,
+          value: id.toString(),
+          label: date.toString(),
         };
       }),
     );
