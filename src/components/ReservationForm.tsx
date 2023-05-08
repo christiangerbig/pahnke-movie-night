@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Box, Select, Button, TextInput } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { Box, Select, Button, TextInput, Text } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
@@ -71,8 +71,8 @@ const ReservationForm = ({
       guestSurname: "",
     },
     validate: {
-      show: isNotEmpty(),
-      seat: isNotEmpty(),
+      show: (value) => (value === "" ? "Bitte ein Show auswählen" : null),
+      seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
     },
   });
 
@@ -82,10 +82,16 @@ const ReservationForm = ({
     guestFirstName,
     guestSurname,
   }: HandleSubmitArgs) => {
+    if (guestFirstName || guestSurname) {
+      if (!(guestFirstName && guestSurname)) {
+        return;
+      }
+    }
     form.reset();
     addReservation({
-      guest_name: guestFirstName,
+      guest_firstname: guestFirstName,
       guest_surname: guestSurname,
+      is_guest: guestFirstName && guestSurname ? true : false,
       seat: parseInt(seat),
       show: parseInt(show),
       user: (user as User).id,
@@ -106,7 +112,6 @@ const ReservationForm = ({
           label="Show"
           placeholder="Wähle eine Show aus..."
           withAsterisk
-          mb="1.5rem"
           maw="10rem"
           {...form.getInputProps("show")}
           onChange={(values) => {
@@ -119,7 +124,7 @@ const ReservationForm = ({
           label="Plätze"
           placeholder="Wähle einen Platz aus..."
           withAsterisk
-          mb="2.5rem"
+          mt="1.5rem"
           maw="10rem"
           {...form.getInputProps("seat")}
         />
@@ -127,17 +132,19 @@ const ReservationForm = ({
           label="Gast Vorname"
           placeholder="Vorname"
           {...form.getInputProps("guestFirstName")}
-          mb="2.5rem"
+          mt="2.5rem"
           maw="10rem"
         />
         <TextInput
           label="Gast Nachname"
           placeholder="NachName"
           {...form.getInputProps("guestSurname")}
-          mb="2.5rem"
+          mt="2.5rem"
           maw="10rem"
         />
-        <Button type="submit">Platz buchen</Button>
+        <Button type="submit" mt="2.5rem">
+          Platz buchen
+        </Button>
       </form>
     </Box>
   );
