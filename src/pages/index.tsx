@@ -6,7 +6,9 @@ import { useRouter } from "next/router";
 import type { GetServerSideProps, NextPage } from "next";
 import { Box, Button, Container, Title } from "@mantine/core";
 import type { Database } from "~/lib/database.types";
-import ReservationForm from "~/components/ReservationForm";
+import ReservationForm, {
+  type ReservationWithShow,
+} from "~/components/ReservationForm";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -15,7 +17,7 @@ interface PropTypes {
     email: string;
   };
   shows: Database["public"]["Tables"]["shows"]["Row"][];
-  reservations: Database["public"]["Tables"]["reservations"]["Row"][];
+  reservations: ReservationWithShow[];
 }
 
 const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
