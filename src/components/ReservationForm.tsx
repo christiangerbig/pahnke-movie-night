@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { Box, Select, Button, TextInput } from "@mantine/core";
+import {
+  Box,
+  Select,
+  Button,
+  TextInput,
+  Flex,
+  Image,
+  Container,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
+
 export type Show = Database["public"]["Tables"]["shows"]["Row"];
 export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
 export type ReservationWithShow = Reservation & { show: Show };
@@ -36,6 +45,7 @@ const ReservationForm = ({
   );
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [freeSeatsSelection, setFreeSeatsSelection] = useState<string[]>([]);
+  const [selectedShowImage, setSelectedShowImage] = useState<string>("");
 
   useEffect(() => {
     setShowDatesSelection(
@@ -63,6 +73,12 @@ const ReservationForm = ({
       }
     }
     setFreeSeatsSelection(freeSeats);
+
+    shows.map((element) => {
+      if (element.id === Number(selectedShow)) {
+        element.movie_poster && setSelectedShowImage(element.movie_poster);
+      }
+    });
   }, [selectedShow]);
 
   const form = useForm({
@@ -73,7 +89,7 @@ const ReservationForm = ({
       guestSurname: "",
     },
     validate: {
-      show: (value) => (value === "" ? "Bitte ein Show auswählen" : null),
+      show: (value) => (value === "" ? "Bitte eine Show auswählen" : null),
       seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
     },
   });
@@ -104,50 +120,55 @@ const ReservationForm = ({
 
   return (
     <Box mt="4rem" mb="4rem">
-      <form
-        onSubmit={form.onSubmit((values) => {
-          handleSubmit(values);
-        })}
-      >
-        <Select
-          data={showDatesSelection}
-          label="Show"
-          placeholder="Wähle eine Show aus..."
-          withAsterisk
-          maw="10rem"
-          {...form.getInputProps("show")}
-          onChange={(values) => {
-            setSelectedShow(values);
-            values && form.setValues({ show: values });
-          }}
-        />
-        <Select
-          data={freeSeatsSelection}
-          label="Plätze"
-          placeholder="Wähle einen Platz aus..."
-          withAsterisk
-          mt="1.5rem"
-          maw="10rem"
-          {...form.getInputProps("seat")}
-        />
-        <TextInput
-          label="Gast Vorname"
-          placeholder="Vorname"
-          {...form.getInputProps("guestFirstName")}
-          mt="2.5rem"
-          maw="10rem"
-        />
-        <TextInput
-          label="Gast Nachname"
-          placeholder="NachName"
-          {...form.getInputProps("guestSurname")}
-          mt="2.5rem"
-          maw="10rem"
-        />
-        <Button type="submit" mt="2.5rem">
-          Platz buchen
-        </Button>
-      </form>
+      <Flex justify="flex-start" align="flex-start" direction="row" wrap="wrap">
+        <form
+          onSubmit={form.onSubmit((values) => {
+            handleSubmit(values);
+          })}
+        >
+          <Select
+            data={showDatesSelection}
+            label="Show"
+            placeholder="Wähle eine Show aus..."
+            withAsterisk
+            maw="10rem"
+            {...form.getInputProps("show")}
+            onChange={(values) => {
+              setSelectedShow(values);
+              values && form.setValues({ show: values });
+            }}
+          />
+          <Select
+            data={freeSeatsSelection}
+            label="Plätze"
+            placeholder="Wähle einen Platz aus..."
+            withAsterisk
+            mt="1.5rem"
+            maw="10rem"
+            {...form.getInputProps("seat")}
+          />
+          <TextInput
+            label="Gast Vorname"
+            placeholder="Vorname"
+            {...form.getInputProps("guestFirstName")}
+            mt="2.5rem"
+            maw="10rem"
+          />
+          <TextInput
+            label="Gast Nachname"
+            placeholder="NachName"
+            {...form.getInputProps("guestSurname")}
+            mt="2.5rem"
+            maw="10rem"
+          />
+          <Button type="submit" mt="2.5rem">
+            Platz buchen
+          </Button>
+        </form>
+        <Container maw="19.8rem">
+          <Image radius="sm" src={selectedShowImage} alt="Movie poster" />
+        </Container>
+      </Flex>
     </Box>
   );
 };
