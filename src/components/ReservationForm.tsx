@@ -95,11 +95,11 @@ const ReservationForm = ({
       seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
       guestFirstName: (value, values) =>
         value && values.guestSurname === ""
-          ? "Bitte zusätzlich zum Gast Vornamen auch einen Nachnamen angeben"
+          ? "Bitte zusätzlich zum Vornamen auch einen Nachnamen angeben"
           : null,
       guestSurname: (value, values) =>
         value && values.guestFirstName === ""
-          ? "Bitte zusaätzlich zum Gast Nachnamen auch einen Vornamen angeben"
+          ? "Bitte zusaätzlich zum Nachnamen auch einen Vornamen angeben"
           : null,
     },
   });
