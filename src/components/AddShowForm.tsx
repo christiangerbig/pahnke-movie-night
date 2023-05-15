@@ -40,6 +40,8 @@ export const AddShowForm: React.FC = () => {
       .from("posters")
       .upload(value.name, value);
 
+    console.log(data);
+
     return { data, error };
   };
 

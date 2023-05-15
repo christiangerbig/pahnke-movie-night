@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Select, Button, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { Box, Select, Button, TextInput, Text, Checkbox } from "@mantine/core";
+import { useForm, zodResolver } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
+import { z } from "zod";
+
 export type Show = Database["public"]["Tables"]["shows"]["Row"];
 export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
 export type ReservationWithShow = Reservation & { show: Show };
@@ -65,17 +67,48 @@ const ReservationForm = ({
     setFreeSeatsSelection(freeSeats);
   }, [selectedShow]);
 
+  const schema = z
+    .object({
+      show: z.string().min(2, { message: "Bitte eine Show auswählen" }),
+      seat: z.string().min(2, { message: "Bitte einen Platz auswählen" }),
+      isGuest: z.boolean().optional(),
+      guestFirstName: z
+        .string()
+        .min(2, { message: "Mindestens 2 Zeichen" })
+        .or(z.literal("")),
+      guestSurname: z
+        .string()
+        .min(2, { message: "Mindestens 2 Zeichen" })
+        .or(z.literal("")),
+    })
+    .superRefine((values, ctx) => {
+      if (values.isGuest && !values.guestFirstName) {
+        ctx.addIssue({
+          message: "required",
+          code: z.ZodIssueCode.custom,
+          path: ["guestFirstName"],
+        });
+      }
+
+      if (values.isGuest && !values.guestSurname) {
+        ctx.addIssue({
+          message: "required",
+          code: z.ZodIssueCode.custom,
+          path: ["guestSurname"],
+        });
+      }
+    });
+  // seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
+
   const form = useForm({
     initialValues: {
       show: "",
       seat: "",
       guestFirstName: "",
       guestSurname: "",
+      isGuest: false,
     },
-    validate: {
-      show: (value) => (value === "" ? "Bitte ein Show auswählen" : null),
-      seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
-    },
+    validate: zodResolver(schema),
   });
 
   const handleSubmit = ({
@@ -130,6 +163,7 @@ const ReservationForm = ({
           maw="10rem"
           {...form.getInputProps("seat")}
         />
+        <Checkbox {...form.getInputProps("isGuest")} />
         <TextInput
           label="Gast Vorname"
           placeholder="Vorname"
