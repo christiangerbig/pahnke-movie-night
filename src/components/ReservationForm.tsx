@@ -93,6 +93,14 @@ const ReservationForm = ({
     validate: {
       show: (value) => (value === "" ? "Bitte eine Show auswählen" : null),
       seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
+      guestFirstName: (value, values) =>
+        value && values.guestSurname === ""
+          ? "Bitte zusätzlich zum Gast Vornamen auch einen Nachnamen angeben"
+          : null,
+      guestSurname: (value, values) =>
+        value && values.guestFirstName === ""
+          ? "Bitte zusaätzlich zum Gast Nachnamen auch einen Vornamen angeben"
+          : null,
     },
   });
 
@@ -102,11 +110,6 @@ const ReservationForm = ({
     guestFirstName,
     guestSurname,
   }: HandleSubmitArgs) => {
-    if (guestFirstName || guestSurname) {
-      if (!(guestFirstName && guestSurname)) {
-        return;
-      }
-    }
     form.reset();
     addReservation({
       guest_firstname: guestFirstName,
@@ -119,8 +122,6 @@ const ReservationForm = ({
       console.log(err);
     });
   };
-
-  console.log(selectedShow);
 
   return (
     <Box mt="4rem" mb="4rem">
