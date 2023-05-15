@@ -45,7 +45,9 @@ const ReservationForm = ({
   );
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [freeSeatsSelection, setFreeSeatsSelection] = useState<string[]>([]);
-  const [selectedShowImage, setSelectedShowImage] = useState<string>("");
+  const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     setShowDatesSelection(
@@ -76,7 +78,7 @@ const ReservationForm = ({
 
     shows.map((element) => {
       if (element.id === Number(selectedShow)) {
-        element.movie_poster && setSelectedShowImage(element.movie_poster);
+        setSelectedShowImage(element.movie_poster);
       }
     });
   }, [selectedShow]);
@@ -117,6 +119,8 @@ const ReservationForm = ({
       console.log(err);
     });
   };
+
+  console.log(selectedShow);
 
   return (
     <Box mt="4rem" mb="4rem">
@@ -166,7 +170,9 @@ const ReservationForm = ({
           </Button>
         </form>
         <Container maw="19.8rem">
-          <Image radius="sm" src={selectedShowImage} alt="Movie poster" />
+          {selectedShowImage && (
+            <Image radius="sm" src={selectedShowImage} alt="Movie poster" />
+          )}
         </Container>
       </Flex>
     </Box>
