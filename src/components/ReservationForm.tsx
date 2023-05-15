@@ -69,8 +69,11 @@ const ReservationForm = ({
 
   const schema = z
     .object({
-      show: z.string().min(2, { message: "Bitte eine Show auswählen" }),
-      seat: z.string().min(2, { message: "Bitte einen Platz auswählen" }),
+      show: z.string().trim().min(1, { message: "Bitte eine Show auswählen" }),
+      seat: z
+        .string()
+        .trim()
+        .min(1, { message: "Bitte einen Platz auswählen" }),
       isGuest: z.boolean().optional(),
       guestFirstName: z
         .string()
@@ -98,7 +101,6 @@ const ReservationForm = ({
         });
       }
     });
-  // seat: (value) => (value === "" ? "Bitte einen Platz auswählen" : null),
 
   const form = useForm({
     initialValues: {
@@ -163,7 +165,7 @@ const ReservationForm = ({
           maw="10rem"
           {...form.getInputProps("seat")}
         />
-        <Checkbox {...form.getInputProps("isGuest")} />
+        <Checkbox {...form.getInputProps("isGuest")} label="Gast?" />
         <TextInput
           label="Gast Vorname"
           placeholder="Vorname"
