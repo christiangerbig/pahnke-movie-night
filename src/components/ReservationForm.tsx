@@ -104,8 +104,8 @@ const ReservationForm = ({
         .min(2, { message: "Mindestens 2 Zeichen" })
         .or(z.literal("")),
     })
-    .superRefine((values, ctx) => {
-      if (values.isGuest && !values.guestFirstName) {
+    .superRefine(({ isGuest, guestFirstName, guestSurname }, ctx) => {
+      if (isGuest && !guestFirstName) {
         ctx.addIssue({
           message: "Bitte einen Vornamen angeben",
           code: z.ZodIssueCode.custom,
@@ -113,7 +113,7 @@ const ReservationForm = ({
         });
       }
 
-      if (values.isGuest && !values.guestSurname) {
+      if (isGuest && !guestSurname) {
         ctx.addIssue({
           message: "Bitte einen Nachnamen angeben",
           code: z.ZodIssueCode.custom,
@@ -126,9 +126,9 @@ const ReservationForm = ({
     initialValues: {
       show: "",
       seat: "",
+      isGuest: false,
       guestFirstName: "",
       guestSurname: "",
-      isGuest: false,
     },
     validate: zodResolver(schema),
   });
@@ -171,27 +171,27 @@ const ReservationForm = ({
             label="Show"
             placeholder="Wähle eine Show aus..."
             withAsterisk
-            maw="10rem"
             {...form.getInputProps("show")}
             onChange={(values) => {
               setSelectedShow(values);
               values && form.setValues({ show: values });
             }}
+            maw="10rem"
           />
           <Select
             data={freeSeatsSelection}
             label="Plätze"
             placeholder="Wähle einen Platz aus..."
             withAsterisk
+            {...form.getInputProps("seat")}
             mt="1.5rem"
             maw="10rem"
-            {...form.getInputProps("seat")}
           />
           <Checkbox
-            mt="2.5rem"
-            {...form.getInputProps("isGuest")}
             label="Gast?"
             ref={checkboxRef}
+            {...form.getInputProps("isGuest")}
+            mt="2.5rem"
           />
           {form.values.isGuest ? (
             <Container>
@@ -217,7 +217,7 @@ const ReservationForm = ({
         </form>
         <Container maw="19.8rem">
           {selectedShowImage && (
-            <Image radius="sm" src={selectedShowImage} alt="Movie poster" />
+            <Image src={selectedShowImage} alt="Movie poster" radius="sm" />
           )}
         </Container>
       </Flex>
