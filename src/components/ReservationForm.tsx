@@ -33,9 +33,9 @@ interface ShowDateEntry {
 interface HandleSubmitArgs {
   show: string;
   seat: string;
+  isGuest: boolean;
   guestFirstName: string;
   guestSurname: string;
-  isGuest: boolean;
 }
 
 const ReservationForm = ({
@@ -80,9 +80,9 @@ const ReservationForm = ({
     }
     setFreeSeatsSelection(freeSeats);
 
-    shows.map((element) => {
-      if (element.id === Number(selectedShow)) {
-        setSelectedShowImage(element.movie_poster);
+    shows.map((show) => {
+      if (show.id === Number(selectedShow)) {
+        setSelectedShowImage(show.movie_poster);
       }
     });
   }, [selectedShow]);
@@ -136,13 +136,12 @@ const ReservationForm = ({
   const handleSubmit = ({
     show,
     seat,
+    isGuest,
     guestFirstName,
     guestSurname,
-    isGuest,
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
-
     const newReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
         seat: parseInt(seat),
