@@ -151,7 +151,7 @@ const ReservationForm = ({
     if (isGuest) {
       newReservation.guest_firstname = guestFirstName;
       newReservation.guest_surname = guestSurname;
-      newReservation.is_guest = guestFirstName && guestSurname ? true : false;
+      newReservation.is_guest = true;
     }
     addReservation(newReservation).catch((err) => {
       console.log(err);
