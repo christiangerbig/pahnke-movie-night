@@ -13,6 +13,7 @@ import { useForm, zodResolver } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
+import { addReservations } from "~/api/addReservations";
 import { z } from "zod";
 
 export type Show = Database["public"]["Tables"]["shows"]["Row"];
@@ -36,6 +37,7 @@ interface HandleSubmitArgs {
   isGuest: boolean;
   guestFirstName: string;
   guestSurname: string;
+  guestSeat: string;
 }
 
 const ReservationForm = ({
@@ -103,24 +105,38 @@ const ReservationForm = ({
         .string()
         .min(2, { message: "Mindestens 2 Zeichen" })
         .or(z.literal("")),
+      guestSeat: z
+        .string()
+        .trim()
+        .min(1, { message: "Bitte einen Platz auswählen" })
+        .or(z.literal("")),
     })
-    .superRefine(({ isGuest, guestFirstName, guestSurname }, ctx) => {
-      if (isGuest && !guestFirstName) {
-        ctx.addIssue({
-          message: "Bitte einen Vornamen angeben",
-          code: z.ZodIssueCode.custom,
-          path: ["guestFirstName"],
-        });
-      }
+    .superRefine(
+      ({ seat, isGuest, guestFirstName, guestSurname, guestSeat }, ctx) => {
+        if (isGuest && !guestFirstName) {
+          ctx.addIssue({
+            message: "Bitte einen Vornamen angeben",
+            code: z.ZodIssueCode.custom,
+            path: ["guestFirstName"],
+          });
+        }
 
-      if (isGuest && !guestSurname) {
-        ctx.addIssue({
-          message: "Bitte einen Nachnamen angeben",
-          code: z.ZodIssueCode.custom,
-          path: ["guestSurname"],
-        });
-      }
-    });
+        if (isGuest && !guestSurname) {
+          ctx.addIssue({
+            message: "Bitte einen Nachnamen angeben",
+            code: z.ZodIssueCode.custom,
+            path: ["guestSurname"],
+          });
+        }
+        if (guestSeat === seat) {
+          ctx.addIssue({
+            message: "Bitte einen anderen Platz auswählen",
+            code: z.ZodIssueCode.custom,
+            path: ["guestSeat"],
+          });
+        }
+      },
+    );
 
   const form = useForm({
     initialValues: {
@@ -129,6 +145,7 @@ const ReservationForm = ({
       isGuest: false,
       guestFirstName: "",
       guestSurname: "",
+      guestSeat: "",
     },
     validate: zodResolver(schema),
   });
@@ -139,23 +156,37 @@ const ReservationForm = ({
     isGuest,
     guestFirstName,
     guestSurname,
+    guestSeat,
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
-    const newReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
+    const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
         seat: parseInt(seat),
         show: parseInt(show),
         user: (user as User).id,
       };
     if (isGuest) {
-      newReservation.guest_firstname = guestFirstName;
-      newReservation.guest_surname = guestSurname;
-      newReservation.is_guest = true;
+      const userReservations = [];
+      userReservations.push(userReservation);
+      const guestReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
+        {
+          seat: parseInt(guestSeat),
+          show: parseInt(show),
+          user: (user as User).id,
+          guest_firstname: guestFirstName,
+          guest_surname: guestSurname,
+          is_guest: true,
+        };
+      userReservations.push(guestReservation);
+      addReservations(userReservations).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      addReservation(userReservation).catch((err) => {
+        console.log(err);
+      });
     }
-    addReservation(newReservation).catch((err) => {
-      console.log(err);
-    });
   };
 
   return (
@@ -180,7 +211,7 @@ const ReservationForm = ({
           />
           <Select
             data={freeSeatsSelection}
-            label="Plätze"
+            label="Platzauswahl"
             placeholder="Wähle einen Platz aus..."
             withAsterisk
             {...form.getInputProps("seat")}
@@ -208,7 +239,16 @@ const ReservationForm = ({
                 {...form.getInputProps("guestSurname")}
                 mt="1.5rem"
                 maw="10rem"
-              />{" "}
+              />
+              <Select
+                data={freeSeatsSelection}
+                label="Platzauswahl"
+                placeholder="Wähle einen Platz aus..."
+                withAsterisk
+                {...form.getInputProps("guestSeat")}
+                mt="1.5rem"
+                maw="10rem"
+              />
             </Container>
           ) : null}
           <Button type="submit" mt="2.5rem">
