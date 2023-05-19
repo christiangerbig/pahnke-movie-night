@@ -8,6 +8,7 @@ import {
   Container,
   Flex,
   Image,
+  Text,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import type { Database } from "~/lib/database.types";
@@ -53,6 +54,7 @@ const ReservationForm = ({
   const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
     null,
   );
+  const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
   const checkboxRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -128,6 +130,7 @@ const ReservationForm = ({
             path: ["guestSurname"],
           });
         }
+
         if (guestSeat === seat) {
           ctx.addIssue({
             message: "Bitte einen anderen Platz auswählen",
@@ -160,6 +163,21 @@ const ReservationForm = ({
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
+
+    reservations?.map((reservation) => {
+      if (reservation.user === (user as User).id) {
+        if (reservation.show.id === Number(selectedShow)) {
+          console.log("Doppelbuchung");
+          setIsDoubleBooking(true);
+        }
+      }
+    });
+    console.log(isDoubleBooking);
+    if (isDoubleBooking) {
+      console.log("Doppelbuchung");
+      return;
+    }
+
     const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
         seat: parseInt(seat),
@@ -251,6 +269,7 @@ const ReservationForm = ({
               />
             </Container>
           ) : null}
+          {isDoubleBooking && <Text>Doppelbuchung !!!!</Text>}
           <Button type="submit" mt="2.5rem">
             Platz buchen
           </Button>
