@@ -9,6 +9,7 @@ import type { Database } from "~/lib/database.types";
 import ReservationForm, {
   type ReservationWithShow,
 } from "~/components/ReservationForm";
+import SeatSVG from "~/components/SeatSVG";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -43,6 +44,7 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
           shows={shows}
           reservations={reservations}
         />
+        <SeatSVG />
       </Container>
     </Box>
   );

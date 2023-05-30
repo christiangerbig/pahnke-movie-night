@@ -1,1 +1,14 @@
 /* Globals */
+svg g#seats path {
+  cursor: pointer;
+  fill: url("#seats-gradient");
+}
+
+svg g#seats path:hover {
+  fill: url("#seats-gradient-hover");
+}
+
+svg g#seats path[aria-disabled] {
+  cursor: unset;
+  fill: url("#seats-gradient-disabled");
+}
