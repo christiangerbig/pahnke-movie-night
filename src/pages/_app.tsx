@@ -26,6 +26,12 @@ const App = ({
         withNormalizeCSS
         theme={{
           colorScheme: "dark",
+
+          globalStyles: (theme) => ({
+            body: {
+              backgroundColor: "#060606",
+            },
+          }),
         }}
       >
         <Notifications />
