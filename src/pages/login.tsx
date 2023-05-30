@@ -1,11 +1,9 @@
-import {
-  createBrowserSupabaseClient,
-  createServerSupabaseClient,
-} from "@supabase/auth-helpers-nextjs";
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useSessionContext } from "@supabase/auth-helpers-react";
 import { TextInput, Container, Button, Stack, Box, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
-import type { GetServerSideProps } from "next";
+import { useState } from "react";
 
 const supabaseClient = createBrowserSupabaseClient();
 
@@ -27,6 +25,9 @@ const validateEmail = (value: string) => {
 
 const LoginPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { session, isLoading } = useSessionContext();
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -38,14 +39,30 @@ const LoginPage = () => {
   });
 
   const handleLogin = async (email: string) => {
+    setLoading(true);
+
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
+      options: {
+        emailRedirectTo: "/login",
+      },
     });
 
     if (!error) {
       void router.push("/verify-request");
     }
+
+    setLoading(false);
   };
+
+  if (isLoading) {
+    return;
+  }
+
+  if (session) {
+    void router.push("/");
+    return;
+  }
 
   return (
     <Box component="main">
@@ -62,7 +79,9 @@ const LoginPage = () => {
                 withAsterisk
                 {...form.getInputProps("email")}
               />
-              <Button type="submit">Einloggen</Button>
+              <Button type="submit" loading={loading}>
+                Einloggen
+              </Button>
             </Stack>
           </form>
         </Stack>
@@ -72,24 +91,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // Create authenticated Supabase Client
-  const supabaseServer = createServerSupabaseClient(ctx);
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabaseServer.auth.getSession();
-
-  if (session)
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-
-  return {
-    props: {},
-  };
-};

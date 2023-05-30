@@ -5,6 +5,7 @@ import {
 import { useRouter } from "next/router";
 import type { GetServerSideProps, NextPage } from "next";
 import { Box, Button, Container, Title } from "@mantine/core";
+
 import type { Database } from "~/lib/database.types";
 import ReservationForm, {
   type ReservationWithShow,
@@ -31,8 +32,6 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
       router.reload();
     }
   };
-
-  // console.log("Reservations: ", reservations);
 
   return (
     <Box component="main">
@@ -62,11 +61,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (!session)
     return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
+      props: {},
     };
+  // return {
+  //   redirect: {
+  //     destination: "/login",
+  //     permanent: false,
+  //   },
+  // };
 
   const { data: reservations } = await supabaseAuthServer
     .from("reservations")
