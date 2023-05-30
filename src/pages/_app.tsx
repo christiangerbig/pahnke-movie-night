@@ -27,7 +27,7 @@ const App = ({
         theme={{
           colorScheme: "dark",
 
-          globalStyles: (theme) => ({
+          globalStyles: () => ({
             body: {
               backgroundColor: "#060606",
             },
