@@ -13,9 +13,9 @@ const Defs = () => {
         y2="0.623"
         gradientUnits="objectBoundingBox"
       >
-        <stop offset="0" stop-color="red" />
-        <stop offset="0.424" stop-color="#540000" />
-        <stop offset="1" stop-color="#060606" />
+        <stop offset="0" stopColor="red" />
+        <stop offset="0.424" stopColor="#540000" />
+        <stop offset="1" stopColor="#060606" />
       </linearGradient>
       <linearGradient
         id="seats-gradient-hover"
@@ -24,9 +24,9 @@ const Defs = () => {
         y2="0.623"
         gradientUnits="objectBoundingBox"
       >
-        <stop offset="0" stop-color="#FF8400" />
-        <stop offset="0.424" stop-color="#421400" />
-        <stop offset="1" stop-color="#060606" />
+        <stop offset="0" stopColor="#FF8400" />
+        <stop offset="0.424" stopColor="#421400" />
+        <stop offset="1" stopColor="#060606" />
       </linearGradient>
       <linearGradient
         id="seats-gradient-disabled"
@@ -35,9 +35,9 @@ const Defs = () => {
         y2="0.623"
         gradientUnits="objectBoundingBox"
       >
-        <stop offset="0" stop-color="#9E9E9E" />
-        <stop offset="0.424" stop-color="#292929" />
-        <stop offset="1" stop-color="#060606" />
+        <stop offset="0" stopColor="#9E9E9E" />
+        <stop offset="0.424" stopColor="#292929" />
+        <stop offset="1" stopColor="#060606" />
       </linearGradient>
       <linearGradient
         id="a"
