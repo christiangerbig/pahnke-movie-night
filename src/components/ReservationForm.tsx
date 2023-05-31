@@ -161,18 +161,20 @@ const ReservationForm = ({
     guestSurname,
     guestSeat,
   }: HandleSubmitArgs) => {
+    let isDoubleBooking = false;
+
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
-          console.log("Doppelbuchung");
+          isDoubleBooking = true;
           setIsDoubleBooking(true);
         }
       }
     });
-    console.log(isDoubleBooking);
+
     if (isDoubleBooking) {
       console.log("Doppelbuchung");
       return;
@@ -269,7 +271,12 @@ const ReservationForm = ({
               />
             </Container>
           ) : null}
-          {isDoubleBooking && <Text>Doppelbuchung !!!!</Text>}
+          {isDoubleBooking && (
+            <Text fz="lg" color="orange">
+              Doppelbuchung! Es können pro Vorstellung nur einmal Plätze
+              reserviert werden.
+            </Text>
+          )}
           <Button type="submit" mt="2.5rem">
             Platz buchen
           </Button>
