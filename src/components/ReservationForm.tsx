@@ -225,8 +225,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             .then((updatedReservations): void => {
               setReservations(updatedReservations as ReservationWithShow[]);
             })
-            .catch((error) => {
-              console.log(error);
+            .catch((err) => {
+              console.log("Fehler:", err);
             });
         })
         .catch((err) => {
