@@ -16,7 +16,9 @@ import {
   useCinemaStore,
   selectShows,
   selectReservations,
+  selectIsDoubleBooking,
   selectSetReservations,
+  selectSetIsDoubleBooking,
 } from "../hooks/useCinemaStore";
 
 import type { Database } from "~/lib/database.types";
@@ -57,12 +59,13 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
     null,
   );
-  const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
   const checkboxRef = useRef<HTMLInputElement>(null);
 
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
+  const isDoubleBooking = useCinemaStore(selectIsDoubleBooking);
   const setReservations = useCinemaStore(selectSetReservations);
+  const setIsDoubleBooking = useCinemaStore(selectSetIsDoubleBooking);
 
   useEffect(() => {
     setShowDatesSelection(
@@ -168,15 +171,12 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     guestSurname,
     guestSeat,
   }: HandleSubmitArgs) => {
-    let isDoubleBooking = false;
-
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
-          isDoubleBooking = true;
           setIsDoubleBooking(true);
         }
       }
