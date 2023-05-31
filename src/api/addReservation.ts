@@ -4,8 +4,16 @@ import { supabaseAuthClient } from "~/pages";
 export const addReservation = async (
   reservation: Database["public"]["Tables"]["reservations"]["Insert"],
 ) => {
-  const feedback = await supabaseAuthClient
+  const { data: newReservation, error } = await supabaseAuthClient
     .from("reservations")
-    .insert(reservation);
-  return feedback;
+    .insert(reservation)
+    .select("*");
+  return new Promise((resolve, reject) => {
+    if (newReservation) {
+      resolve(newReservation);
+    }
+    if (error) {
+      reject(error);
+    }
+  });
 };

@@ -6,6 +6,12 @@ import { useRouter } from "next/router";
 import type { GetServerSideProps, NextPage } from "next";
 import { Box, Button, Container, Title } from "@mantine/core";
 
+import {
+  useCinemaStore,
+  selectSetShows,
+  selectSetReservations,
+} from "../hooks/useCinemaStore";
+
 import type { Database } from "~/lib/database.types";
 import ReservationForm, {
   type ReservationWithShow,
@@ -24,6 +30,8 @@ interface PropTypes {
 
 const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
   const router = useRouter();
+  const setShows = useCinemaStore(selectSetShows);
+  const setReservations = useCinemaStore(selectSetReservations);
 
   const handleLogout = async () => {
     const { error } = await supabaseAuthClient.auth.signOut();
@@ -33,16 +41,15 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
     }
   };
 
+  setShows(shows);
+  setReservations(reservations);
+
   return (
     <Box component="main">
       <Container>
         <Title>Hello {user.email}</Title>
         <Button onClick={() => void handleLogout()}>Logout</Button>
-        <ReservationForm
-          user={user}
-          shows={shows}
-          reservations={reservations}
-        />
+        <ReservationForm user={user} />
         <SeatSVG />
       </Container>
     </Box>

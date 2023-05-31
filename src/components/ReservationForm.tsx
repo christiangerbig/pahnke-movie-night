@@ -11,19 +11,26 @@ import {
   Text,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+
+import {
+  useCinemaStore,
+  selectShows,
+  selectReservations,
+  selectSetReservations,
+} from "../hooks/useCinemaStore";
+
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
 import { addReservations } from "~/api/addReservations";
 import { z } from "zod";
+import { fetchReservations } from "~/api/fetchReservations";
 
 export type Show = Database["public"]["Tables"]["shows"]["Row"];
 export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
 export type ReservationWithShow = Reservation & { show: Show };
 
 interface ReservationFormProps {
-  shows: Show[];
-  reservations: ReservationWithShow[];
   user: object;
 }
 
@@ -41,11 +48,7 @@ interface HandleSubmitArgs {
   guestSeat: string;
 }
 
-const ReservationForm = ({
-  user,
-  shows,
-  reservations,
-}: ReservationFormProps) => {
+const ReservationForm = ({ user }: ReservationFormProps) => {
   const [showDatesSelection, setShowDatesSelection] = useState<ShowDateEntry[]>(
     [],
   );
@@ -56,6 +59,10 @@ const ReservationForm = ({
   );
   const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
   const checkboxRef = useRef<HTMLInputElement>(null);
+
+  const shows = useCinemaStore(selectShows);
+  const reservations = useCinemaStore(selectReservations);
+  const setReservations = useCinemaStore(selectSetReservations);
 
   useEffect(() => {
     setShowDatesSelection(
@@ -89,7 +96,7 @@ const ReservationForm = ({
         setSelectedShowImage(show.movie_poster);
       }
     });
-  }, [selectedShow]);
+  }, [selectedShow, reservations]);
 
   const schema = z
     .object({
@@ -176,7 +183,6 @@ const ReservationForm = ({
     });
 
     if (isDoubleBooking) {
-      console.log("Doppelbuchung");
       return;
     }
 
@@ -199,13 +205,33 @@ const ReservationForm = ({
           is_guest: true,
         };
       userReservations.push(guestReservation);
-      addReservations(userReservations).catch((err) => {
-        console.log(err);
-      });
+      addReservations(userReservations)
+        .then(() => {
+          fetchReservations()
+            .then((updatedReservations): void => {
+              setReservations(updatedReservations as ReservationWithShow[]);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((err) => {
+          console.log("Fehler:", err);
+        });
     } else {
-      addReservation(userReservation).catch((err) => {
-        console.log(err);
-      });
+      addReservation(userReservation)
+        .then(() => {
+          fetchReservations()
+            .then((updatedReservations): void => {
+              setReservations(updatedReservations as ReservationWithShow[]);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((err) => {
+          console.log("Fehler:", err);
+        });
     }
   };
 

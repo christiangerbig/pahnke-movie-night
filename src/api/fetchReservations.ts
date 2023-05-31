@@ -1,13 +1,9 @@
-import type { Database } from "~/lib/database.types";
 import { supabaseAuthClient } from "~/pages";
 
-export const addReservations = async (
-  userReservations: Database["public"]["Tables"]["reservations"]["Insert"][],
-) => {
+export const fetchReservations = async () => {
   const { data: reservations, error } = await supabaseAuthClient
     .from("reservations")
-    .insert(userReservations)
-    .select("*");
+    .select(`*, show!inner (*)`);
   return new Promise((resolve, reject) => {
     if (reservations) {
       resolve(reservations);
