@@ -7,6 +7,7 @@ import { seatsData } from "../lib/seatsData";
 
 import {
   useCinemaStore,
+  selectFreeSeatsSelection,
   selectSelectedSeats,
   selectSetSelectedSeats,
 } from "../hooks/useCinemaStore";
@@ -195,26 +196,25 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const setSelectedSeats = useCinemaStore(selectSetSelectedSeats);
 
-  // useEffect(() => {
-  //   console.log(selectedSeats);
-  // }, [selectedSeats]);
-
   const handleClick = (
     event: { target: { toggleAttribute: (arg0: string) => void } },
     seatNumber: number,
   ) => {
-    const clonedSelectedSeats = [...selectedSeats];
-    const index = clonedSelectedSeats.indexOf(seatNumber);
-    if (index === -1) {
-      clonedSelectedSeats.push(seatNumber);
-      setSelectedSeats(clonedSelectedSeats);
-    } else {
-      clonedSelectedSeats.splice(index, 1);
-      setSelectedSeats(clonedSelectedSeats);
-      event.target.toggleAttribute("data-selected");
-    }
-    if (selectedSeats.length < 2) {
-      event.target.toggleAttribute("data-selected");
+    if (!event.target.hasAttribute("aria-disabled")) {
+      console.log("Hallo");
+      const clonedSelectedSeats = [...selectedSeats];
+      const index = clonedSelectedSeats.indexOf(seatNumber);
+      if (index === -1) {
+        clonedSelectedSeats.push(seatNumber);
+        setSelectedSeats(clonedSelectedSeats);
+      } else {
+        clonedSelectedSeats.splice(index, 1);
+        setSelectedSeats(clonedSelectedSeats);
+        event.target.toggleAttribute("data-selected");
+      }
+      if (selectedSeats.length < 2) {
+        event.target.toggleAttribute("data-selected");
+      }
     }
   };
 
@@ -239,14 +239,31 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
     </Popover>
   );
 };
-
+//----------------------------------------------
 const Seats = () => {
+  const freeSeatsSelection = useCinemaStore(selectFreeSeatsSelection);
+
+  useEffect(() => {
+    for (let i = 1; i < 49; i++) {
+      const selectorString = `[data-seat='${i}']`;
+      let element = document.querySelector(selectorString);
+      element.setAttribute("aria-disabled", "");
+      element.removeAttribute("data-selected");
+    }
+
+    freeSeatsSelection.map((entry) => {
+      const selectorString = `[data-seat='${entry}']`;
+      let element = document.querySelector(selectorString);
+      element.toggleAttribute("aria-disabled");
+    });
+  }, [freeSeatsSelection]);
+
   return (
     <g id="seats">
       {seatsData.map((seatData, index) => {
         return (
           <Seat seatNumber={index + 1} key={index.toString()}>
-            <path aria-disabled="false" data-seat={index + 1} d={seatData} />
+            <path data-seat={index + 1} d={seatData} />
           </Seat>
         );
       })}

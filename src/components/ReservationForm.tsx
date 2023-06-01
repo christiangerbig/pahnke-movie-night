@@ -5,23 +5,21 @@ import {
   Button,
   TextInput,
   Checkbox,
-  Container,
   Flex,
-  Image,
   Text,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-
 import {
   useCinemaStore,
   selectShows,
   selectReservations,
+  selectFreeSeatsSelection,
   selectIsDoubleBooking,
   selectSelectedSeats,
   selectSetReservations,
+  selectSetFreeSeatsSelection,
   selectSetIsDoubleBooking,
 } from "../hooks/useCinemaStore";
-
 import type { Database } from "~/lib/database.types";
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
@@ -54,7 +52,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     [],
   );
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
-  const [freeSeatsSelection, setFreeSeatsSelection] = useState<string[]>([]);
   const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
     null,
   );
@@ -62,11 +59,14 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
 
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
+  const freeSeatsSelection = useCinemaStore(selectFreeSeatsSelection);
   const isDoubleBooking = useCinemaStore(selectIsDoubleBooking);
   const setReservations = useCinemaStore(selectSetReservations);
+  const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
   const setIsDoubleBooking = useCinemaStore(selectSetIsDoubleBooking);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
+  // Component did mount
   useEffect(() => {
     setShowDatesSelection(
       shows.map(({ id, date }): ShowDateEntry => {
@@ -78,6 +78,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     );
   }, []);
 
+  // Selected Show/reservations change
   useEffect(() => {
     const reservedPlaceNumbers = reservations?.map((reservation) => {
       if (reservation.show.id === Number(selectedShow)) {
@@ -87,9 +88,9 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     });
 
     const freeSeats = [];
-    for (let placeNumber = 1; placeNumber < 11; placeNumber++) {
+    for (let placeNumber = 1; placeNumber <= 48; placeNumber++) {
       if (!reservedPlaceNumbers.includes(placeNumber)) {
-        freeSeats.push(placeNumber.toString());
+        freeSeats.push(placeNumber);
       }
     }
     setFreeSeatsSelection(freeSeats);
@@ -101,6 +102,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     });
   }, [selectedShow, reservations]);
 
+  // zod schema
   const schema = z
     .object({
       show: z.string().trim().min(1, { message: "Bitte eine Show auswählen" }),
@@ -132,6 +134,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       }
     });
 
+  // Mantine form
   const form = useForm({
     initialValues: {
       show: "",
@@ -142,25 +145,29 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     validate: zodResolver(schema),
   });
 
+  // Submit
   const handleSubmit = ({
     show,
     isGuest,
     guestFirstName,
     guestSurname,
   }: HandleSubmitArgs) => {
-    console.log("cvcvxxvcxcvcxv");
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
+
+    let isDoubleBooking = false;
 
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
           setIsDoubleBooking(true);
+          isDoubleBooking = true;
         }
       }
     });
 
     if (isDoubleBooking) {
+      console.log("DoubleBooking");
       return;
     }
 
@@ -185,12 +192,14 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       userReservations.push(guestReservation);
       addReservations(userReservations)
         .then(() => {
+          // setSelectedShow("");
+          setFreeSeatsSelection([]);
           fetchReservations()
             .then((updatedReservations): void => {
               setReservations(updatedReservations as ReservationWithShow[]);
             })
-            .catch((error) => {
-              console.log(error);
+            .catch((err) => {
+              console.log("Fehler:", err);
             });
         })
         .catch((err) => {
@@ -199,6 +208,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     } else {
       addReservation(userReservation)
         .then(() => {
+          // setSelectedShow("");
+          setFreeSeatsSelection([]);
           fetchReservations()
             .then((updatedReservations): void => {
               setReservations(updatedReservations as ReservationWithShow[]);

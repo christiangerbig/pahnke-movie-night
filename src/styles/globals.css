@@ -12,7 +12,7 @@ svg g#seats path[data-selected] {
   fill: url("#seats-gradient-hover");
 }
 
-svg g#seats path[aria-disabled="true"] {
+svg g#seats path[aria-disabled] {
   cursor: unset;
   fill: url("#seats-gradient-disabled");
 }
