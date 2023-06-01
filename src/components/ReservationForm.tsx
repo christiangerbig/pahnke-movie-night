@@ -17,6 +17,7 @@ import {
   selectShows,
   selectReservations,
   selectIsDoubleBooking,
+  selectSelectedSeats,
   selectSetReservations,
   selectSetIsDoubleBooking,
 } from "../hooks/useCinemaStore";
@@ -43,11 +44,9 @@ interface ShowDateEntry {
 
 interface HandleSubmitArgs {
   show: string;
-  seat: string;
   isGuest: boolean;
   guestFirstName: string;
   guestSurname: string;
-  guestSeat: string;
 }
 
 const ReservationForm = ({ user }: ReservationFormProps) => {
@@ -66,6 +65,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const isDoubleBooking = useCinemaStore(selectIsDoubleBooking);
   const setReservations = useCinemaStore(selectSetReservations);
   const setIsDoubleBooking = useCinemaStore(selectSetIsDoubleBooking);
+  const selectedSeats = useCinemaStore(selectSelectedSeats);
 
   useEffect(() => {
     setShowDatesSelection(
@@ -104,10 +104,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const schema = z
     .object({
       show: z.string().trim().min(1, { message: "Bitte eine Show auswählen" }),
-      seat: z
-        .string()
-        .trim()
-        .min(1, { message: "Bitte einen Platz auswählen" }),
       isGuest: z.boolean().optional(),
       guestFirstName: z
         .string()
@@ -117,60 +113,42 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         .string()
         .min(2, { message: "Mindestens 2 Zeichen" })
         .or(z.literal("")),
-      guestSeat: z
-        .string()
-        .trim()
-        .min(1, { message: "Bitte einen Platz auswählen" })
-        .or(z.literal("")),
     })
-    .superRefine(
-      ({ seat, isGuest, guestFirstName, guestSurname, guestSeat }, ctx) => {
-        if (isGuest && !guestFirstName) {
-          ctx.addIssue({
-            message: "Bitte einen Vornamen angeben",
-            code: z.ZodIssueCode.custom,
-            path: ["guestFirstName"],
-          });
-        }
+    .superRefine(({ isGuest, guestFirstName, guestSurname }, ctx) => {
+      if (isGuest && !guestFirstName) {
+        ctx.addIssue({
+          message: "Bitte einen Vornamen angeben",
+          code: z.ZodIssueCode.custom,
+          path: ["guestFirstName"],
+        });
+      }
 
-        if (isGuest && !guestSurname) {
-          ctx.addIssue({
-            message: "Bitte einen Nachnamen angeben",
-            code: z.ZodIssueCode.custom,
-            path: ["guestSurname"],
-          });
-        }
-
-        if (guestSeat === seat) {
-          ctx.addIssue({
-            message: "Bitte einen anderen Platz auswählen",
-            code: z.ZodIssueCode.custom,
-            path: ["guestSeat"],
-          });
-        }
-      },
-    );
+      if (isGuest && !guestSurname) {
+        ctx.addIssue({
+          message: "Bitte einen Nachnamen angeben",
+          code: z.ZodIssueCode.custom,
+          path: ["guestSurname"],
+        });
+      }
+    });
 
   const form = useForm({
     initialValues: {
       show: "",
-      seat: "",
       isGuest: false,
       guestFirstName: "",
       guestSurname: "",
-      guestSeat: "",
     },
     validate: zodResolver(schema),
   });
 
   const handleSubmit = ({
     show,
-    seat,
     isGuest,
     guestFirstName,
     guestSurname,
-    guestSeat,
   }: HandleSubmitArgs) => {
+    console.log("cvcvxxvcxcvcxv");
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
@@ -188,7 +166,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
 
     const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
-        seat: parseInt(seat),
+        seat: selectedSeats[0],
         show: parseInt(show),
         user: (user as User).id,
       };
@@ -197,7 +175,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       userReservations.push(userReservation);
       const guestReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
-          seat: parseInt(guestSeat),
+          seat: selectedSeats[1],
           show: parseInt(show),
           user: (user as User).id,
           guest_firstname: guestFirstName,
@@ -236,26 +214,37 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   };
 
   return (
-    <Box mt="4rem" mb="4rem">
-      <Flex justify="flex-start" align="flex-start" direction="row" wrap="wrap">
-        <form
-          onSubmit={form.onSubmit((values) => {
-            handleSubmit(values);
-          })}
+    <Box mb="4rem">
+      <form
+        onSubmit={form.onSubmit((values) => {
+          handleSubmit(values);
+        })}
+      >
+        <Flex
+          justify="flex-start"
+          align="flex-start"
+          direction="row"
+          wrap="wrap"
         >
-          <Select
-            data={showDatesSelection}
-            label="Show"
-            placeholder="Wähle eine Show aus..."
-            withAsterisk
-            {...form.getInputProps("show")}
-            onChange={(values) => {
-              setSelectedShow(values);
-              values && form.setValues({ show: values });
-            }}
-            maw="10rem"
-          />
-          <Select
+          <Flex
+            justify="flex-start"
+            align="flex-start"
+            direction="column"
+            mr="10rem"
+          >
+            <Select
+              data={showDatesSelection}
+              label="Show"
+              placeholder="Wähle eine Show aus..."
+              withAsterisk
+              {...form.getInputProps("show")}
+              onChange={(values) => {
+                setSelectedShow(values);
+                values && form.setValues({ show: values });
+              }}
+              maw="10rem"
+            />
+            {/* <Select
             data={freeSeatsSelection}
             label="Platzauswahl"
             placeholder="Wähle einen Platz aus..."
@@ -263,20 +252,20 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             {...form.getInputProps("seat")}
             mt="1.5rem"
             maw="10rem"
-          />
-          <Checkbox
-            label="Gast?"
-            ref={checkboxRef}
-            {...form.getInputProps("isGuest")}
-            mt="2.5rem"
-          />
+            /> */}
+            <Checkbox
+              label="Gast?"
+              ref={checkboxRef}
+              {...form.getInputProps("isGuest")}
+              mt="2.5rem"
+            />
+          </Flex>
           {form.values.isGuest ? (
-            <Container>
+            <Flex justify="flex-start" align="flex-start" direction="column">
               <TextInput
                 label="Gast Vorname"
                 placeholder="Vorname"
                 {...form.getInputProps("guestFirstName")}
-                mt="1.5rem"
                 maw="10rem"
               />
               <TextInput
@@ -286,7 +275,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
                 mt="1.5rem"
                 maw="10rem"
               />
-              <Select
+              {/* <Select
                 data={freeSeatsSelection}
                 label="Platzauswahl"
                 placeholder="Wähle einen Platz aus..."
@@ -294,25 +283,25 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
                 {...form.getInputProps("guestSeat")}
                 mt="1.5rem"
                 maw="10rem"
-              />
-            </Container>
+              /> */}
+            </Flex>
           ) : null}
-          {isDoubleBooking && (
-            <Text fz="lg" color="orange">
-              Doppelbuchung! Es können pro Vorstellung nur einmal Plätze
-              reserviert werden.
-            </Text>
-          )}
-          <Button type="submit" mt="2.5rem">
-            Platz buchen
-          </Button>
-        </form>
-        <Container maw="19.8rem">
-          {selectedShowImage && (
-            <Image src={selectedShowImage} alt="Movie poster" radius="sm" />
-          )}
-        </Container>
-      </Flex>
+        </Flex>
+        {isDoubleBooking && (
+          <Text fz="lg" color="orange">
+            Doppelbuchung! Es können pro Vorstellung nur einmal Plätze
+            reserviert werden.
+          </Text>
+        )}
+        <Button type="submit" mt="2.5rem">
+          Platz buchen
+        </Button>
+      </form>
+      {/* <Container maw="19.8rem">
+        {selectedShowImage && (
+          <Image src={selectedShowImage} alt="Movie poster" radius="sm" />
+        )}
+      </Container> */}
     </Box>
   );
 };

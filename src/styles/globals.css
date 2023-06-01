@@ -8,7 +8,11 @@ svg g#seats path:hover {
   fill: url("#seats-gradient-hover");
 }
 
-svg g#seats path[aria-disabled] {
+svg g#seats path[data-selected] {
+  fill: url("#seats-gradient-hover");
+}
+
+svg g#seats path[aria-disabled="true"] {
   cursor: unset;
   fill: url("#seats-gradient-disabled");
 }

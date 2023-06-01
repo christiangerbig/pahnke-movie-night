@@ -1,9 +1,15 @@
 import { Box, type BoxProps, Popover, Portal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { motion } from "framer-motion";
-import { type PropsWithChildren, forwardRef } from "react";
+import { type PropsWithChildren, forwardRef, useEffect } from "react";
 
 import { seatsData } from "../lib/seatsData";
+
+import {
+  useCinemaStore,
+  selectSelectedSeats,
+  selectSetSelectedSeats,
+} from "../hooks/useCinemaStore";
 
 const Defs = () => {
   return (
@@ -165,7 +171,11 @@ const Defs = () => {
 
 const PathGroup = forwardRef<
   SVGGElement,
-  { onMouseEnter: () => void; onMouseLeave: () => void } & BoxProps
+  {
+    onClick: (event: any) => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+  } & BoxProps
 >(({ children, ...rest }, ref) => {
   return (
     <Box<"g"> component="g" ref={ref} {...rest}>
@@ -182,11 +192,42 @@ interface SeatProps extends PropsWithChildren {
 
 const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
   const [opened, { close, open }] = useDisclosure(false);
+  const selectedSeats = useCinemaStore(selectSelectedSeats);
+  const setSelectedSeats = useCinemaStore(selectSetSelectedSeats);
+
+  // useEffect(() => {
+  //   console.log(selectedSeats);
+  // }, [selectedSeats]);
+
+  const handleClick = (
+    event: { target: { toggleAttribute: (arg0: string) => void } },
+    seatNumber: number,
+  ) => {
+    const clonedSelectedSeats = [...selectedSeats];
+    const index = clonedSelectedSeats.indexOf(seatNumber);
+    if (index === -1) {
+      clonedSelectedSeats.push(seatNumber);
+      setSelectedSeats(clonedSelectedSeats);
+    } else {
+      clonedSelectedSeats.splice(index, 1);
+      setSelectedSeats(clonedSelectedSeats);
+      event.target.toggleAttribute("data-selected");
+    }
+    if (selectedSeats.length < 2) {
+      event.target.toggleAttribute("data-selected");
+    }
+  };
 
   return (
     <Popover opened={opened}>
       <Popover.Target>
-        <PathGroup onMouseEnter={open} onMouseLeave={close}>
+        <PathGroup
+          onClick={(event): void => {
+            handleClick(event, seatNumber);
+          }}
+          onMouseEnter={open}
+          onMouseLeave={close}
+        >
           {children}
         </PathGroup>
       </Popover.Target>
@@ -199,15 +240,13 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
   );
 };
 
-// <path aria-disabled="true" d
-
 const Seats = () => {
   return (
     <g id="seats">
       {seatsData.map((seatData, index) => {
         return (
           <Seat seatNumber={index + 1} key={index.toString()}>
-            <path data-seat={index + 1} d={seatData} />
+            <path aria-disabled="false" data-seat={index + 1} d={seatData} />
           </Seat>
         );
       })}

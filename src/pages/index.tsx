@@ -49,8 +49,8 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
       <Container>
         <Title>Hello {user.email}</Title>
         <Button onClick={() => void handleLogout()}>Logout</Button>
-        <ReservationForm user={user} />
         <SeatSVG />
+        <ReservationForm user={user} />
       </Container>
     </Box>
   );
