@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import { useEffect, useState, type PropsWithChildren } from "react";
 // zustand
 import {
   useCinemaStore,
@@ -16,29 +16,32 @@ interface SeatProps extends PropsWithChildren {
 }
 
 const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
+  const [isSeatSelected, setIsSeatSelected] = useState<boolean>(false);
   const [opened, { close, open }] = useDisclosure(false);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const setSelectedSeats = useCinemaStore(selectSetSelectedSeats);
 
-  const handleClick = (
-    event: { target: { toggleAttribute: (arg0: string) => void } },
-    seatNumber: number,
-  ) => {
-    if (!event.target.hasAttribute("aria-disabled")) {
-      console.log("Hallo");
-      const clonedSelectedSeats = [...selectedSeats];
-      const index = clonedSelectedSeats.indexOf(seatNumber);
-      if (index === -1) {
-        clonedSelectedSeats.push(seatNumber);
-        setSelectedSeats(clonedSelectedSeats);
-      } else {
-        clonedSelectedSeats.splice(index, 1);
-        setSelectedSeats(clonedSelectedSeats);
-        event.target.toggleAttribute("data-selected");
-      }
-      if (selectedSeats.length < 2) {
-        event.target.toggleAttribute("data-selected");
-      }
+  // useEffect(() => {
+  //   setSelectedSeats([]);
+  // }, []);
+
+  useEffect(() => {
+    console.log(selectedSeats);
+    const clonedSelectedSeats = [...selectedSeats];
+    const index = clonedSelectedSeats.indexOf(seatNumber);
+    if (index === -1) {
+      clonedSelectedSeats.push(seatNumber);
+      setSelectedSeats(clonedSelectedSeats);
+    } else {
+      clonedSelectedSeats.splice(index, 1);
+      setSelectedSeats(clonedSelectedSeats);
+    }
+  }, [isSeatSelected]);
+
+  const handleClick = ({ target }: any) => {
+    if (!target.hasAttribute("aria-disabled")) {
+      setIsSeatSelected(!isSeatSelected);
+      target.toggleAttribute("data-selected");
     }
   };
 
@@ -47,7 +50,7 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
       <Popover.Target>
         <PathGroup
           onClick={(event): void => {
-            handleClick(event, seatNumber);
+            handleClick(event);
           }}
           onMouseEnter={open}
           onMouseLeave={close}

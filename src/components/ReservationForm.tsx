@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-// Mantine
+// mantine
 import {
   Box,
   Select,
@@ -28,7 +28,7 @@ import { fetchReservations } from "~/api/fetchReservations";
 import type { Database } from "~/lib/database.types";
 // zod
 import { z } from "zod";
-// ts-types
+// types
 import type { ReservationWithShow } from "~/lib/general.types";
 
 interface ReservationFormProps {
@@ -65,7 +65,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
-  // Component did mount
+  // component did mount
   useEffect(() => {
     setShowDatesSelection(
       shows.map(({ id, date }): ShowDateEntry => {
@@ -77,7 +77,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     );
   }, []);
 
-  // Selected Show/reservations change
+  // selected show/reservations change
   useEffect(() => {
     const reservedPlaceNumbers = reservations?.map((reservation) => {
       if (reservation.show.id === Number(selectedShow)) {
@@ -87,7 +87,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     });
 
     const freeSeats = [];
-    for (let placeNumber = 1; placeNumber <= 48; placeNumber++) {
+    for (let placeNumber = 1; placeNumber < 49; placeNumber++) {
       if (!reservedPlaceNumbers.includes(placeNumber)) {
         freeSeats.push(placeNumber);
       }
@@ -133,7 +133,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       }
     });
 
-  // Mantine form
+  // mantine form
   const form = useForm({
     initialValues: {
       show: "",
@@ -144,7 +144,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     validate: zodResolver(schema),
   });
 
-  // Submit
+  // submit
   const handleSubmit = ({
     show,
     isGuest,
@@ -170,7 +170,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       return;
     }
 
-    // component
     const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
         seat: selectedSeats[0],
