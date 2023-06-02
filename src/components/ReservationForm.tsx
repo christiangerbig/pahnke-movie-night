@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+// Mantine
 import {
   Box,
   Select,
@@ -9,27 +10,26 @@ import {
   Text,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+// zustand
 import {
   useCinemaStore,
   selectShows,
   selectReservations,
   selectFreeSeatsSelection,
-  selectIsDoubleBooking,
   selectSelectedSeats,
   selectSetReservations,
   selectSetFreeSeatsSelection,
-  selectSetIsDoubleBooking,
 } from "../hooks/useCinemaStore";
-import type { Database } from "~/lib/database.types";
+// supabase
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
 import { addReservations } from "~/api/addReservations";
-import { z } from "zod";
 import { fetchReservations } from "~/api/fetchReservations";
-
-export type Show = Database["public"]["Tables"]["shows"]["Row"];
-export type Reservation = Database["public"]["Tables"]["reservations"]["Row"];
-export type ReservationWithShow = Reservation & { show: Show };
+import type { Database } from "~/lib/database.types";
+// zod
+import { z } from "zod";
+// ts-types
+import type { ReservationWithShow } from "~/lib/general.types";
 
 interface ReservationFormProps {
   user: object;
@@ -52,6 +52,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     [],
   );
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
+  const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
   const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
     null,
   );
@@ -60,10 +61,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
   const freeSeatsSelection = useCinemaStore(selectFreeSeatsSelection);
-  const isDoubleBooking = useCinemaStore(selectIsDoubleBooking);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
-  const setIsDoubleBooking = useCinemaStore(selectSetIsDoubleBooking);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
   // Component did mount
@@ -171,6 +170,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       return;
     }
 
+    // component
     const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
       {
         seat: selectedSeats[0],
@@ -192,7 +192,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       userReservations.push(guestReservation);
       addReservations(userReservations)
         .then(() => {
-          // setSelectedShow("");
           setFreeSeatsSelection([]);
           fetchReservations()
             .then((updatedReservations): void => {
@@ -208,7 +207,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     } else {
       addReservation(userReservation)
         .then(() => {
-          // setSelectedShow("");
           setFreeSeatsSelection([]);
           fetchReservations()
             .then((updatedReservations): void => {
