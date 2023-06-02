@@ -1,5 +1,5 @@
-import type { Database } from "~/lib/database.types";
 import { supabaseAuthClient } from "~/pages";
+import type { Database } from "~/lib/database.types";
 
 export const addReservations = async (
   userReservations: Database["public"]["Tables"]["reservations"]["Insert"][],

@@ -1,7 +1,7 @@
 import { Table } from "@mantine/core";
-import dayjs from "dayjs";
-
 import type { Database } from "~/lib/database.types";
+
+import dayjs from "dayjs";
 
 interface PropTypes {
   shows: Database["public"]["Tables"]["shows"]["Row"][];

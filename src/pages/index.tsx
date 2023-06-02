@@ -1,22 +1,24 @@
+import type { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+// supabase
 import {
   createServerSupabaseClient,
   createBrowserSupabaseClient,
 } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import type { GetServerSideProps, NextPage } from "next";
+// mantine
 import { Box, Button, Container, Title } from "@mantine/core";
-
+// zustand
 import {
   useCinemaStore,
   selectSetShows,
   selectSetReservations,
 } from "../hooks/useCinemaStore";
-
+// types
 import type { Database } from "~/lib/database.types";
-import ReservationForm, {
-  type ReservationWithShow,
-} from "~/components/ReservationForm";
-import SeatSVG from "~/components/SeatSVG";
+import type { ReservationWithShow } from "~/lib/general.types";
+// components
+import ReservationForm from "~/components/ReservationForm";
+import SeatSVG from "~/components/Cinema/SeatSVG";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
