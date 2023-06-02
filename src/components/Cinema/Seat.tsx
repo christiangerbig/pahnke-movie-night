@@ -1,9 +1,10 @@
-import { useEffect, useState, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 // zustand
 import {
   useCinemaStore,
   selectSelectedSeats,
-  selectSetSelectedSeats,
+  selectAddSelectedSeat,
+  selectRemoveSelectedSeat,
 } from "../../hooks/useCinemaStore";
 // mantine
 import { Popover, Portal } from "@mantine/core";
@@ -16,32 +17,16 @@ interface SeatProps extends PropsWithChildren {
 }
 
 const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
-  const [isSeatSelected, setIsSeatSelected] = useState<boolean>(false);
   const [opened, { close, open }] = useDisclosure(false);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
-  const setSelectedSeats = useCinemaStore(selectSetSelectedSeats);
+  const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
+  const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
-  // useEffect(() => {
-  //   setSelectedSeats([]);
-  // }, []);
-
-  useEffect(() => {
-    console.log(selectedSeats);
-    const clonedSelectedSeats = [...selectedSeats];
-    const index = clonedSelectedSeats.indexOf(seatNumber);
-    if (index === -1) {
-      clonedSelectedSeats.push(seatNumber);
-      setSelectedSeats(clonedSelectedSeats);
+  const handleClick = () => {
+    if (selectedSeats.includes(seatNumber)) {
+      removeSelectedSeat(seatNumber);
     } else {
-      clonedSelectedSeats.splice(index, 1);
-      setSelectedSeats(clonedSelectedSeats);
-    }
-  }, [isSeatSelected]);
-
-  const handleClick = ({ target }: any) => {
-    if (!target.hasAttribute("aria-disabled")) {
-      setIsSeatSelected(!isSeatSelected);
-      target.toggleAttribute("data-selected");
+      addSelectedSeat(seatNumber);
     }
   };
 
@@ -49,9 +34,7 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
     <Popover opened={opened}>
       <Popover.Target>
         <PathGroup
-          onClick={(event): void => {
-            handleClick(event);
-          }}
+          onClick={handleClick}
           onMouseEnter={open}
           onMouseLeave={close}
         >

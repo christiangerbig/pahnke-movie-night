@@ -18,6 +18,7 @@ import {
   selectSelectedSeats,
   selectSetReservations,
   selectSetFreeSeatsSelection,
+  selectResetSelectedSeats,
 } from "../hooks/useCinemaStore";
 // supabase
 import type { User } from "@supabase/supabase-js";
@@ -62,6 +63,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
+  const resetSelectedSeates = useCinemaStore(selectResetSelectedSeats);
 
   // component did mount
   useEffect(() => {
@@ -151,6 +153,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
+    console.log(selectedSeats);
 
     let isDoubleBooking = false;
 
@@ -174,7 +177,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         show: parseInt(show),
         user: (user as User).id,
       };
-    if (isGuest) {
+
+    if (isGuest && selectedSeats[1]) {
       const userReservations = [];
       userReservations.push(userReservation);
       const guestReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
@@ -251,6 +255,9 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               {...form.getInputProps("show")}
               onChange={(values) => {
                 setSelectedShow(values);
+
+                resetSelectedSeates();
+
                 values && form.setValues({ show: values });
               }}
             />
