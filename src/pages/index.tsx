@@ -20,6 +20,8 @@ import type { ReservationWithShow } from "~/lib/general.types";
 import ReservationForm from "~/components/ReservationForm";
 import SeatSVG from "~/components/Cinema/SeatSVG";
 
+import dayjs from "dayjs";
+
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 interface PropTypes {
@@ -100,7 +102,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .select(`*, show!inner (*)`);
   // .eq("show.date", "2023-05-02");
 
-  const { data: shows } = await supabaseAuthServer.from("shows").select();
+  const { data: shows } = await supabaseAuthServer
+    .from("shows")
+    .select()
+    .gte("date", dayjs(new Date()).format("YYYY-MM-DD"));
 
   return {
     props: {
