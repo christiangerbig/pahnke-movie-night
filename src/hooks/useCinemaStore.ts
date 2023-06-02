@@ -12,6 +12,9 @@ interface CinemaState {
     setReservations: (reservations: ReservationWithShow[]) => void;
     setFreeSeatsSelection: (freeSeatsSelection: number[]) => void;
     setSelectedSeats: (selectedSeats: number[]) => void;
+    addSelectedSeat: (selectedSeat: number) => void;
+    removeSelectedSeat: (selectedSeat: number) => void;
+    resetSelectedSeats: () => void;
   };
 }
 
@@ -34,6 +37,22 @@ export const useCinemaStore = create<CinemaState>((set) => ({
     setSelectedSeats: (selectedSeats) => {
       set({ selectedSeats });
     },
+    addSelectedSeat: (selectedSeat: number) => {
+      set((state) => {
+        if (state.selectedSeats.length < 2) {
+          return { selectedSeats: [...state.selectedSeats, selectedSeat] };
+        }
+
+        return { selectedSeats: state.selectedSeats };
+      });
+    },
+    removeSelectedSeat: (selectedSeat: number) =>
+      set((state) => ({
+        selectedSeats: state.selectedSeats.filter(
+          (item) => item !== selectedSeat,
+        ),
+      })),
+    resetSelectedSeats: () => set({ selectedSeats: [] }),
   },
 }));
 
@@ -52,6 +71,14 @@ const selectors = {
   }: CinemaState) => setFreeSeatsSelection,
   selectSetSelectedSeats: ({ actions: { setSelectedSeats } }: CinemaState) =>
     setSelectedSeats,
+  selectAddSelectedSeat: ({ actions: { addSelectedSeat } }: CinemaState) =>
+    addSelectedSeat,
+  selectRemoveSelectedSeat: ({
+    actions: { removeSelectedSeat },
+  }: CinemaState) => removeSelectedSeat,
+  selectResetSelectedSeats: ({
+    actions: { resetSelectedSeats },
+  }: CinemaState) => resetSelectedSeats,
 };
 
 export const {
@@ -64,4 +91,7 @@ export const {
   selectSetReservations,
   selectSetFreeSeatsSelection,
   selectSetSelectedSeats,
+  selectAddSelectedSeat,
+  selectRemoveSelectedSeat,
+  selectResetSelectedSeats,
 } = selectors;
