@@ -6,7 +6,7 @@ import {
   createBrowserSupabaseClient,
 } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, Button, Container, Title } from "@mantine/core";
+import { Box, Button, Container, Flex, Title } from "@mantine/core";
 // zustand
 import {
   useCinemaStore,
@@ -49,10 +49,26 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
   return (
     <Box component="main">
       <Container>
-        <Title>Hello {user.email}</Title>
-        <Button onClick={() => void handleLogout()}>Logout</Button>
-        <SeatSVG />
-        <ReservationForm user={user} />
+        <Flex
+          justify="space-between"
+          align="flex-start"
+          direction="row"
+          mt={"1.5rem"}
+        >
+          <Title order={3}>Hello {user.email}</Title>
+          <Button compact onClick={() => void handleLogout()}>
+            Logout
+          </Button>
+        </Flex>
+        <Flex
+          justify="space-between"
+          align="flex-start"
+          direction="row"
+          mt="2rem"
+        >
+          <ReservationForm user={user} />
+          <SeatSVG />
+        </Flex>
       </Container>
     </Box>
   );

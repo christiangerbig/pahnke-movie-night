@@ -8,7 +8,7 @@ import Screen from "./Screen";
 
 const SeatSVG = () => {
   return (
-    <Box sx={{ overflow: "hidden" }}>
+    <Box sx={{ overflow: "hidden" }} w="60rem">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xlinkHref="http://www.w3.org/1999/xlink"

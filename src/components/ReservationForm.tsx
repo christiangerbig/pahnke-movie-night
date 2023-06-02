@@ -15,7 +15,6 @@ import {
   useCinemaStore,
   selectShows,
   selectReservations,
-  selectFreeSeatsSelection,
   selectSelectedSeats,
   selectSetReservations,
   selectSetFreeSeatsSelection,
@@ -53,14 +52,13 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   );
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
-  const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
-    null,
-  );
+  // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
+  //   null,
+  // );
   const checkboxRef = useRef<HTMLInputElement>(null);
 
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
-  const freeSeatsSelection = useCinemaStore(selectFreeSeatsSelection);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
@@ -94,11 +92,11 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     }
     setFreeSeatsSelection(freeSeats);
 
-    shows.map((show) => {
-      if (show.id === Number(selectedShow)) {
-        setSelectedShowImage(show.movie_poster);
-      }
-    });
+    //   shows.map((show) => {
+    //     if (show.id === Number(selectedShow)) {
+    //       setSelectedShowImage(show.movie_poster);
+    //     }
+    //   });
   }, [selectedShow, reservations]);
 
   // zod schema
@@ -233,14 +231,19 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
           align="flex-start"
           direction="row"
           wrap="wrap"
+          h={"17rem"}
         >
           <Flex
             justify="flex-start"
             align="flex-start"
             direction="column"
-            mr="10rem"
+            mr="2rem"
+            w={"10rem"}
           >
             <Select
+              ml={"0rem"}
+              mr={"2.5rem"}
+              size="xs"
               data={showDatesSelection}
               label="Show"
               placeholder="Wähle eine Show aus..."
@@ -250,50 +253,36 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
                 setSelectedShow(values);
                 values && form.setValues({ show: values });
               }}
-              maw="10rem"
             />
-            {/* <Select
-            data={freeSeatsSelection}
-            label="Platzauswahl"
-            placeholder="Wähle einen Platz aus..."
-            withAsterisk
-            {...form.getInputProps("seat")}
-            mt="1.5rem"
-            maw="10rem"
-            /> */}
             <Checkbox
+              size="xs"
               label="Gast?"
               ref={checkboxRef}
               {...form.getInputProps("isGuest")}
               mt="2.5rem"
             />
+            {form.values.isGuest ? (
+              <Box mt={"1.3rem"}>
+                <TextInput
+                  ml={"0rem"}
+                  mr={"2.5rem"}
+                  size="xs"
+                  label="Gast Vorname"
+                  placeholder="Vorname"
+                  {...form.getInputProps("guestFirstName")}
+                />
+                <TextInput
+                  ml={"0rem"}
+                  mr={"2.5rem"}
+                  size="xs"
+                  label="Gast Nachname"
+                  placeholder="NachName"
+                  {...form.getInputProps("guestSurname")}
+                  mt="1.5rem"
+                />
+              </Box>
+            ) : null}
           </Flex>
-          {form.values.isGuest ? (
-            <Flex justify="flex-start" align="flex-start" direction="column">
-              <TextInput
-                label="Gast Vorname"
-                placeholder="Vorname"
-                {...form.getInputProps("guestFirstName")}
-                maw="10rem"
-              />
-              <TextInput
-                label="Gast Nachname"
-                placeholder="NachName"
-                {...form.getInputProps("guestSurname")}
-                mt="1.5rem"
-                maw="10rem"
-              />
-              {/* <Select
-                data={freeSeatsSelection}
-                label="Platzauswahl"
-                placeholder="Wähle einen Platz aus..."
-                withAsterisk
-                {...form.getInputProps("guestSeat")}
-                mt="1.5rem"
-                maw="10rem"
-              /> */}
-            </Flex>
-          ) : null}
         </Flex>
         {isDoubleBooking && (
           <Text fz="lg" color="orange">
@@ -301,15 +290,10 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             reserviert werden.
           </Text>
         )}
-        <Button type="submit" mt="2.5rem">
-          Platz buchen
+        <Button type="submit" mt="1.5rem" compact>
+          buchen
         </Button>
       </form>
-      {/* <Container maw="19.8rem">
-        {selectedShowImage && (
-          <Image src={selectedShowImage} alt="Movie poster" radius="sm" />
-        )}
-      </Container> */}
     </Box>
   );
 };
