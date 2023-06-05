@@ -38,19 +38,17 @@ export const useCinemaStore = create<CinemaState>((set) => ({
       set({ selectedSeats });
     },
     addSelectedSeat: (selectedSeat: number) => {
-      set((state) => {
-        if (state.selectedSeats.length < 2) {
-          return { selectedSeats: [...state.selectedSeats, selectedSeat] };
+      set(({ selectedSeats }) => {
+        if (selectedSeats.length < 2) {
+          return { selectedSeats: [...selectedSeats, selectedSeat] };
         }
 
-        return { selectedSeats: state.selectedSeats };
+        return { selectedSeats };
       });
     },
     removeSelectedSeat: (selectedSeat: number) =>
-      set((state) => ({
-        selectedSeats: state.selectedSeats.filter(
-          (item) => item !== selectedSeat,
-        ),
+      set(({ selectedSeats }) => ({
+        selectedSeats: selectedSeats.filter((item) => item !== selectedSeat),
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
   },

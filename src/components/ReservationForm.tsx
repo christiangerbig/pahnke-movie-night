@@ -153,7 +153,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
-    console.log(selectedSeats);
+    console.log("submit:", selectedSeats);
 
     let isDoubleBooking = false;
 
@@ -171,55 +171,57 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       return;
     }
 
-    const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
-      {
-        seat: selectedSeats[0],
-        show: parseInt(show),
-        user: (user as User).id,
-      };
-
-    if (isGuest && selectedSeats[1]) {
-      const userReservations = [];
-      userReservations.push(userReservation);
-      const guestReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
+    if (selectedSeats[0]) {
+      const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
-          seat: selectedSeats[1],
+          seat: selectedSeats[0],
           show: parseInt(show),
           user: (user as User).id,
-          guest_firstname: guestFirstName,
-          guest_surname: guestSurname,
-          is_guest: true,
         };
-      userReservations.push(guestReservation);
-      addReservations(userReservations)
-        .then(() => {
-          setFreeSeatsSelection([]);
-          fetchReservations()
-            .then((updatedReservations): void => {
-              setReservations(updatedReservations as ReservationWithShow[]);
-            })
-            .catch((err) => {
-              console.log("Fehler:", err);
-            });
-        })
-        .catch((err) => {
-          console.log("Fehler:", err);
-        });
-    } else {
-      addReservation(userReservation)
-        .then(() => {
-          setFreeSeatsSelection([]);
-          fetchReservations()
-            .then((updatedReservations): void => {
-              setReservations(updatedReservations as ReservationWithShow[]);
-            })
-            .catch((err) => {
-              console.log("Fehler:", err);
-            });
-        })
-        .catch((err) => {
-          console.log("Fehler:", err);
-        });
+
+      if (isGuest && selectedSeats[1]) {
+        const userReservations = [];
+        userReservations.push(userReservation);
+        const guestReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
+          {
+            seat: selectedSeats[1],
+            show: parseInt(show),
+            user: (user as User).id,
+            guest_firstname: guestFirstName,
+            guest_surname: guestSurname,
+            is_guest: true,
+          };
+        userReservations.push(guestReservation);
+        addReservations(userReservations)
+          .then(() => {
+            setFreeSeatsSelection([]);
+            fetchReservations()
+              .then((updatedReservations): void => {
+                setReservations(updatedReservations as ReservationWithShow[]);
+              })
+              .catch((err) => {
+                console.log("Fehler:", err);
+              });
+          })
+          .catch((err) => {
+            console.log("Fehler:", err);
+          });
+      } else {
+        addReservation(userReservation)
+          .then(() => {
+            setFreeSeatsSelection([]);
+            fetchReservations()
+              .then((updatedReservations): void => {
+                setReservations(updatedReservations as ReservationWithShow[]);
+              })
+              .catch((err) => {
+                console.log("Fehler:", err);
+              });
+          })
+          .catch((err) => {
+            console.log("Fehler:", err);
+          });
+      }
     }
   };
 

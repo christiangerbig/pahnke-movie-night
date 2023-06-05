@@ -23,6 +23,7 @@ const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
   const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
   const handleClick = () => {
+    console.log("Plätze:", selectedSeats);
     if (selectedSeats.includes(seatNumber)) {
       removeSelectedSeat(seatNumber);
     } else {
