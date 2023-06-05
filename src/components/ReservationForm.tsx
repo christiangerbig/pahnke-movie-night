@@ -31,6 +31,8 @@ import { z } from "zod";
 // types
 import type { ReservationWithShow } from "~/lib/general.types";
 
+import dayjs from "dayjs";
+
 interface ReservationFormProps {
   user: object;
 }
@@ -71,7 +73,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       shows.map(({ id, date }): ShowDateEntry => {
         return {
           value: id.toString(),
-          label: date.toString(),
+          label: dayjs(date).format("DD. MMMM YYYY").toString(),
         };
       }),
     );
