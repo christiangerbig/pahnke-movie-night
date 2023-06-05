@@ -110,6 +110,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
 
   // showDatesSelection change
   useEffect(() => {
+    showDatesSelection[0] && setSelectedShow(showDatesSelection[0].value);
+    resetSelectedSeates();
     form.setValues({ show: showDatesSelection[0]?.value.toString() });
   }, [showDatesSelection]);
 
