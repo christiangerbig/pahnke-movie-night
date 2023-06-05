@@ -21,6 +21,7 @@ import ReservationForm from "~/components/ReservationForm";
 import SeatSVG from "~/components/Cinema/SeatSVG";
 
 import dayjs from "dayjs";
+import ReservationDisplay from "~/components/ReservationDisplay";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -68,7 +69,10 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
           direction="row"
           mt="2rem"
         >
-          <ReservationForm user={user} />
+          <Flex justify="flex-start" align="flex-start" direction="column">
+            <ReservationForm user={user} />
+            <ReservationDisplay />
+          </Flex>
           <SeatSVG />
         </Flex>
       </Container>
