@@ -84,7 +84,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     );
   }, []);
 
-  // selected show/reservations change
+  // selectedShow / reservations change
   useEffect(() => {
     const reservedPlaceNumbers = reservations?.map((reservation) => {
       if (reservation.show.id === Number(selectedShow)) {
@@ -107,6 +107,11 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     //     }
     //   });
   }, [selectedShow, reservations]);
+
+  // showDatesSelection change
+  useEffect(() => {
+    form.setValues({ show: showDatesSelection[0]?.value.toString() });
+  }, [showDatesSelection]);
 
   // zod schema
   const schema = z
@@ -179,7 +184,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         message: "Nur eine Buchung pro Vorstellung möglich.",
         autoClose: 10000,
       });
-
       return;
     }
 
