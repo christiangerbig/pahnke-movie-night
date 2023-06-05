@@ -58,7 +58,7 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
           direction="row"
           mt={"1.5rem"}
         >
-          <Title order={4}>Hello {user.email}</Title>
+          <Title order={4}>Hallo {user.email}</Title>
           <Button compact onClick={() => void handleLogout()}>
             Logout
           </Button>

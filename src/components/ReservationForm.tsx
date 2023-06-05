@@ -16,9 +16,11 @@ import {
   selectShows,
   selectReservations,
   selectSelectedSeats,
+  selectIsGuest,
   selectSetReservations,
   selectSetFreeSeatsSelection,
   selectResetSelectedSeats,
+  selectSetIsGuest,
 } from "../hooks/useCinemaStore";
 // supabase
 import type { User } from "@supabase/supabase-js";
@@ -62,10 +64,12 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
 
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
+  const isGuest = useCinemaStore(selectIsGuest);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const resetSelectedSeates = useCinemaStore(selectResetSelectedSeats);
+  const setIsGuest = useCinemaStore(selectSetIsGuest);
 
   // component did mount
   useEffect(() => {
@@ -169,7 +173,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     });
 
     if (isDoubleBooking) {
-      console.log("DoubleBooking");
       return;
     }
 
@@ -257,12 +260,10 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               placeholder="Wähle eine Show aus..."
               withAsterisk
               {...form.getInputProps("show")}
-              onChange={(values) => {
-                setSelectedShow(values);
-
+              onChange={(value) => {
+                setSelectedShow(value);
                 resetSelectedSeates();
-
-                values && form.setValues({ show: values });
+                value && form.setValues({ show: value });
               }}
             />
             <Checkbox
@@ -270,6 +271,10 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               label="Gast?"
               ref={checkboxRef}
               {...form.getInputProps("isGuest")}
+              onChange={() => {
+                form.setValues({ isGuest: !isGuest });
+                setIsGuest(!isGuest);
+              }}
               mt="2.5rem"
             />
             {form.values.isGuest ? (

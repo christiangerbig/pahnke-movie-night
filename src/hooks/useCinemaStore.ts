@@ -6,6 +6,7 @@ interface CinemaState {
   reservations: ReservationWithShow[];
   freeSeatsSelection: number[];
   selectedSeats: number[];
+  isGuest: boolean;
 
   actions: {
     setShows: (shows: Show[]) => void;
@@ -15,6 +16,7 @@ interface CinemaState {
     addSelectedSeat: (selectedSeat: number) => void;
     removeSelectedSeat: (selectedSeat: number) => void;
     resetSelectedSeats: () => void;
+    setIsGuest: (isGuest: boolean) => void;
   };
 }
 
@@ -23,6 +25,7 @@ export const useCinemaStore = create<CinemaState>((set) => ({
   reservations: [],
   freeSeatsSelection: [],
   selectedSeats: [],
+  isGuest: false,
 
   actions: {
     setShows: (shows) => {
@@ -38,8 +41,8 @@ export const useCinemaStore = create<CinemaState>((set) => ({
       set({ selectedSeats });
     },
     addSelectedSeat: (selectedSeat: number) => {
-      set(({ selectedSeats }) => {
-        if (selectedSeats.length < 2) {
+      set(({ selectedSeats, isGuest }) => {
+        if (selectedSeats.length < (isGuest ? 2 : 1)) {
           return { selectedSeats: [...selectedSeats, selectedSeat] };
         }
 
@@ -51,6 +54,7 @@ export const useCinemaStore = create<CinemaState>((set) => ({
         selectedSeats: selectedSeats.filter((item) => item !== selectedSeat),
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
+    setIsGuest: (isGuest) => set({ isGuest }),
   },
 }));
 
@@ -60,6 +64,7 @@ const selectors = {
   selectFreeSeatsSelection: ({ freeSeatsSelection }: CinemaState) =>
     freeSeatsSelection,
   selectSelectedSeats: ({ selectedSeats }: CinemaState) => selectedSeats,
+  selectIsGuest: ({ isGuest }: CinemaState) => isGuest,
   // Actions
   selectSetShows: ({ actions: { setShows } }: CinemaState) => setShows,
   selectSetReservations: ({ actions: { setReservations } }: CinemaState) =>
@@ -77,6 +82,7 @@ const selectors = {
   selectResetSelectedSeats: ({
     actions: { resetSelectedSeats },
   }: CinemaState) => resetSelectedSeats,
+  selectSetIsGuest: ({ actions: { setIsGuest } }: CinemaState) => setIsGuest,
 };
 
 export const {
@@ -84,6 +90,7 @@ export const {
   selectReservations,
   selectFreeSeatsSelection,
   selectSelectedSeats,
+  selectIsGuest,
   // Actions
   selectSetShows,
   selectSetReservations,
@@ -92,4 +99,5 @@ export const {
   selectAddSelectedSeat,
   selectRemoveSelectedSeat,
   selectResetSelectedSeats,
+  selectSetIsGuest,
 } = selectors;
