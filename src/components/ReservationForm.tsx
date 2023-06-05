@@ -22,6 +22,7 @@ import {
   selectResetSelectedSeats,
   selectSetIsGuest,
 } from "../hooks/useCinemaStore";
+import { notifications } from "@mantine/notifications";
 // supabase
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
@@ -173,6 +174,12 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     });
 
     if (isDoubleBooking) {
+      notifications.show({
+        title: "Doppelte Buchung!",
+        message: "Nur eine Buchung pro Vorstellung möglich.",
+        autoClose: 10000,
+      });
+
       return;
     }
 
@@ -300,12 +307,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             ) : null}
           </Flex>
         </Flex>
-        {isDoubleBooking && (
-          <Text fz="lg" color="orange">
-            Doppelbuchung! Es können pro Vorstellung nur einmal Plätze
-            reserviert werden.
-          </Text>
-        )}
         <Button type="submit" mt="1.5rem" compact>
           buchen
         </Button>
