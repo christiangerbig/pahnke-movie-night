@@ -17,11 +17,11 @@ import {
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 // components
-import ReservationForm from "~/components/Booking/ReservationForm";
-import SeatSVG from "~/components/Cinema/SeatSVG";
+import ReservationForm from "~/components/booking/ReservationForm";
+import SeatSVG from "~/components/cinema/SeatSVG";
 
 import dayjs from "dayjs";
-import ReservationDisplay from "~/components/Booking/ReservationDisplay";
+import ReservationDisplay from "~/components/booking/ReservationDisplay";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
