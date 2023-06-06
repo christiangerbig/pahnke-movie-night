@@ -104,12 +104,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { data: reservations } = await supabaseAuthServer
     .from("reservations")
     .select(`*, show!inner (*)`);
-  // .eq("show.date", "2023-05-02");
 
   const { data: shows } = await supabaseAuthServer
     .from("shows")
     .select()
-    .gte("date", dayjs(new Date()).format("YYYY-MM-DD"));
+    .gte("date", dayjs(new Date()).format("YYYY-MM-DD"))
+    .order("date", { ascending: true });
 
   return {
     props: {
