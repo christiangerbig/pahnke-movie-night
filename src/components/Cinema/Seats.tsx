@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 // hooks
 import {
   useCinemaStore,
-  selectFreeSeatsSelection,
+  selectFreeSeats,
   selectSelectedSeats,
 } from "../../hooks/useCinemaStore";
 // data
@@ -11,7 +11,7 @@ import { seatsData } from "../../lib/seatsData";
 import Seat from "./Seat";
 
 const Seats = () => {
-  const freeSeatsSelection = useCinemaStore(selectFreeSeatsSelection);
+  const freeSeats = useCinemaStore(selectFreeSeats);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
   useEffect(() => {
@@ -21,12 +21,12 @@ const Seats = () => {
       element?.setAttribute("aria-disabled", "");
     }
 
-    freeSeatsSelection.map((entry) => {
+    freeSeats.map((entry) => {
       const selectorString = `[data-seat='${entry}']`;
       const element = document.querySelector(selectorString);
       element?.toggleAttribute("aria-disabled");
     });
-  }, [freeSeatsSelection]);
+  }, [freeSeats]);
 
   return (
     <g id="seats">

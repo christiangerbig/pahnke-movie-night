@@ -1,14 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 // mantine
-import {
-  Box,
-  Select,
-  Button,
-  TextInput,
-  Checkbox,
-  Flex,
-  Text,
-} from "@mantine/core";
+import { Box, Select, Button, TextInput, Checkbox, Flex } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 // zustand
 import {
@@ -18,7 +10,7 @@ import {
   selectSelectedSeats,
   selectIsGuest,
   selectSetReservations,
-  selectSetFreeSeatsSelection,
+  selectSetFreeSeats,
   selectResetSelectedSeats,
   selectSetIsGuest,
 } from "../../hooks/useCinemaStore";
@@ -67,7 +59,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const reservations = useCinemaStore(selectReservations);
   const isGuest = useCinemaStore(selectIsGuest);
   const setReservations = useCinemaStore(selectSetReservations);
-  const setFreeSeatsSelection = useCinemaStore(selectSetFreeSeatsSelection);
+  const setFreeSeats = useCinemaStore(selectSetFreeSeats);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const resetSelectedSeates = useCinemaStore(selectResetSelectedSeats);
   const setIsGuest = useCinemaStore(selectSetIsGuest);
@@ -99,7 +91,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         freeSeats.push(placeNumber);
       }
     }
-    setFreeSeatsSelection(freeSeats);
+    setFreeSeats(freeSeats);
 
     //   shows.map((show) => {
     //     if (show.id === Number(selectedShow)) {
@@ -212,7 +204,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         userReservations.push(guestReservation);
         addReservations(userReservations)
           .then(() => {
-            setFreeSeatsSelection([]);
+            setFreeSeats([]);
             fetchReservations()
               .then((updatedReservations): void => {
                 setReservations(updatedReservations as ReservationWithShow[]);
@@ -227,7 +219,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       } else {
         addReservation(userReservation)
           .then(() => {
-            setFreeSeatsSelection([]);
+            setFreeSeats([]);
             fetchReservations()
               .then((updatedReservations): void => {
                 setReservations(updatedReservations as ReservationWithShow[]);
