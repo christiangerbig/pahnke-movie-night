@@ -1,6 +1,4 @@
 import { useState } from "react";
-// next
-import type { AppProps } from "next/app";
 // supabase
 import {
   SessionContextProvider,
@@ -12,6 +10,8 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 // styles
 import "~/styles/globals.css";
+// types
+import type { AppProps } from "next/app";
 
 const App = ({
   Component,

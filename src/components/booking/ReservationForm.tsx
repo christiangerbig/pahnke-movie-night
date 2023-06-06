@@ -12,11 +12,9 @@ import {
   selectSetIsGuest,
 } from "../../hooks/useCinemaStore";
 // supabase
-import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
 import { addReservations } from "~/api/addReservations";
 import { fetchReservations } from "~/api/fetchReservations";
-import type { Database } from "~/lib/database.types";
 // mantine
 import { Box, Select, Button, TextInput, Checkbox, Flex } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
@@ -26,6 +24,8 @@ import { z } from "zod";
 // dayjs
 import dayjs from "dayjs";
 // types
+import type { User } from "@supabase/supabase-js";
+import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 
 interface ReservationFormProps {
@@ -150,7 +150,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     validate: zodResolver(schema),
   });
 
-  // submit
+  // submit.main
   const handleSubmit = ({
     show,
     isGuest,
@@ -160,6 +160,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
+    // submit.doubleBooking
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
@@ -183,6 +184,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       return;
     }
 
+    // submit.booking
     if (selectedSeats[0]) {
       const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
         setReservations(updatedReservations);
@@ -197,7 +199,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
           autoClose: 8000,
         });
       };
-
       const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
           seat: selectedSeats[0],

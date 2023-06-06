@@ -1,4 +1,3 @@
-import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 // supabase
 import {
@@ -19,7 +18,9 @@ import dayjs from "dayjs";
 import ReservationForm from "~/components/booking/ReservationForm";
 import ReservationDisplay from "~/components/booking/ReservationDisplay";
 import SeatSVG from "~/components/cinema/SeatSVG";
+import ReservationOverview from "~/components/booking/ReservationOverview";
 // types
+import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 
@@ -75,6 +76,7 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
           </Flex>
           <SeatSVG />
         </Flex>
+        <ReservationOverview user={user} />
       </Container>
     </Box>
   );

@@ -1,6 +1,5 @@
 import { CornerDownLeft } from "lucide-react";
 // next
-import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 // mantine
 import { Box, Container, Title, Button, Modal, Flex } from "@mantine/core";
@@ -12,6 +11,7 @@ import "dayjs/locale/de";
 import { AddShowForm } from "~/components/AddShowForm";
 import { ShowsTable } from "~/components/ShowsTable";
 // types
+import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 
 interface PropTypes {

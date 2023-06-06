@@ -1,4 +1,5 @@
 import { supabaseAuthClient } from "~/pages";
+// types
 import type { Database } from "~/lib/database.types";
 
 export const addReservation = async (
