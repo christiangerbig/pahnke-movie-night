@@ -18,12 +18,13 @@ interface SeatProps extends PropsWithChildren {
 
 const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
   const [opened, { close, open }] = useDisclosure(false);
+  // zustand
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
   const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
+  // click handler
   const handleClick = () => {
-    console.log("Plätze:", selectedSeats);
     if (selectedSeats.includes(seatNumber)) {
       removeSelectedSeat(seatNumber);
     } else {

@@ -14,6 +14,7 @@ const Seats = () => {
   const freeSeats = useCinemaStore(selectFreeSeats);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
+  // hook freeSeats change
   useEffect(() => {
     for (let i = 1; i < 49; i++) {
       const selectorString = `[data-seat='${i}']`;

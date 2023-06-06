@@ -29,7 +29,6 @@ export const AddShowForm: React.FC = () => {
       date: dayjs().toDate(),
       poster: undefined as FileWithPath | undefined,
     },
-
     validate: {
       title: isNotEmpty("Es muss ein Filmtitel angegeben werden"),
       date: isNotEmpty("Es muss ein Datum angegeben werden"),
@@ -66,6 +65,7 @@ export const AddShowForm: React.FC = () => {
     return;
   };
 
+  // submit
   const handleSubmit = async (values: {
     date: Date;
     title: string;

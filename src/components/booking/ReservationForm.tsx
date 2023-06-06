@@ -45,28 +45,25 @@ interface HandleSubmitArgs {
 }
 
 const ReservationForm = ({ user }: ReservationFormProps) => {
-  const [showDatesSelection, setShowDatesSelection] = useState<ShowDateEntry[]>(
-    [],
-  );
+  const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
-  // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(
-  //   null,
-  // );
+  // -> movie poster not yet supported <-
+  // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
-
+  // zustand
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const isGuest = useCinemaStore(selectIsGuest);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeats = useCinemaStore(selectSetFreeSeats);
-  const resetSelectedSeates = useCinemaStore(selectResetSelectedSeats);
+  const resetSelectedSeats = useCinemaStore(selectResetSelectedSeats);
   const setIsGuest = useCinemaStore(selectSetIsGuest);
 
-  // component did mount
+  // hook component did mount
   useEffect(() => {
-    setShowDatesSelection(
+    setShowDates(
       shows.map(({ id, date }): ShowDateEntry => {
         return {
           value: id.toString(),
@@ -74,14 +71,23 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         };
       }),
     );
+
+    resetSelectedSeats();
   }, []);
 
-  // selectedShow / reservations change
+  // hook showDates change
+  useEffect(() => {
+    showDates[0] && setSelectedShow(showDates[0].value);
+    form.setValues({ show: showDates[0]?.value.toString() });
+  }, [showDates]);
+
+  // hook selectedShow / reservations change
   useEffect(() => {
     const reservedPlaceNumbers = reservations?.map((reservation) => {
       if (reservation.show.id === Number(selectedShow)) {
         return reservation.seat;
       }
+
       return null;
     });
 
@@ -100,13 +106,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     //     }
     //   });
   }, [selectedShow, reservations]);
-
-  // showDatesSelection change
-  useEffect(() => {
-    showDatesSelection[0] && setSelectedShow(showDatesSelection[0].value);
-    resetSelectedSeates();
-    form.setValues({ show: showDatesSelection[0]?.value.toString() });
-  }, [showDatesSelection]);
 
   // zod schema
   const schema = z
@@ -160,10 +159,8 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   }: HandleSubmitArgs) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
-    console.log("submit:", selectedSeats);
 
     let isDoubleBooking = false;
-
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
@@ -172,24 +169,41 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         }
       }
     });
-
     if (isDoubleBooking) {
+      resetSelectedSeats();
+      showDates[0] && setSelectedShow(showDates[0].value);
+      form.setValues({
+        show: showDates[0]?.value.toString(),
+      });
       notifications.show({
         title: "Doppelte Buchung!",
         message: "Nur eine Buchung pro Vorstellung möglich.",
-        autoClose: 10000,
+        autoClose: 8000,
       });
       return;
     }
 
     if (selectedSeats[0]) {
+      const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
+        setReservations(updatedReservations);
+        resetSelectedSeats();
+        showDates[0] && setSelectedShow(showDates[0].value);
+        form.setValues({
+          show: showDates[0]?.value.toString(),
+        });
+        notifications.show({
+          title: "",
+          message: "Buchung war erfolgreich.",
+          autoClose: 8000,
+        });
+      };
+
       const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
           seat: selectedSeats[0],
           show: parseInt(show),
           user: (user as User).id,
         };
-
       if (isGuest && selectedSeats[1]) {
         const userReservations = [];
         userReservations.push(userReservation);
@@ -208,7 +222,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             setFreeSeats([]);
             fetchReservations()
               .then((updatedReservations): void => {
-                setReservations(updatedReservations as ReservationWithShow[]);
+                bookingCleanup(updatedReservations as ReservationWithShow[]);
               })
               .catch((err) => {
                 console.log("Fehler:", err);
@@ -223,7 +237,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             setFreeSeats([]);
             fetchReservations()
               .then((updatedReservations): void => {
-                setReservations(updatedReservations as ReservationWithShow[]);
+                bookingCleanup(updatedReservations as ReservationWithShow[]);
               })
               .catch((err) => {
                 console.log("Fehler:", err);
@@ -261,14 +275,14 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               ml={"0rem"}
               mr={"2.5rem"}
               size="xs"
-              data={showDatesSelection}
+              data={showDates}
               label="Show"
               placeholder="Wähle eine Show aus..."
               withAsterisk
               {...form.getInputProps("show")}
               onChange={(value) => {
                 setSelectedShow(value);
-                resetSelectedSeates();
+                resetSelectedSeats();
                 value && form.setValues({ show: value });
               }}
             />
