@@ -21,7 +21,7 @@ import {
   selectSetFreeSeatsSelection,
   selectResetSelectedSeats,
   selectSetIsGuest,
-} from "../hooks/useCinemaStore";
+} from "../../hooks/useCinemaStore";
 import { notifications } from "@mantine/notifications";
 // supabase
 import type { User } from "@supabase/supabase-js";
