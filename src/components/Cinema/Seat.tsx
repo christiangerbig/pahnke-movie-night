@@ -1,4 +1,3 @@
-import { type PropsWithChildren } from "react";
 // zustand
 import {
   useCinemaStore,
@@ -11,12 +10,14 @@ import { Popover, Portal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // components
 import PathGroup from "./PathGroup";
+// types
+import type { PropsWithChildren } from "react";
 
 interface SeatProps extends PropsWithChildren {
   seatNumber: number;
 }
 
-const Seat: React.FC<SeatProps> = ({ seatNumber, children }) => {
+const Seat = ({ seatNumber, children }: SeatProps) => {
   const [opened, { close, open }] = useDisclosure(false);
   // zustand
   const selectedSeats = useCinemaStore(selectSelectedSeats);

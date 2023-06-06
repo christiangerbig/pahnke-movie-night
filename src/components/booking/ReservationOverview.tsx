@@ -38,7 +38,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
         return reservation.user === (user as User).id;
       }),
     );
-  }, reservations);
+  }, [reservations]);
 
   // hook userReservations change
   useEffect(() => {

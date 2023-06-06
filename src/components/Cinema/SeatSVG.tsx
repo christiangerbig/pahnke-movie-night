@@ -3,9 +3,9 @@ import { Box } from "@mantine/core";
 // components
 import Defs from "./Defs";
 import Seats from "./Seats";
-import LeftCurtain from "./LeftCurtain";
-import RightCurtain from "./RightCurtain";
-import Screen from "./Screen";
+import MovieScreen from "./MovieScreen";
+import CurtainLeft from "./CurtainLeft";
+import CurtainRight from "./CurtainRight";
 
 const SeatSVG = () => {
   return (
@@ -17,9 +17,9 @@ const SeatSVG = () => {
       >
         <Defs />
         <Seats />
-        <Screen />
-        <LeftCurtain />
-        <RightCurtain />
+        <MovieScreen />
+        <CurtainLeft />
+        <CurtainRight />
       </svg>
     </Box>
   );

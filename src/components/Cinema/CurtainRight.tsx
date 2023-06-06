@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const RightCurtain = () => {
+const CurtainRight = () => {
   return (
     <motion.path
       fill="url(#aa)"
@@ -16,4 +16,4 @@ const RightCurtain = () => {
   );
 };
 
-export default RightCurtain;
+export default CurtainRight;

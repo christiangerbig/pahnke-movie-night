@@ -1,6 +1,8 @@
 import { forwardRef } from "react";
 // mantine
-import { Box, type BoxProps } from "@mantine/core";
+import { Box } from "@mantine/core";
+// types
+import type { BoxProps } from "@mantine/core";
 
 const PathGroup = forwardRef<
   SVGGElement,

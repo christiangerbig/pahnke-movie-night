@@ -9,19 +9,16 @@ import { Box, TextInput, Text, Group, rem, Button, Stack } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { DatePickerInput } from "@mantine/dates";
-import {
-  Dropzone,
-  IMAGE_MIME_TYPE,
-  type FileWithPath,
-} from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 // dayjs
 import dayjs from "dayjs";
 // types
 import type { Database } from "~/lib/database.types";
+import type { FileWithPath } from "@mantine/dropzone";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-export const AddShowForm: React.FC = () => {
+export const AddShowForm = () => {
   const [file, setFile] = useState<FileWithPath>();
   const form = useForm({
     initialValues: {

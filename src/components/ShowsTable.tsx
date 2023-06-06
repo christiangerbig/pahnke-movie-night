@@ -5,11 +5,11 @@ import dayjs from "dayjs";
 // types
 import type { Database } from "~/lib/database.types";
 
-interface PropTypes {
+interface ShowsTableProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
-export const ShowsTable: React.FC<PropTypes> = ({ shows }) => {
+export const ShowsTable = ({ shows }: ShowsTableProps) => {
   return (
     <Table>
       <thead>

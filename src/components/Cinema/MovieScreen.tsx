@@ -1,4 +1,4 @@
-const Screen = () => {
+const MovieScreen = () => {
   return (
     <>
       <path fill="#fff" d="M156.95 136.34h463.98v219.01H156.95z" />
@@ -16,4 +16,4 @@ const Screen = () => {
   );
 };
 
-export default Screen;
+export default MovieScreen;

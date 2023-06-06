@@ -1,9 +1,6 @@
 import { useState } from "react";
 // supabase
-import {
-  SessionContextProvider,
-  type Session,
-} from "@supabase/auth-helpers-react";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
 import { MantineProvider } from "@mantine/core";
@@ -12,6 +9,7 @@ import { Notifications } from "@mantine/notifications";
 import "~/styles/globals.css";
 // types
 import type { AppProps } from "next/app";
+import type { Session } from "@supabase/auth-helpers-react";
 
 const App = ({
   Component,
