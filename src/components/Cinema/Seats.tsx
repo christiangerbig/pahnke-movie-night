@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-// hooks
+// zustand
 import {
   useCinemaStore,
   selectFreeSeats,

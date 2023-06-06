@@ -1,8 +1,10 @@
-import { Box, Text } from "@mantine/core";
+// zustand
 import {
   useCinemaStore,
   selectSelectedSeats,
 } from "../../hooks/useCinemaStore";
+// mantine
+import { Box, Text } from "@mantine/core";
 
 const ReservationDisplay = () => {
   const selectedSeats = useCinemaStore(selectSelectedSeats);

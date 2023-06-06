@@ -1,17 +1,18 @@
 import { CornerDownLeft } from "lucide-react";
+// next
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 // mantine
 import { Box, Container, Title, Button, Modal, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-// types
-import type { Database } from "~/lib/database.types";
+// dayjs
+import "dayjs/locale/de";
 // components
 import { AddShowForm } from "~/components/AddShowForm";
 import { ShowsTable } from "~/components/ShowsTable";
-
-import "dayjs/locale/de";
+// types
+import type { Database } from "~/lib/database.types";
 
 interface PropTypes {
   shows: Database["public"]["Tables"]["shows"]["Row"][];

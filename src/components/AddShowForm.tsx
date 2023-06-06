@@ -1,19 +1,22 @@
 import { useState } from "react";
+import { Image as ImageIcon, UploadCloud, XCircle } from "lucide-react";
+// next
 import Image from "next/image";
+// supabase
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+// mantine
 import { Box, TextInput, Text, Group, rem, Button, Stack } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import { DatePickerInput } from "@mantine/dates";
 import {
   Dropzone,
   IMAGE_MIME_TYPE,
   type FileWithPath,
 } from "@mantine/dropzone";
-import { isNotEmpty, useForm } from "@mantine/form";
+// dayjs
 import dayjs from "dayjs";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-
-import { Image as ImageIcon, UploadCloud, XCircle } from "lucide-react";
-
+// types
 import type { Database } from "~/lib/database.types";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();

@@ -1,7 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-// mantine
-import { Box, Select, Button, TextInput, Checkbox, Flex } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
 // zustand
 import {
   useCinemaStore,
@@ -14,19 +11,22 @@ import {
   selectResetSelectedSeats,
   selectSetIsGuest,
 } from "../../hooks/useCinemaStore";
-import { notifications } from "@mantine/notifications";
 // supabase
 import type { User } from "@supabase/supabase-js";
 import { addReservation } from "~/api/addReservation";
 import { addReservations } from "~/api/addReservations";
 import { fetchReservations } from "~/api/fetchReservations";
 import type { Database } from "~/lib/database.types";
+// mantine
+import { Box, Select, Button, TextInput, Checkbox, Flex } from "@mantine/core";
+import { useForm, zodResolver } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 // zod
 import { z } from "zod";
+// dayjs
+import dayjs from "dayjs";
 // types
 import type { ReservationWithShow } from "~/lib/general.types";
-
-import dayjs from "dayjs";
 
 interface ReservationFormProps {
   user: object;
@@ -57,10 +57,10 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
 
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
+  const selectedSeats = useCinemaStore(selectSelectedSeats);
   const isGuest = useCinemaStore(selectIsGuest);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeats = useCinemaStore(selectSetFreeSeats);
-  const selectedSeats = useCinemaStore(selectSelectedSeats);
   const resetSelectedSeates = useCinemaStore(selectResetSelectedSeats);
   const setIsGuest = useCinemaStore(selectSetIsGuest);
 
@@ -93,6 +93,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     }
     setFreeSeats(freeSeats);
 
+    // -> movie posters not yet supported <-
     //   shows.map((show) => {
     //     if (show.id === Number(selectedShow)) {
     //       setSelectedShowImage(show.movie_poster);
@@ -305,9 +306,11 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
             ) : null}
           </Flex>
         </Flex>
-        <Button type="submit" mt="1.5rem" compact>
-          buchen
-        </Button>
+        {selectedSeats.length >= 1 ? (
+          <Button type="submit" mt="1.5rem" compact>
+            buchen
+          </Button>
+        ) : null}
       </form>
     </Box>
   );

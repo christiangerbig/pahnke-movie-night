@@ -1,4 +1,5 @@
 import { create } from "zustand";
+// types
 import type { ReservationWithShow, Show } from "~/lib/general.types";
 
 interface CinemaState {

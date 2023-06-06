@@ -1,3 +1,4 @@
+// mantine
 import { Box } from "@mantine/core";
 // components
 import Defs from "./Defs";
