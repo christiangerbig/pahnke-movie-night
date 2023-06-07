@@ -18,7 +18,6 @@ interface TableElement {
   showDate: string;
   showTitle: string;
   seat: number;
-  guest: string;
   guestFirstName: string | null;
   guestSurname: string | null;
 }
@@ -48,7 +47,6 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
           ({
             show: { date, movie_title },
             seat,
-            is_guest,
             guest_firstname,
             guest_surname,
           }: ReservationWithShow) => {
@@ -56,7 +54,6 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
               showDate: date,
               showTitle: movie_title,
               seat,
-              guest: is_guest ? "ja" : "nein",
               guestFirstName: guest_firstname,
               guestSurname: guest_surname,
             };
@@ -77,14 +74,13 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
     setTableRows(
       tableElements.map(
         (
-          { showDate, showTitle, seat, guest, guestFirstName, guestSurname },
+          { showDate, showTitle, seat, guestFirstName, guestSurname },
           index,
         ) => (
           <tr key={index.toString()}>
             <td>{dayjs(showDate).format("DD. MMMM YYYY").toString()}</td>
             <td>{showTitle}</td>
             <td>{seat}</td>
-            <td>{guest}</td>
             <td>{guestFirstName}</td>
             <td>{guestSurname}</td>
           </tr>
@@ -104,7 +100,6 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
             <th>Datum</th>
             <th>Film</th>
             <th>Platz</th>
-            <th>Gast</th>
             <th>Vorname</th>
             <th>Nachname</th>
           </tr>

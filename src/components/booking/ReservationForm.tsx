@@ -26,7 +26,7 @@ import dayjs from "../../dayjs.config";
 // types
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
-import type { ReservationWithShow, Show } from "~/lib/general.types";
+import type { ReservationWithShow } from "~/lib/general.types";
 
 interface ReservationFormProps {
   user: object;
@@ -47,7 +47,7 @@ interface HandleSubmitArgs {
 const ReservationForm = ({ user }: ReservationFormProps) => {
   const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
-  const [isDoubleBooking, setIsDoubleBooking] = useState<boolean>(false);
+  const [selectedFilm, setSelectedFilm] = useState<string>("");
   // -> movie poster not yet supported <-
   // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -99,12 +99,13 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     }
     setFreeSeats(freeSeats);
 
-    // -> movie posters not yet supported <-
-    //   shows.map((show) => {
-    //     if (show.id === Number(selectedShow)) {
-    //       setSelectedShowImage(show.movie_poster);
-    //     }
-    //   });
+    shows.map((show) => {
+      if (show.id === Number(selectedShow)) {
+        setSelectedFilm(show.movie_title);
+        // -> movie posters not yet supported <-
+        // setSelectedShowImage(show.movie_poster);
+      }
+    });
   }, [selectedShow, reservations]);
 
   // zod schema
@@ -157,7 +158,16 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     guestFirstName,
     guestSurname,
   }: HandleSubmitArgs) => {
-    // invalid booking
+    const resetReservationValues = () => {
+      resetSelectedSeats();
+      setIsGuest(false);
+      showDates[0] && setSelectedShow(showDates[0].value);
+      form.setValues({
+        show: showDates[0]?.value.toString(),
+      });
+    };
+
+    // booking invalid
     if (isGuest && selectedSeats.length === 1) {
       notifications.show({
         title: "Ungültige Reservierung!",
@@ -170,22 +180,17 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
-    // double booking
+    // booking doublet
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
-          setIsDoubleBooking(true);
           isDoubleBooking = true;
         }
       }
     });
     if (isDoubleBooking) {
-      resetSelectedSeats();
-      showDates[0] && setSelectedShow(showDates[0].value);
-      form.setValues({
-        show: showDates[0]?.value.toString(),
-      });
+      resetReservationValues();
       notifications.show({
         title: "Doppelte Reservierung!",
         message: "Nur eine Buchung pro Vorstellung möglich.",
@@ -194,33 +199,47 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       return;
     }
 
-    // normal booking
+    // booking normal
     if (selectedSeats[0]) {
       const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
         setReservations(updatedReservations);
-        resetSelectedSeats();
-        setIsGuest(false);
-        showDates[0] && setSelectedShow(showDates[0].value);
-        form.setValues({
-          show: showDates[0]?.value.toString(),
-        });
+        resetReservationValues();
         notifications.show({
           title: "",
           message:
             selectedSeats[0] && !selectedSeats[1]
-              ? `Platz ${selectedSeats[0].toString()} wurde gebucht`
+              ? `Platz ${selectedSeats[0].toString()} für den Film "${selectedFilm}" wurde gebucht.`
               : selectedSeats[0] && selectedSeats[1]
-              ? `Plätze ${selectedSeats[0].toString()} und ${selectedSeats[1].toString()} wurden gebucht`
-              : "Es ist ein Fehnler aufgetreten",
+              ? `Plätze ${selectedSeats[0].toString()} und ${selectedSeats[1].toString()} für den Film "${selectedFilm}" wurden gebucht.`
+              : "Es ist ein Fehler aufgetreten.",
           autoClose: 5000,
         });
       };
+
       const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
           seat: selectedSeats[0],
           show: parseInt(show),
           user: (user as User).id,
         };
+      // booking without guest
+      if (!isGuest && !selectedSeats[1]) {
+        addReservation(userReservation)
+          .then(() => {
+            setFreeSeats([]);
+            fetchReservations()
+              .then((updatedReservations): void => {
+                bookingCleanup(updatedReservations as ReservationWithShow[]);
+              })
+              .catch((err) => {
+                console.log("Fehler:", err);
+              });
+          })
+          .catch((err) => {
+            console.log("Fehler:", err);
+          });
+      }
+      // booking with guest
       if (isGuest && selectedSeats[1]) {
         const userReservations = [];
         userReservations.push(userReservation);
@@ -235,21 +254,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
           };
         userReservations.push(guestReservation);
         addReservations(userReservations)
-          .then(() => {
-            setFreeSeats([]);
-            fetchReservations()
-              .then((updatedReservations): void => {
-                bookingCleanup(updatedReservations as ReservationWithShow[]);
-              })
-              .catch((err) => {
-                console.log("Fehler:", err);
-              });
-          })
-          .catch((err) => {
-            console.log("Fehler:", err);
-          });
-      } else {
-        addReservation(userReservation)
           .then(() => {
             setFreeSeats([]);
             fetchReservations()
