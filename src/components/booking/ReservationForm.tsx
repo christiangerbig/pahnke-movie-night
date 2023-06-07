@@ -26,7 +26,7 @@ import dayjs from "../../dayjs.config";
 // types
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
-import type { ReservationWithShow } from "~/lib/general.types";
+import type { ReservationWithShow, Show } from "~/lib/general.types";
 
 interface ReservationFormProps {
   user: object;
@@ -150,17 +150,27 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     validate: zodResolver(schema),
   });
 
-  // submit.main
+  // submit
   const handleSubmit = ({
     show,
     isGuest,
     guestFirstName,
     guestSurname,
   }: HandleSubmitArgs) => {
+    // invalid booking
+    if (isGuest && selectedSeats.length === 1) {
+      notifications.show({
+        title: "Ungültige Reservierung!",
+        message: "Bitte noch einen Platz für den Gast angeben.",
+        autoClose: 5000,
+      });
+      return;
+    }
+
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
-    // submit.doubleBooking
+    // double booking
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
@@ -177,26 +187,32 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         show: showDates[0]?.value.toString(),
       });
       notifications.show({
-        title: "Doppelte Buchung!",
+        title: "Doppelte Reservierung!",
         message: "Nur eine Buchung pro Vorstellung möglich.",
-        autoClose: 8000,
+        autoClose: 5000,
       });
       return;
     }
 
-    // submit.booking
+    // normal booking
     if (selectedSeats[0]) {
       const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
         setReservations(updatedReservations);
         resetSelectedSeats();
+        setIsGuest(false);
         showDates[0] && setSelectedShow(showDates[0].value);
         form.setValues({
           show: showDates[0]?.value.toString(),
         });
         notifications.show({
           title: "",
-          message: "Buchung war erfolgreich.",
-          autoClose: 8000,
+          message:
+            selectedSeats[0] && !selectedSeats[1]
+              ? `Platz ${selectedSeats[0].toString()} wurde gebucht`
+              : selectedSeats[0] && selectedSeats[1]
+              ? `Plätze ${selectedSeats[0].toString()} und ${selectedSeats[1].toString()} wurden gebucht`
+              : "Es ist ein Fehnler aufgetreten",
+          autoClose: 5000,
         });
       };
       const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
