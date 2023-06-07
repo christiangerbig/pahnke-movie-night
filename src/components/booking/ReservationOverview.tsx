@@ -43,24 +43,28 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
   // hook userReservations change
   useEffect(() => {
     setTableElements(
-      userReservations.map(
-        ({
-          show: { date, movie_title },
-          seat,
-          is_guest,
-          guest_firstname,
-          guest_surname,
-        }: ReservationWithShow) => {
-          return {
-            showDate: dayjs(date).format("DD. MMMM YYYY").toString(),
-            showTitle: movie_title,
+      userReservations
+        .map(
+          ({
+            show: { date, movie_title },
             seat,
-            guest: is_guest ? "ja" : "nein",
-            guestFirstName: guest_firstname,
-            guestSurname: guest_surname,
-          };
-        },
-      ),
+            is_guest,
+            guest_firstname,
+            guest_surname,
+          }: ReservationWithShow) => {
+            return {
+              showDate: dayjs(date).format("DD. MMMM YYYY").toString(),
+              showTitle: movie_title,
+              seat,
+              guest: is_guest ? "ja" : "nein",
+              guestFirstName: guest_firstname,
+              guestSurname: guest_surname,
+            };
+          },
+        )
+        .sort((a: TableElement, b: TableElement) =>
+          a.showDate > b.showDate ? -1 : a.showDate < b.showDate ? 1 : 0,
+        ),
     );
   }, [userReservations]);
 
