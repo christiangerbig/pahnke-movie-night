@@ -53,7 +53,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
             guest_surname,
           }: ReservationWithShow) => {
             return {
-              showDate: dayjs(date).format("DD. MMMM YYYY").toString(),
+              showDate: date,
               showTitle: movie_title,
               seat,
               guest: is_guest ? "ja" : "nein",
@@ -63,7 +63,12 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
           },
         )
         .sort((a: TableElement, b: TableElement) =>
-          a.showDate > b.showDate ? -1 : a.showDate < b.showDate ? 1 : 0,
+          a.showDate < b.showDate ? -1 : a.showDate > b.showDate ? 1 : 0,
+        )
+        .filter(
+          (reservation: TableElement) =>
+            reservation.showDate >=
+            dayjs(Date()).format("YYYY-MM-DD").toString(),
         ),
     );
   }, [userReservations]);
@@ -77,7 +82,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
           index,
         ) => (
           <tr key={index.toString()}>
-            <td>{showDate}</td>
+            <td>{dayjs(showDate).format("DD. MMMM YYYY").toString()}</td>
             <td>{showTitle}</td>
             <td>{seat}</td>
             <td>{guest}</td>
