@@ -11,7 +11,7 @@ import { notifications } from "@mantine/notifications";
 import { DatePickerInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 // dayjs
-import dayjs from "dayjs";
+import dayjs from "../dayjs.config";
 // types
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";

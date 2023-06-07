@@ -22,7 +22,7 @@ import { notifications } from "@mantine/notifications";
 // zod
 import { z } from "zod";
 // dayjs
-import dayjs from "dayjs";
+import dayjs from "../../dayjs.config";
 // types
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";

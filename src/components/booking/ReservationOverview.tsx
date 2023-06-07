@@ -4,7 +4,7 @@ import { useCinemaStore, selectReservations } from "../../hooks/useCinemaStore";
 // mantine
 import { Box, Text, Table } from "@mantine/core";
 // dayjs
-import dayjs from "dayjs";
+import dayjs from "../../dayjs.config";
 // types
 import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";

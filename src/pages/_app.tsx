@@ -7,6 +7,8 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 // styles
 import "~/styles/globals.css";
+// dayjs
+import "~/dayjs.config";
 // types
 import type { AppProps } from "next/app";
 import type { Session } from "@supabase/auth-helpers-react";

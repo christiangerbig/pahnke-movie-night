@@ -1,7 +1,7 @@
 // mantine
 import { Table } from "@mantine/core";
 // dayjs
-import dayjs from "dayjs";
+import dayjs from "../dayjs.config";
 // types
 import type { Database } from "~/lib/database.types";
 

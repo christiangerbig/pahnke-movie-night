@@ -13,7 +13,7 @@ import {
   selectSetReservations,
 } from "../hooks/useCinemaStore";
 // dayjs
-import dayjs from "dayjs";
+import dayjs from "../dayjs.config";
 // components
 import ReservationForm from "~/components/booking/ReservationForm";
 import ReservationDisplay from "~/components/booking/ReservationDisplay";
