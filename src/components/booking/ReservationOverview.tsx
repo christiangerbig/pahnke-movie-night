@@ -18,6 +18,7 @@ interface TableElement {
   showDate: string;
   showTitle: string;
   seat: number;
+  isGuest: boolean;
   guestFirstName: string | null;
   guestSurname: string | null;
 }
@@ -47,6 +48,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
           ({
             show: { date, movie_title },
             seat,
+            is_guest,
             guest_firstname,
             guest_surname,
           }: ReservationWithShow) => {
@@ -54,6 +56,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
               showDate: date,
               showTitle: movie_title,
               seat,
+              isGuest: is_guest,
               guestFirstName: guest_firstname,
               guestSurname: guest_surname,
             };
@@ -74,12 +77,16 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
     setTableRows(
       tableElements.map(
         (
-          { showDate, showTitle, seat, guestFirstName, guestSurname },
+          { showDate, showTitle, seat, isGuest, guestFirstName, guestSurname },
           index,
         ) => (
           <tr key={index.toString()}>
-            <td>{dayjs(showDate).format("DD. MMMM YYYY").toString()}</td>
-            <td>{showTitle}</td>
+            {isGuest ? (
+              <td />
+            ) : (
+              <td>{dayjs(showDate).format("DD. MMMM YYYY").toString()}</td>
+            )}
+            {isGuest ? <td /> : <td>{showTitle}</td>}
             <td>{seat}</td>
             <td>{guestFirstName}</td>
             <td>{guestSurname}</td>
