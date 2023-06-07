@@ -1,6 +1,7 @@
 // zustand
 import {
   useCinemaStore,
+  selectFreeSeats,
   selectSelectedSeats,
   selectAddSelectedSeat,
   selectRemoveSelectedSeat,
@@ -20,16 +21,19 @@ interface SeatProps extends PropsWithChildren {
 const Seat = ({ seatNumber, children }: SeatProps) => {
   const [opened, { close, open }] = useDisclosure(false);
   // zustand
+  const freeSeats = useCinemaStore(selectFreeSeats);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
   const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
   // click handler
   const handleClick = () => {
-    if (selectedSeats.includes(seatNumber)) {
-      removeSelectedSeat(seatNumber);
-    } else {
-      addSelectedSeat(seatNumber);
+    if (freeSeats.includes(seatNumber)) {
+      if (selectedSeats.includes(seatNumber)) {
+        removeSelectedSeat(seatNumber);
+      } else {
+        addSelectedSeat(seatNumber);
+      }
     }
   };
 
