@@ -66,9 +66,8 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
           a.showDate < b.showDate ? -1 : a.showDate > b.showDate ? 1 : 0,
         )
         .filter(
-          (reservation: TableElement) =>
-            reservation.showDate >=
-            dayjs(Date()).format("YYYY-MM-DD").toString(),
+          ({ showDate }: TableElement) =>
+            showDate >= dayjs(Date()).format("YYYY-MM-DD").toString(),
         ),
     );
   }, [userReservations]);
