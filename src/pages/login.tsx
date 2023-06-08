@@ -30,12 +30,11 @@ const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { session, isLoading } = useSessionContext();
-
+  // mantine form
   const form = useForm({
     initialValues: {
       email: "",
     },
-
     validate: {
       email: validateEmail,
     },

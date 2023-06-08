@@ -20,6 +20,7 @@ const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 export const AddShowForm = () => {
   const [file, setFile] = useState<FileWithPath>();
+  // mantine form
   const form = useForm({
     initialValues: {
       title: "",

@@ -13,6 +13,7 @@ interface CinemaState {
     setShows: (shows: Show[]) => void;
     setReservations: (reservations: ReservationWithShow[]) => void;
     setFreeSeats: (freeSeats: number[]) => void;
+    resetFreeSeats: () => void;
     setSelectedSeats: (selectedSeats: number[]) => void;
     addSelectedSeat: (selectedSeat: number) => void;
     removeSelectedSeat: (selectedSeat: number) => void;
@@ -37,6 +38,9 @@ export const useCinemaStore = create<CinemaState>((set) => ({
     },
     setFreeSeats: (freeSeats) => {
       set({ freeSeats });
+    },
+    resetFreeSeats: () => {
+      set({ freeSeats: [] });
     },
     setSelectedSeats: (selectedSeats) => {
       set({ selectedSeats });
@@ -71,6 +75,8 @@ const selectors = {
     setReservations,
   selectSetFreeSeats: ({ actions: { setFreeSeats } }: CinemaState) =>
     setFreeSeats,
+  selectResetFreeSeats: ({ actions: { resetFreeSeats } }: CinemaState) =>
+    resetFreeSeats,
   selectSetSelectedSeats: ({ actions: { setSelectedSeats } }: CinemaState) =>
     setSelectedSeats,
   selectAddSelectedSeat: ({ actions: { addSelectedSeat } }: CinemaState) =>
@@ -94,6 +100,7 @@ export const {
   selectSetShows,
   selectSetReservations,
   selectSetFreeSeats,
+  selectResetFreeSeats,
   selectSetSelectedSeats,
   selectAddSelectedSeat,
   selectRemoveSelectedSeat,

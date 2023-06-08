@@ -8,6 +8,7 @@ import {
   selectIsGuest,
   selectSetReservations,
   selectSetFreeSeats,
+  selectResetFreeSeats,
   selectResetSelectedSeats,
   selectSetIsGuest,
 } from "../../hooks/useCinemaStore";
@@ -58,6 +59,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const isGuest = useCinemaStore(selectIsGuest);
   const setReservations = useCinemaStore(selectSetReservations);
   const setFreeSeats = useCinemaStore(selectSetFreeSeats);
+  const resetFreeSeats = useCinemaStore(selectResetFreeSeats);
   const resetSelectedSeats = useCinemaStore(selectResetSelectedSeats);
   const setIsGuest = useCinemaStore(selectSetIsGuest);
 
@@ -167,7 +169,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       });
     };
 
-    // booking invalid
+    // booking invalid check
     if (isGuest && selectedSeats.length === 1) {
       notifications.show({
         title: "Ungültige Reservierung!",
@@ -180,7 +182,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     form.reset();
     (checkboxRef.current as HTMLInputElement).checked = false;
 
-    // booking doublet
+    // booking doublet check
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
       if (reservation.user === (user as User).id) {
@@ -226,7 +228,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       if (!isGuest && !selectedSeats[1]) {
         addReservation(userReservation)
           .then(() => {
-            setFreeSeats([]);
+            resetFreeSeats();
             fetchReservations()
               .then((updatedReservations): void => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);
@@ -255,7 +257,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         userReservations.push(guestReservation);
         addReservations(userReservations)
           .then(() => {
-            setFreeSeats([]);
+            resetFreeSeats();
             fetchReservations()
               .then((updatedReservations): void => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);

@@ -19,10 +19,10 @@ export const ShowsTable = ({ shows }: ShowsTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {shows.map((show) => (
-          <tr key={show.id}>
-            <td>{dayjs(show.date).format("DD MMMM YYYY")}</td>
-            <td>{show.movie_title}</td>
+        {shows.map(({ id, date, movie_title }) => (
+          <tr key={id}>
+            <td>{dayjs(date).format("DD MMMM YYYY")}</td>
+            <td>{movie_title}</td>
           </tr>
         ))}
       </tbody>
