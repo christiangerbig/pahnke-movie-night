@@ -5,18 +5,20 @@ import { useRouter } from "next/router";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 // mantine
-import { TextInput, Paper, Title, Container, Button } from "@mantine/core";
+import { TextInput, Paper, Title, Button, Flex, Box } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useViewportSize } from "@mantine/hooks";
 // helpers
 import { validateEmail } from "~/lib/validateEmail";
 
 const supabaseClient = createBrowserSupabaseClient();
 
 const LoginPage = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  // supabase hooks
   const { session, isLoading } = useSessionContext();
-  // mantine form
+  // mantine hooks
   const form = useForm({
     initialValues: {
       email: "",
@@ -25,6 +27,7 @@ const LoginPage = () => {
       email: validateEmail,
     },
   });
+  const { height } = useViewportSize();
 
   const handleLogin = async (email: string) => {
     setLoading(true);
@@ -53,26 +56,35 @@ const LoginPage = () => {
   }
 
   return (
-    <Container size="26rem" my="2.5rem">
-      <Title align="center" order={1}>
-        Willkommen!
-      </Title>
-      <form
-        onSubmit={form.onSubmit((values) => void handleLogin(values.email))}
-      >
-        <Paper withBorder shadow="md" p="2rem" mt="2rem" radius="md">
-          <TextInput
-            label="E-Mail"
-            placeholder="meine@email.com"
-            withAsterisk
-            {...form.getInputProps("email")}
-          />
-          <Button type="submit" fullWidth mt="xl" loading={loading}>
-            Einloggen
-          </Button>
-        </Paper>
-      </form>
-    </Container>
+    <Box component="main">
+      <Flex justify="center" align="center" direction="column" h={height}>
+        <Title align="center" order={1}>
+          Willkommen!
+        </Title>
+        <form
+          onSubmit={form.onSubmit((values) => void handleLogin(values.email))}
+        >
+          <Paper
+            withBorder
+            shadow="md"
+            p="2rem"
+            mt="2rem"
+            radius="md"
+            w="26rem"
+          >
+            <TextInput
+              label="E-Mail"
+              placeholder="meine@email.com"
+              withAsterisk
+              {...form.getInputProps("email")}
+            />
+            <Button type="submit" fullWidth mt="xl" loading={loading}>
+              Einloggen
+            </Button>
+          </Paper>
+        </form>
+      </Flex>
+    </Box>
   );
 };
 
