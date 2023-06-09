@@ -1,6 +1,7 @@
 import { create } from "zustand";
 // types
 import type { ReservationWithShow, Show } from "~/lib/general.types";
+import type { Database } from "~/lib/database.types";
 
 interface CinemaState {
   shows: Show[];
@@ -9,6 +10,7 @@ interface CinemaState {
   selectedSeats: number[];
   isGuest: boolean;
   selectedShow: string | null;
+  userReservations: Database["public"]["Tables"]["reservations"]["Delete"][];
 
   actions: {
     setShows: (shows: Show[]) => void;
@@ -21,6 +23,9 @@ interface CinemaState {
     resetSelectedSeats: () => void;
     setIsGuest: (isGuest: boolean) => void;
     setSelectedShow: (selectedShow: string | null) => void;
+    setUserReservation: (
+      userReservations: Database["public"]["Tables"]["reservations"]["Delete"][],
+    ) => void;
   };
 }
 
@@ -31,6 +36,7 @@ export const useCinemaStore = create<CinemaState>((set) => ({
   selectedSeats: [],
   isGuest: false,
   selectedShow: null,
+  userReservations: [],
 
   actions: {
     setShows: (shows) => {
@@ -66,6 +72,12 @@ export const useCinemaStore = create<CinemaState>((set) => ({
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
     setIsGuest: (isGuest) => set({ isGuest }),
+    setUserReservations: (
+      userReservation: Database["public"]["Tables"]["reservations"]["Delete"],
+    ) =>
+      set(({ userReservations }) => ({
+        userReservations: userReservations.push(userReservation),
+      })),
   },
 }));
 
@@ -75,6 +87,8 @@ const selectors = {
   selectFreeSeats: ({ freeSeats }: CinemaState) => freeSeats,
   selectSelectedSeats: ({ selectedSeats }: CinemaState) => selectedSeats,
   selectIsGuest: ({ isGuest }: CinemaState) => isGuest,
+  selectUserReservations: ({ userReservations }: CinemaState) =>
+    userReservations,
   // Actions
   selectSetShows: ({ actions: { setShows } }: CinemaState) => setShows,
   selectSetReservations: ({ actions: { setReservations } }: CinemaState) =>
@@ -97,6 +111,9 @@ const selectors = {
   selectSelectedShow: ({ selectedShow }: CinemaState) => selectedShow,
   selectSetSelectedShow: ({ actions: { setSelectedShow } }: CinemaState) =>
     setSelectedShow,
+  selectSetUserReservations: ({
+    actions: { setUserReservations },
+  }: CinemaState) => setUserReservations,
 };
 
 export const {
@@ -105,6 +122,7 @@ export const {
   selectFreeSeats,
   selectSelectedSeats,
   selectIsGuest,
+  selectUserReservations,
   // Actions
   selectSetShows,
   selectSetReservations,
@@ -117,4 +135,5 @@ export const {
   selectSetIsGuest,
   selectSelectedShow,
   selectSetSelectedShow,
+  selectSetUserReservations,
 } = selectors;

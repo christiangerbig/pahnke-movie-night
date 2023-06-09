@@ -32,6 +32,10 @@ export const Layout: React.FC<{ user: User } & PropsWithChildren> = ({
     (show) => show.id === Number(selectedShowId),
   )[0];
 
+  const handleDelete = () => {
+    console.log("TEST");
+  };
+
   return (
     <>
       <AppShell
@@ -56,6 +60,7 @@ export const Layout: React.FC<{ user: User } & PropsWithChildren> = ({
                   leftIcon={<Trash size={16} />}
                   w="100%"
                   variant="outline"
+                  onClick={handleDelete}
                 >
                   Buchung stornieren
                 </Button>
