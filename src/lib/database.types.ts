@@ -15,7 +15,7 @@ export interface Database {
           guest_firstname: string | null
           guest_surname: string | null
           id: number
-          is_guest: boolean
+          is_guest: boolean | null
           seat: number
           show: number
           user: string
@@ -25,7 +25,7 @@ export interface Database {
           guest_firstname?: string | null
           guest_surname?: string | null
           id?: number
-          is_guest?: boolean
+          is_guest?: boolean | null
           seat: number
           show: number
           user: string
@@ -35,11 +35,25 @@ export interface Database {
           guest_firstname?: string | null
           guest_surname?: string | null
           id?: number
-          is_guest?: boolean
+          is_guest?: boolean | null
           seat?: number
           show?: number
           user?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_show_fkey"
+            columns: ["show"]
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reservations_user_fkey"
+            columns: ["user"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       shows: {
         Row: {
@@ -49,6 +63,7 @@ export interface Database {
           movie_description: string | null
           movie_poster: string | null
           movie_title: string
+          time: string | null
         }
         Insert: {
           created_at?: string | null
@@ -57,6 +72,7 @@ export interface Database {
           movie_description?: string | null
           movie_poster?: string | null
           movie_title: string
+          time?: string | null
         }
         Update: {
           created_at?: string | null
@@ -65,7 +81,9 @@ export interface Database {
           movie_description?: string | null
           movie_poster?: string | null
           movie_title?: string
+          time?: string | null
         }
+        Relationships: []
       }
     }
     Views: {
