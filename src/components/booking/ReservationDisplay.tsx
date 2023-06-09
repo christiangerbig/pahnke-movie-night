@@ -4,18 +4,22 @@ import {
   selectSelectedSeats,
 } from "../../hooks/useCinemaStore";
 // mantine
-import { Box, Text } from "@mantine/core";
+import { Flex, Text } from "@mantine/core";
 
 const ReservationDisplay = () => {
   const selectedSeats = useCinemaStore(selectSelectedSeats);
 
   return (
-    <Box>
-      {selectedSeats[0] && <Text>1. Platz: {selectedSeats[0]}</Text>}
-      {selectedSeats[1] && (
-        <Text mt="0.5rem">2. Platz: {selectedSeats[1]}</Text>
-      )}
-    </Box>
+    <Flex gap={8} align="center">
+      <Text component="span" color="dimmed" size="sm">
+        Ausgewählte Plätze:
+      </Text>
+      <Text weight="bold">
+        {!selectedSeats[0] && "-"}
+        {selectedSeats[0] && selectedSeats[0]}
+        {selectedSeats[1] && `, ${selectedSeats[1]}`}
+      </Text>
+    </Flex>
   );
 };
 

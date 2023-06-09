@@ -8,6 +8,7 @@ interface CinemaState {
   freeSeats: number[];
   selectedSeats: number[];
   isGuest: boolean;
+  selectedShow: string | null;
 
   actions: {
     setShows: (shows: Show[]) => void;
@@ -19,6 +20,7 @@ interface CinemaState {
     removeSelectedSeat: (selectedSeat: number) => void;
     resetSelectedSeats: () => void;
     setIsGuest: (isGuest: boolean) => void;
+    setSelectedShow: (selectedShow: string | null) => void;
   };
 }
 
@@ -28,6 +30,7 @@ export const useCinemaStore = create<CinemaState>((set) => ({
   freeSeats: [],
   selectedSeats: [],
   isGuest: false,
+  selectedShow: null,
 
   actions: {
     setShows: (shows) => {
@@ -44,6 +47,9 @@ export const useCinemaStore = create<CinemaState>((set) => ({
     },
     setSelectedSeats: (selectedSeats) => {
       set({ selectedSeats });
+    },
+    setSelectedShow: (selectedShow) => {
+      set({ selectedShow });
     },
     addSelectedSeat: (selectedSeat: number) => {
       set(({ selectedSeats, isGuest }) => {
@@ -88,6 +94,9 @@ const selectors = {
     actions: { resetSelectedSeats },
   }: CinemaState) => resetSelectedSeats,
   selectSetIsGuest: ({ actions: { setIsGuest } }: CinemaState) => setIsGuest,
+  selectSelectedShow: ({ selectedShow }: CinemaState) => selectedShow,
+  selectSetSelectedShow: ({ actions: { setSelectedShow } }: CinemaState) =>
+    setSelectedShow,
 };
 
 export const {
@@ -106,4 +115,6 @@ export const {
   selectRemoveSelectedSeat,
   selectResetSelectedSeats,
   selectSetIsGuest,
+  selectSelectedShow,
+  selectSetSelectedShow,
 } = selectors;

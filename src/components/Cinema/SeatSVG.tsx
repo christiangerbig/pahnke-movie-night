@@ -1,5 +1,5 @@
 // mantine
-import { Box } from "@mantine/core";
+import { Flex } from "@mantine/core";
 // components
 import Defs from "./Defs";
 import Seats from "./Seats";
@@ -9,11 +9,12 @@ import CurtainRight from "./CurtainRight";
 
 const SeatSVG = () => {
   return (
-    <Box sx={{ overflow: "hidden" }} w="60rem">
+    <Flex justify="center" sx={{ overflow: "hidden" }} h="100%">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xlinkHref="http://www.w3.org/1999/xlink"
         viewBox="0 0 771.67 724.2"
+        height="100%"
       >
         <Defs />
         <Seats />
@@ -21,7 +22,7 @@ const SeatSVG = () => {
         <CurtainLeft />
         <CurtainRight />
       </svg>
-    </Box>
+    </Flex>
   );
 };
 

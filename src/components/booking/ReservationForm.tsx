@@ -11,6 +11,8 @@ import {
   selectResetFreeSeats,
   selectResetSelectedSeats,
   selectSetIsGuest,
+  selectSetSelectedShow,
+  selectSelectedShow,
 } from "../../hooks/useCinemaStore";
 // supabase
 import { addReservation } from "~/api/addReservation";
@@ -28,9 +30,10 @@ import dayjs from "../../dayjs.config";
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import ReservationDisplay from "./ReservationDisplay";
 
 interface ReservationFormProps {
-  user: object;
+  user: User;
 }
 
 interface ShowDateEntry {
@@ -47,7 +50,7 @@ interface HandleSubmitArgs {
 
 const ReservationForm = ({ user }: ReservationFormProps) => {
   const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
-  const [selectedShow, setSelectedShow] = useState<string | null>(null);
+  // const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [selectedFilm, setSelectedFilm] = useState<string>("");
   // -> movie poster not yet supported <-
   // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(null);
@@ -62,14 +65,18 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   const resetFreeSeats = useCinemaStore(selectResetFreeSeats);
   const resetSelectedSeats = useCinemaStore(selectResetSelectedSeats);
   const setIsGuest = useCinemaStore(selectSetIsGuest);
+  const selectedShow = useCinemaStore(selectSelectedShow);
+  const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
   // hook component did mount
   useEffect(() => {
     setShowDates(
-      shows.map(({ id, date }): ShowDateEntry => {
+      shows.map(({ id, date, movie_title }): ShowDateEntry => {
         return {
           value: id.toString(),
-          label: dayjs(date).format("DD. MMMM YYYY").toString(),
+          label: `${movie_title} - ${dayjs(date)
+            .format("dd. DD.MM.YYYY")
+            .toString()} `,
         };
       }),
     );
@@ -174,6 +181,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       notifications.show({
         title: "Ungültige Reservierung!",
         message: "Bitte noch einen Platz für den Gast angeben.",
+        color: "red",
         autoClose: 5000,
       });
       return;
@@ -185,7 +193,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     // booking doublet check
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
-      if (reservation.user === (user as User).id) {
+      if (reservation.user === user.id) {
         if (reservation.show.id === Number(selectedShow)) {
           isDoubleBooking = true;
         }
@@ -196,6 +204,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
       notifications.show({
         title: "Doppelte Reservierung!",
         message: "Nur eine Buchung pro Vorstellung möglich.",
+        color: "red",
         autoClose: 5000,
       });
       return;
@@ -214,6 +223,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               : selectedSeats[0] && selectedSeats[1]
               ? `Plätze ${selectedSeats[0].toString()} und ${selectedSeats[1].toString()} für den Film "${selectedFilm}" wurden gebucht.`
               : "Es ist ein Fehler aufgetreten.",
+          color: "green",
           autoClose: 5000,
         });
       };
@@ -222,7 +232,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         {
           seat: selectedSeats[0],
           show: parseInt(show),
-          user: (user as User).id,
+          user: user.id,
         };
       // booking without guest
       if (!isGuest && !selectedSeats[1]) {
@@ -249,7 +259,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
           {
             seat: selectedSeats[1],
             show: parseInt(show),
-            user: (user as User).id,
+            user: user.id,
             guest_firstname: guestFirstName,
             guest_surname: guestSurname,
             is_guest: true,
@@ -274,34 +284,20 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
   };
 
   return (
-    <Box mb="4rem">
+    <Box>
       <form
         onSubmit={form.onSubmit((values) => {
           handleSubmit(values);
         })}
       >
-        <Flex
-          justify="flex-start"
-          align="flex-start"
-          direction="row"
-          wrap="wrap"
-          h={"17rem"}
-        >
-          <Flex
-            justify="flex-start"
-            align="flex-start"
-            direction="column"
-            mr="2rem"
-            w={"10rem"}
-          >
+        <Flex direction="row" wrap="wrap" gap="lg">
+          <Flex direction="column" w="100%" gap="md">
             <Select
-              ml={"0rem"}
-              mr={"2.5rem"}
-              size="xs"
               data={showDates}
-              label="Show"
               placeholder="Wähle eine Show aus..."
-              withAsterisk
+              w="100%"
+              variant="filled"
+              bg="dark.9"
               {...form.getInputProps("show")}
               onChange={(value) => {
                 setSelectedShow(value);
@@ -310,44 +306,42 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
               }}
             />
             <Checkbox
-              size="xs"
-              label="Gast?"
+              label="Ich möchte einen Gast mitbringen"
               ref={checkboxRef}
+              color="indigo"
               {...form.getInputProps("isGuest")}
               onChange={() => {
                 form.setValues({ isGuest: !isGuest });
                 setIsGuest(!isGuest);
               }}
-              mt="2.5rem"
             />
             {form.values.isGuest ? (
-              <Box mt={"1.3rem"}>
+              <Flex direction="column" gap="md">
                 <TextInput
-                  ml={"0rem"}
-                  mr={"2.5rem"}
-                  size="xs"
-                  label="Gast Vorname"
+                  label="Vorname Gast"
                   placeholder="Vorname"
+                  withAsterisk
                   {...form.getInputProps("guestFirstName")}
                 />
                 <TextInput
-                  ml={"0rem"}
-                  mr={"2.5rem"}
-                  size="xs"
-                  label="Gast Nachname"
+                  label="Nachname Gast"
                   placeholder="NachName"
+                  withAsterisk
                   {...form.getInputProps("guestSurname")}
-                  mt="1.5rem"
                 />
-              </Box>
+              </Flex>
             ) : null}
           </Flex>
-        </Flex>
-        {selectedSeats.length >= 1 ? (
-          <Button type="submit" mt="1.5rem" compact>
-            buchen
+          <ReservationDisplay />
+          <Button
+            type="submit"
+            w="100%"
+            disabled={selectedSeats.length === 0}
+            color="indigo"
+          >
+            Ticket(s) buchen
           </Button>
-        ) : null}
+        </Flex>
       </form>
     </Box>
   );

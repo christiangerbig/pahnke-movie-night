@@ -1,11 +1,11 @@
-import { useRouter } from "next/router";
 // supabase
 import {
   createServerSupabaseClient,
   createBrowserSupabaseClient,
+  type User,
 } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, Button, Container, Flex, Title } from "@mantine/core";
+import { Box, ColorSwatch, Container, Flex, Text } from "@mantine/core";
 // zustand
 import {
   useCinemaStore,
@@ -15,70 +15,71 @@ import {
 // dayjs
 import dayjs from "../dayjs.config";
 // components
-import ReservationForm from "~/components/booking/ReservationForm";
-import ReservationDisplay from "~/components/booking/ReservationDisplay";
 import SeatSVG from "~/components/cinema/SeatSVG";
-import ReservationOverview from "~/components/booking/ReservationOverview";
+// import ReservationOverview from "~/components/booking/ReservationOverview";
+import { Layout } from "~/components/Layout";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import { PushhLogo } from "~/components/PushhLogo";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 interface PropTypes {
-  user: {
-    email: string;
-  };
+  user: User;
   shows: Database["public"]["Tables"]["shows"]["Row"][];
   reservations: ReservationWithShow[];
 }
 
 const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
-  const router = useRouter();
   const setShows = useCinemaStore(selectSetShows);
   const setReservations = useCinemaStore(selectSetReservations);
-
-  const handleLogout = async () => {
-    const { error } = await supabaseAuthClient.auth.signOut();
-
-    if (!error) {
-      router.reload();
-    }
-  };
 
   setShows(shows);
   setReservations(reservations);
 
   return (
-    <Box component="main">
-      <Container>
-        <Flex
-          justify="space-between"
-          align="flex-start"
-          direction="row"
-          mt={"1.5rem"}
-        >
-          <Title order={4}>Hallo {user.email}</Title>
-          <Button compact onClick={() => void handleLogout()}>
-            Logout
-          </Button>
-        </Flex>
-        <Flex
-          justify="space-between"
-          align="flex-start"
-          direction="row"
-          mt="2rem"
-        >
-          <Flex justify="flex-start" align="flex-start" direction="column">
-            <ReservationForm user={user} />
-            <ReservationDisplay />
-          </Flex>
+    <Layout user={user}>
+      <Box component="main">
+        <Box h="calc(100vh - 120px)" sx={{ overflow: "hidden" }} mx="auto">
           <SeatSVG />
-        </Flex>
-        <ReservationOverview user={user} />
-      </Container>
-    </Box>
+        </Box>
+        <Container>
+          <Flex justify="space-between">
+            <Flex gap="xl" align="center">
+              <Flex align="center" gap="sm">
+                <ColorSwatch color="red" size={20} />
+                <Text component="span" size="sm">
+                  Freie Plätze
+                </Text>
+              </Flex>
+              <Flex align="center" gap="sm">
+                <ColorSwatch color="orange" size={20} />
+                <Text component="span" size="sm">
+                  Ausgewählte Plätze
+                </Text>
+              </Flex>
+              <Flex align="center" gap="sm">
+                <ColorSwatch color="grey" size={20} />
+                <Text component="span" size="sm">
+                  Belegte Plätze
+                </Text>
+              </Flex>
+            </Flex>
+            <Flex px="md" align="center" gap="sm">
+              <Text color="dimmed" size="xs" mb={2}>
+                Powered by
+              </Text>
+              <Box h={40} opacity={0.5}>
+                <PushhLogo />
+              </Box>
+            </Flex>
+          </Flex>
+        </Container>
+        {/*   <ReservationOverview user={user} /> */}
+      </Box>
+    </Layout>
   );
 };
 
@@ -96,12 +97,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {},
     };
-  // return {
-  //   redirect: {
-  //     destination: "/login",
-  //     permanent: false,
-  //   },
-  // };
 
   const { data: reservations } = await supabaseAuthServer
     .from("reservations")

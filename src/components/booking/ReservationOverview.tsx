@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 // zustand
 import { useCinemaStore, selectReservations } from "../../hooks/useCinemaStore";
 // mantine
-import { Box, Text, Table } from "@mantine/core";
+import { Box, Text, Table, Title } from "@mantine/core";
 // dayjs
 import dayjs from "../../dayjs.config";
 // types
@@ -98,9 +98,9 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
 
   return (
     <Box>
-      <Text fz="lg" mb="1rem">
+      <Title fz="lg" mb="1rem">
         Meine Reservierungen
-      </Text>
+      </Title>
       <Table>
         <thead>
           <tr>
