@@ -53,7 +53,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Container size={420} my="2.5rem">
+    <Container size="26rem" my="2.5rem">
       <Title align="center" order={1}>
         Willkommen!
       </Title>
