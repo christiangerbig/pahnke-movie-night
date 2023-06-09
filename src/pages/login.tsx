@@ -5,11 +5,20 @@ import { useRouter } from "next/router";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 // mantine
-import { TextInput, Paper, Title, Button, Flex, Box } from "@mantine/core";
+import {
+  TextInput,
+  Paper,
+  Title,
+  Button,
+  Flex,
+  Box,
+  Text,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useViewportSize } from "@mantine/hooks";
 // helpers
 import { validateEmail } from "~/lib/validateEmail";
+import { PushhLogo } from "~/components/PushhLogo";
 
 const supabaseClient = createBrowserSupabaseClient();
 
@@ -83,6 +92,14 @@ const LoginPage = () => {
             </Button>
           </Paper>
         </form>
+        <Flex px="md" align="center" gap="sm" mt="2rem">
+          <Text color="dimmed" size="xs" mb={2}>
+            Powered by
+          </Text>
+          <Box h={40} opacity={0.5}>
+            <PushhLogo />
+          </Box>
+        </Flex>
       </Flex>
     </Box>
   );
