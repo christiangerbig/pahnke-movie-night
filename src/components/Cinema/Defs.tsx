@@ -132,7 +132,7 @@ const Defs = () => {
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0" stopOpacity="0" />
-        <stop offset="1" />
+        <stop offset="1" stopColor="#060606" />
       </linearGradient>
       <linearGradient
         xlinkHref="#d"
