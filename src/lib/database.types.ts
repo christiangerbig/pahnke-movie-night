@@ -41,14 +41,7 @@ export interface Database {
           user?: string;
         };
         Delete: {
-          created_at?: string | null;
-          guest_firstname?: string | null;
-          guest_surname?: string | null;
-          id?: number;
-          is_guest?: boolean | null;
-          seat?: number;
-          show?: number;
-          user?: string;
+          id: number;
         };
         Relationships: [
           {
