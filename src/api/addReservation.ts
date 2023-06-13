@@ -1,4 +1,4 @@
-import { supabaseAuthClient } from "~/pages";
+import { supabaseAuthClient } from "../pages/dashboard";
 // types
 import type { Database } from "~/lib/database.types";
 

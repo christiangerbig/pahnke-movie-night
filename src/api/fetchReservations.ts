@@ -1,4 +1,4 @@
-import { supabaseAuthClient } from "~/pages";
+import { supabaseAuthClient } from "../pages/dashboard";
 
 export const fetchReservations = async () => {
   const { data: reservations, error } = await supabaseAuthClient
