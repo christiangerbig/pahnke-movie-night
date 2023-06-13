@@ -12,7 +12,7 @@ interface CinemaState {
   selectedSeats: number[];
   isGuest: boolean;
   selectedShow: string | null;
-  userReservations: Database["public"]["Tables"]["reservations"]["Delete"][];
+  userReservations: Database["public"]["Tables"]["reservations"][];
 
   actions: {
     setUser: (user: User) => void;

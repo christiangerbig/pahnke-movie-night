@@ -23,6 +23,7 @@ import ReservationOverview from "~/components/booking/ReservationOverview";
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import ShowsOverview from "~/components/ShowsOverview";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -33,6 +34,7 @@ interface PropTypes {
 }
 
 const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
+  // zustand
   const setUser = useCinemaStore(selectSetUser);
   const setShows = useCinemaStore(selectSetShows);
   const setReservations = useCinemaStore(selectSetReservations);
@@ -47,6 +49,7 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
   return (
     <Box>
       <Container size="xl" mt="4rem">
+        <ShowsOverview />
         <ReservationOverview user={user} />
         <Flex px="md" align="center" gap="sm">
           <Text color="dimmed" size="xs" mb={2}>

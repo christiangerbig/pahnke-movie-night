@@ -1,4 +1,11 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { Trash } from "lucide-react";
+// zustand
+import {
+  selectSelectedShow,
+  selectShows,
+  useCinemaStore,
+} from "~/hooks/useCinemaStore";
+// mantine
 import {
   AppShell,
   Box,
@@ -11,17 +18,14 @@ import {
   Card,
   Skeleton,
 } from "@mantine/core";
-import type { User } from "@supabase/supabase-js";
+// dayjs
 import dayjs from "dayjs";
-
+// components
 import { Header } from "./Header";
 import ReservationForm from "./booking/ReservationForm";
-import {
-  selectSelectedShow,
-  selectShows,
-  useCinemaStore,
-} from "~/hooks/useCinemaStore";
-import { Trash } from "lucide-react";
+// types
+import type { User } from "@supabase/supabase-js";
+import type { PropsWithChildren } from "react";
 
 export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
   user,
@@ -31,10 +35,6 @@ export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
   const show = useCinemaStore(selectShows).filter(
     (show) => show.id === Number(selectedShowId),
   )[0];
-
-  const handleDelete = () => {
-    console.log("TEST");
-  };
 
   return (
     <>
@@ -54,17 +54,7 @@ export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
                 </Text>
                 <ReservationForm user={user} />
               </Navbar.Section>
-              <Navbar.Section px="md" w="100%">
-                <Button
-                  color="red"
-                  leftIcon={<Trash size={16} />}
-                  w="100%"
-                  variant="outline"
-                  onClick={handleDelete}
-                >
-                  Buchung stornieren
-                </Button>
-              </Navbar.Section>
+
               <Navbar.Section sx={{ flex: "0 1 0%" }}>
                 <Skeleton visible={!show} mt="lg">
                   <Card mt="lg" shadow="unset" pb="lg" radius={0} bg="dark.6">

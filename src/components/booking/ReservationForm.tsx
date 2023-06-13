@@ -82,13 +82,15 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     );
 
     resetSelectedSeats();
+
+    selectedShow && form.setValues({ show: selectedShow });
   }, []);
 
   // hook showDates change
-  useEffect(() => {
-    showDates[0] && setSelectedShow(showDates[0].value);
-    form.setValues({ show: showDates[0]?.value.toString() });
-  }, [showDates]);
+  // useEffect(() => {
+  //   showDates[0] && setSelectedShow(showDates[0].value);
+  //   form.setValues({ show: showDates[0]?.value.toString() });
+  // }, [showDates]);
 
   // hook selectedShow / reservations change
   useEffect(() => {

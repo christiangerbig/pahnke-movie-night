@@ -40,9 +40,6 @@ export interface Database {
           show?: number;
           user?: string;
         };
-        // Delete: {
-        //   id: number;
-        // };
         Relationships: [
           {
             foreignKeyName: "reservations_show_fkey";

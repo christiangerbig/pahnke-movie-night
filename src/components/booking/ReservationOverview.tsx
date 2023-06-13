@@ -37,6 +37,7 @@ const ReservationOverview = ({ user }: ReservationOverviewProps) => {
   >([]);
   const [tableElements, setTableElements] = useState<TableElement[]>([]);
   const [tableRows, setTableRows] = useState<ReactNode[]>([]);
+  // zustand
   const reservations = useCinemaStore(selectReservations);
   const setReservations = useCinemaStore(selectSetReservations);
 
