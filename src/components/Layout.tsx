@@ -23,7 +23,7 @@ import {
 } from "~/hooks/useCinemaStore";
 import { Trash } from "lucide-react";
 
-export const Layout: React.FC<{ user: User } & PropsWithChildren> = ({
+export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
   user,
   children,
 }) => {

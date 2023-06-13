@@ -2,8 +2,10 @@ import { create } from "zustand";
 // types
 import type { ReservationWithShow, Show } from "~/lib/general.types";
 import type { Database } from "~/lib/database.types";
+import type { User } from "@supabase/auth-helpers-nextjs";
 
 interface CinemaState {
+  user: User | object;
   shows: Show[];
   reservations: ReservationWithShow[];
   freeSeats: number[];
@@ -13,6 +15,7 @@ interface CinemaState {
   userReservations: Database["public"]["Tables"]["reservations"]["Delete"][];
 
   actions: {
+    setUser: (user: User) => void;
     setShows: (shows: Show[]) => void;
     setReservations: (reservations: ReservationWithShow[]) => void;
     setFreeSeats: (freeSeats: number[]) => void;
@@ -23,13 +26,14 @@ interface CinemaState {
     resetSelectedSeats: () => void;
     setIsGuest: (isGuest: boolean) => void;
     setSelectedShow: (selectedShow: string | null) => void;
-    setUserReservation: (
-      userReservations: Database["public"]["Tables"]["reservations"]["Delete"][],
-    ) => void;
+    // setUserReservation: (
+    //   userReservations: Database["public"]["Tables"]["reservations"]["Delete"][],
+    // ) => void;
   };
 }
 
 export const useCinemaStore = create<CinemaState>((set) => ({
+  user: {},
   shows: [],
   reservations: [],
   freeSeats: [],
@@ -39,6 +43,9 @@ export const useCinemaStore = create<CinemaState>((set) => ({
   userReservations: [],
 
   actions: {
+    setUser: (user) => {
+      set({ user });
+    },
     setShows: (shows) => {
       set({ shows });
     },
@@ -72,16 +79,17 @@ export const useCinemaStore = create<CinemaState>((set) => ({
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
     setIsGuest: (isGuest) => set({ isGuest }),
-    setUserReservations: (
-      userReservation: Database["public"]["Tables"]["reservations"]["Delete"],
-    ) =>
-      set(({ userReservations }) => ({
-        userReservations: userReservations.push(userReservation),
-      })),
+    // setUserReservations: (
+    //   userReservation: Database["public"]["Tables"]["reservations"]["Delete"],
+    // ) =>
+    //   set(({ userReservations }) => ({
+    //     userReservations: userReservations.push(userReservation),
+    //   })),
   },
 }));
 
 const selectors = {
+  selectUser: ({ user }: CinemaState) => user,
   selectShows: ({ shows }: CinemaState) => shows,
   selectReservations: ({ reservations }: CinemaState) => reservations,
   selectFreeSeats: ({ freeSeats }: CinemaState) => freeSeats,
@@ -90,6 +98,7 @@ const selectors = {
   selectUserReservations: ({ userReservations }: CinemaState) =>
     userReservations,
   // Actions
+  selectSetUser: ({ actions: { setUser } }: CinemaState) => setUser,
   selectSetShows: ({ actions: { setShows } }: CinemaState) => setShows,
   selectSetReservations: ({ actions: { setReservations } }: CinemaState) =>
     setReservations,
@@ -111,12 +120,13 @@ const selectors = {
   selectSelectedShow: ({ selectedShow }: CinemaState) => selectedShow,
   selectSetSelectedShow: ({ actions: { setSelectedShow } }: CinemaState) =>
     setSelectedShow,
-  selectSetUserReservations: ({
-    actions: { setUserReservations },
-  }: CinemaState) => setUserReservations,
+  // selectSetUserReservations: ({
+  //   actions: { setUserReservations },
+  // }: CinemaState) => setUserReservations,
 };
 
 export const {
+  selectUser,
   selectShows,
   selectReservations,
   selectFreeSeats,
@@ -124,6 +134,7 @@ export const {
   selectIsGuest,
   selectUserReservations,
   // Actions
+  selectSetUser,
   selectSetShows,
   selectSetReservations,
   selectSetFreeSeats,
@@ -135,5 +146,5 @@ export const {
   selectSetIsGuest,
   selectSelectedShow,
   selectSetSelectedShow,
-  selectSetUserReservations,
+  // selectSetUserReservations,
 } = selectors;

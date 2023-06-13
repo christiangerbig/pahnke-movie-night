@@ -33,7 +33,7 @@ import type { ReservationWithShow } from "~/lib/general.types";
 import ReservationDisplay from "./ReservationDisplay";
 
 interface ReservationFormProps {
-  user: User;
+  user: User | object;
 }
 
 interface ShowDateEntry {
@@ -193,7 +193,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     // booking doublet check
     let isDoubleBooking = false;
     reservations?.map((reservation) => {
-      if (reservation.user === user.id) {
+      if (reservation.user === (user as User).id) {
         if (reservation.show.id === Number(selectedShow)) {
           isDoubleBooking = true;
         }
@@ -232,7 +232,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
         {
           seat: selectedSeats[0],
           show: parseInt(show),
-          user: user.id,
+          user: (user as User).id,
         };
       // booking without guest
       if (!isGuest && !selectedSeats[1]) {
@@ -259,7 +259,7 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
           {
             seat: selectedSeats[1],
             show: parseInt(show),
-            user: user.id,
+            user: (user as User).id,
             guest_firstname: guestFirstName,
             guest_surname: guestSurname,
             is_guest: true,

@@ -10,7 +10,7 @@ import type { Database } from "~/lib/database.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-export const Header = ({ user }: { user: User }) => {
+export const Header = ({ user }: { user: User | object }) => {
   const router = useRouter();
   const handleLogout = async () => {
     const { error } = await supabaseAuthClient.auth.signOut();
@@ -24,7 +24,7 @@ export const Header = ({ user }: { user: User }) => {
       <Flex justify="space-between" align="center" h="100%">
         <Box>
           {/* <PushhLogo /> */}
-          <Title order={4}>Hallo {user.email}</Title>
+          <Title order={4}>Hallo {(user as User).email}</Title>
         </Box>
         <Button onClick={() => void handleLogout()} variant="default" size="xs">
           Logout
