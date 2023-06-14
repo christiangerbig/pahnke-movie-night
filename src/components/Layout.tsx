@@ -23,12 +23,15 @@ import { Header } from "./Header";
 import ReservationForm from "./booking/ReservationForm";
 // types
 import type { PropsWithChildren } from "react";
+import type { Show } from "~/lib/general.types";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const selectedShowId = useCinemaStore(selectSelectedShow);
   const show = useCinemaStore(selectShows).filter(
-    (show) => show.id === Number(selectedShowId),
+    (show: Show) => show.id === Number(selectedShowId),
   )[0];
+
+  const { movie_title, movie_poster, date, time } = show as Show;
 
   return (
     <>
@@ -56,7 +59,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
                       <Text component="span" color="dimmed" weight="normal">
                         Titel:{" "}
                       </Text>
-                      {show?.movie_title}
+                      {movie_title}
                     </Text>
                     <Text mt="md" weight="bold" my={4}>
                       <Text
@@ -67,16 +70,17 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
                       >
                         Datum:{" "}
                       </Text>
-                      {dayjs(show?.date).format("dd. DD.MM.YYYY")}{" "}
+                      {dayjs(date).format("dd. DD.MM.YYYY")}{" "}
                     </Text>
                     <Text mt="md" my={0}>
                       <Text component="span" color="dimmed" weight="normal">
                         Uhrzeit:{" "}
                       </Text>
+                      {(time as string).slice(0, 5)}
                     </Text>
-                    {show?.movie_poster && (
+                    {movie_poster && (
                       <Image
-                        src={show?.movie_poster}
+                        src={movie_poster}
                         alt=""
                         height={398}
                         mt="md"
