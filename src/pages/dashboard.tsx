@@ -6,7 +6,7 @@ import {
   type User,
 } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, ColorSwatch, Container, Flex, Text } from "@mantine/core";
+import { Box, Container, Flex, Text } from "@mantine/core";
 // zustand
 import {
   useCinemaStore,
@@ -17,7 +17,7 @@ import {
 // dayjs
 import dayjs from "../dayjs.config";
 // components
-import { PushhLogo } from "~/components/PushhLogo";
+import PushhLogo from "~/components/PushhLogo";
 import ReservationOverview from "~/components/booking/ReservationOverview";
 // types
 import type { GetServerSideProps, NextPage } from "next";

@@ -8,8 +8,8 @@ import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // dayjs
 import "dayjs/locale/de";
 // components
-import { AddShowForm } from "~/components/AddShowForm";
-import { ShowsTable } from "~/components/ShowsTable";
+import AddShowForm from "~/components/AddShowForm";
+import ShowsTable from "~/components/ShowsTable";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";

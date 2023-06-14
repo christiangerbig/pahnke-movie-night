@@ -1,4 +1,3 @@
-import { Trash } from "lucide-react";
 // zustand
 import {
   selectSelectedShow,
@@ -9,7 +8,6 @@ import {
 import {
   AppShell,
   Box,
-  Button,
   Navbar,
   Text,
   Image,
@@ -27,7 +25,7 @@ import ReservationForm from "./booking/ReservationForm";
 import type { User } from "@supabase/supabase-js";
 import type { PropsWithChildren } from "react";
 
-export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
+const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
   user,
   children,
 }) => {
@@ -101,3 +99,5 @@ export const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
     </>
   );
 };
+
+export default Layout;

@@ -18,7 +18,7 @@ import type { FileWithPath } from "@mantine/dropzone";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-export const AddShowForm = () => {
+const AddShowForm = () => {
   const [file, setFile] = useState<FileWithPath>();
   // mantine hooks
   const form = useForm({
@@ -182,3 +182,5 @@ export const AddShowForm = () => {
     </form>
   );
 };
+
+export default AddShowForm;

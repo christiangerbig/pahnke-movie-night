@@ -3,7 +3,7 @@ import { Clock3, CalendarDays, ArrowRight } from "lucide-react";
 import { useRouter } from "next/router";
 // zustand
 import { useCinemaStore, selectSetSelectedShow } from "../hooks/useCinemaStore";
-// Mantine
+// mantine
 import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
 // dayjs
 import dayjs from "../dayjs.config";

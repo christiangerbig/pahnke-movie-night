@@ -26,9 +26,6 @@ interface CinemaState {
     resetSelectedSeats: () => void;
     setIsGuest: (isGuest: boolean) => void;
     setSelectedShow: (selectedShow: string | null) => void;
-    // setUserReservation: (
-    //   userReservations: Database["public"]["Tables"]["reservations"]["Delete"][],
-    // ) => void;
   };
 }
 
@@ -79,12 +76,6 @@ export const useCinemaStore = create<CinemaState>((set) => ({
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
     setIsGuest: (isGuest) => set({ isGuest }),
-    // setUserReservations: (
-    //   userReservation: Database["public"]["Tables"]["reservations"]["Delete"],
-    // ) =>
-    //   set(({ userReservations }) => ({
-    //     userReservations: userReservations.push(userReservation),
-    //   })),
   },
 }));
 
@@ -120,9 +111,6 @@ const selectors = {
   selectSelectedShow: ({ selectedShow }: CinemaState) => selectedShow,
   selectSetSelectedShow: ({ actions: { setSelectedShow } }: CinemaState) =>
     setSelectedShow,
-  // selectSetUserReservations: ({
-  //   actions: { setUserReservations },
-  // }: CinemaState) => setUserReservations,
 };
 
 export const {
@@ -146,5 +134,4 @@ export const {
   selectSetIsGuest,
   selectSelectedShow,
   selectSetSelectedShow,
-  // selectSetUserReservations,
 } = selectors;

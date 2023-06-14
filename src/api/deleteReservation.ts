@@ -5,7 +5,8 @@ export const deleteReservation = async (reservationIDs: number[]) => {
     .from("reservations")
     .delete()
     .in("id", reservationIDs)
-    .select("*");
+    .select("*"); // Return data after deleting
+
   return new Promise((resolve, reject) => {
     if (response) {
       resolve(response);

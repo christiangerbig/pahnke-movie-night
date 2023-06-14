@@ -1,23 +1,11 @@
 // mantine
 import { Box, ColorSwatch, Container, Flex, Text } from "@mantine/core";
 // zustand
-import {
-  useCinemaStore,
-  selectUser,
-  selectSetReservations,
-} from "../hooks/useCinemaStore";
-// dayjs
-import dayjs from "../dayjs.config";
+import { useCinemaStore, selectUser } from "../hooks/useCinemaStore";
 // components
 import SeatSVG from "~/components/cinema/SeatSVG";
-// import ReservationOverview from "~/components/booking/ReservationOverview";
-import { Layout } from "~/components/Layout";
-// types
-import type { Database } from "~/lib/database.types";
-import type { ReservationWithShow } from "~/lib/general.types";
-import { PushhLogo } from "~/components/PushhLogo";
-
-import type { User } from "@supabase/auth-helpers-nextjs";
+import PushhLogo from "~/components/PushhLogo";
+import Layout from "~/components/Layout";
 
 const HomePage = () => {
   const user = useCinemaStore(selectUser);

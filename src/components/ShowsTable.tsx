@@ -9,7 +9,7 @@ interface ShowsTableProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
-export const ShowsTable = ({ shows }: ShowsTableProps) => {
+const ShowsTable = ({ shows }: ShowsTableProps) => {
   return (
     <Table>
       <thead>
@@ -29,3 +29,5 @@ export const ShowsTable = ({ shows }: ShowsTableProps) => {
     </Table>
   );
 };
+
+export default ShowsTable;

@@ -26,11 +26,12 @@ import { notifications } from "@mantine/notifications";
 import { z } from "zod";
 // dayjs
 import dayjs from "../../dayjs.config";
+// components
+import ReservationDisplay from "./ReservationDisplay";
 // types
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
-import ReservationDisplay from "./ReservationDisplay";
 
 interface ReservationFormProps {
   user: User | object;

@@ -1,4 +1,4 @@
-export const PushhLogo = () => {
+const PushhLogo = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -18,3 +18,5 @@ export const PushhLogo = () => {
     </svg>
   );
 };
+
+export default PushhLogo;

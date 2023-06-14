@@ -8,7 +8,8 @@ export const addReservations = async (
   const { data: reservations, error } = await supabaseAuthClient
     .from("reservations")
     .insert(userReservations)
-    .select("*");
+    .select("*"); // Return data after inserting
+
   return new Promise((resolve, reject) => {
     if (reservations) {
       resolve(reservations);

@@ -18,7 +18,8 @@ import { useForm } from "@mantine/form";
 import { useViewportSize } from "@mantine/hooks";
 // helpers
 import { validateEmail } from "~/lib/validateEmail";
-import { PushhLogo } from "~/components/PushhLogo";
+// components
+import PushhLogo from "~/components/PushhLogo";
 
 const supabaseClient = createBrowserSupabaseClient();
 

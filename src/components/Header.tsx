@@ -2,14 +2,14 @@ import { CornerDownLeft } from "lucide-react";
 // next
 import { useRouter } from "next/router";
 import Link from "next/link";
+// supabase
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, Button, Container, Title, Flex } from "@mantine/core";
-import {
-  User,
-  createBrowserSupabaseClient,
-} from "@supabase/auth-helpers-nextjs";
-
-import { PushhLogo } from "./PushhLogo";
+import { Box, Button, Title, Flex } from "@mantine/core";
+// components
+// import PushhLogo from "./PushhLogo";
+// types
+import type { User } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "~/lib/database.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
