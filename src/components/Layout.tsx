@@ -22,13 +22,9 @@ import dayjs from "dayjs";
 import { Header } from "./Header";
 import ReservationForm from "./booking/ReservationForm";
 // types
-import type { User } from "@supabase/supabase-js";
 import type { PropsWithChildren } from "react";
 
-const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
-  user,
-  children,
-}) => {
+const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const selectedShowId = useCinemaStore(selectSelectedShow);
   const show = useCinemaStore(selectShows).filter(
     (show) => show.id === Number(selectedShowId),
@@ -40,7 +36,7 @@ const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
         padding={0}
         header={
           <MantineHeader height={62} bg="dark.9">
-            <Header user={user} />
+            <Header />
           </MantineHeader>
         }
         navbar={
@@ -50,7 +46,7 @@ const Layout: React.FC<{ user: User | object } & PropsWithChildren> = ({
                 <Text size="md" weight={500} color="dimmed" mb="sm">
                   Vorstellung wählen
                 </Text>
-                <ReservationForm user={user} />
+                <ReservationForm />
               </Navbar.Section>
 
               <Navbar.Section sx={{ flex: "0 1 0%" }}>

@@ -61,7 +61,7 @@ const LoginPage = () => {
   }
 
   if (session) {
-    void router.push("/");
+    void router.push("/dashboard");
     return;
   }
 

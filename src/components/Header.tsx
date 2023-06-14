@@ -1,6 +1,8 @@
 import { CornerDownLeft } from "lucide-react";
 // next
 import { useRouter } from "next/router";
+// zustand
+import { useCinemaStore, selectUser } from "../hooks/useCinemaStore";
 import Link from "next/link";
 // supabase
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -14,8 +16,11 @@ import type { Database } from "~/lib/database.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-export const Header = ({ user }: { user: User | object }) => {
+export const Header = () => {
   const router = useRouter();
+  // zustand
+  const user = useCinemaStore(selectUser);
+
   const handleLogout = async () => {
     const { error } = await supabaseAuthClient.auth.signOut();
 
@@ -23,6 +28,7 @@ export const Header = ({ user }: { user: User | object }) => {
       router.reload();
     }
   };
+
   return (
     <Box h="100%" px="md">
       <Flex justify="space-between" align="center" h="100%">

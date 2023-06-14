@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 // zustand
 import {
   useCinemaStore,
+  selectUser,
   selectReservations,
   selectSetReservations,
 } from "../../hooks/useCinemaStore";
@@ -18,10 +19,6 @@ import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { ReservationWithShow } from "~/lib/general.types";
 
-interface ReservationOverviewProps {
-  user: object;
-}
-
 interface TableElement {
   showDate: string;
   showTitle: string;
@@ -31,13 +28,14 @@ interface TableElement {
   guestSurname: string | null;
 }
 
-const ReservationOverview = ({ user }: ReservationOverviewProps) => {
+const ReservationOverview = () => {
   const [userReservations, setUserReservations] = useState<
     ReservationWithShow[]
   >([]);
   const [tableElements, setTableElements] = useState<TableElement[]>([]);
   const [tableRows, setTableRows] = useState<ReactNode[]>([]);
   // zustand
+  const user = useCinemaStore(selectUser);
   const reservations = useCinemaStore(selectReservations);
   const setReservations = useCinemaStore(selectSetReservations);
 

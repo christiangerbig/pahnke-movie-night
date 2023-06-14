@@ -1,17 +1,13 @@
 // mantine
 import { Box, ColorSwatch, Container, Flex, Text } from "@mantine/core";
-// zustand
-import { useCinemaStore, selectUser } from "../hooks/useCinemaStore";
 // components
 import SeatSVG from "~/components/cinema/SeatSVG";
 import PushhLogo from "~/components/PushhLogo";
 import Layout from "~/components/Layout";
 
 const HomePage = () => {
-  const user = useCinemaStore(selectUser);
-
   return (
-    <Layout user={user}>
+    <Layout>
       <Box component="main">
         <Box h="calc(100vh - 120px)" sx={{ overflow: "hidden" }} mx="auto">
           <SeatSVG />

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 // zustand
 import {
   useCinemaStore,
+  selectUser,
   selectShows,
   selectReservations,
   selectSelectedSeats,
@@ -33,10 +34,6 @@ import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 
-interface ReservationFormProps {
-  user: User | object;
-}
-
 interface ShowDateEntry {
   value: string;
   label: string;
@@ -49,14 +46,12 @@ interface HandleSubmitArgs {
   guestSurname: string;
 }
 
-const ReservationForm = ({ user }: ReservationFormProps) => {
+const ReservationForm = () => {
   const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
-  // const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [selectedFilm, setSelectedFilm] = useState<string>("");
-  // -> movie poster not yet supported <-
-  // const [selectedShowImage, setSelectedShowImage] = useState<string | null>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
   // zustand
+  const user = useCinemaStore(selectUser);
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
@@ -87,12 +82,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     selectedShow && form.setValues({ show: selectedShow });
   }, []);
 
-  // hook showDates change
-  // useEffect(() => {
-  //   showDates[0] && setSelectedShow(showDates[0].value);
-  //   form.setValues({ show: showDates[0]?.value.toString() });
-  // }, [showDates]);
-
   // hook selectedShow / reservations change
   useEffect(() => {
     const reservedPlaceNumbers = reservations?.map((reservation) => {
@@ -114,8 +103,6 @@ const ReservationForm = ({ user }: ReservationFormProps) => {
     shows.map((show) => {
       if (show.id === Number(selectedShow)) {
         setSelectedFilm(show.movie_title);
-        // -> movie posters not yet supported <-
-        // setSelectedShowImage(show.movie_poster);
       }
     });
   }, [selectedShow, reservations]);
