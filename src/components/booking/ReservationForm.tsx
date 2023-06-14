@@ -80,7 +80,7 @@ const ReservationForm = () => {
     resetSelectedSeats();
 
     selectedShow && form.setValues({ show: selectedShow });
-  }, []);
+  }, [shows, selectedShow]);
 
   // hook selectedShow / reservations change
   useEffect(() => {
@@ -142,7 +142,7 @@ const ReservationForm = () => {
   // mantine form
   const form = useForm({
     initialValues: {
-      show: "",
+      show: selectedShow || "",
       isGuest: false,
       guestFirstName: "",
       guestSurname: "",

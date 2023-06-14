@@ -1,10 +1,5 @@
 // next
 import { useRouter } from "next/router";
-// zustand
-import {
-  useCinemaStore,
-  selectSetSelectedShow,
-} from "../../hooks/useCinemaStore";
 // mantine
 import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
 // dayjs
@@ -21,11 +16,9 @@ const ShowCard = ({
   show: { id, movie_title, movie_poster, time, date },
 }: ShowCardProps) => {
   const router = useRouter();
-  const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
-  const handleToHomePage = (event: any, id: string) => {
-    setSelectedShow(id);
-    void router.push("/");
+  const handleToHomePage = (id: string) => {
+    void router.push(`/?show=${id}`);
   };
 
   return (
@@ -71,8 +64,8 @@ const ShowCard = ({
               </Group>
             </Group>
             <Button
-              onClick={(event) => {
-                handleToHomePage(event, id.toString());
+              onClick={() => {
+                handleToHomePage(id.toString());
               }}
               variant="light"
               color="blue"

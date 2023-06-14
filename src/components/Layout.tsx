@@ -31,8 +31,6 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
     (show: Show) => show.id === Number(selectedShowId),
   )[0];
 
-  const { movie_title, movie_poster, date, time } = show as Show;
-
   return (
     <>
       <AppShell
@@ -59,7 +57,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
                       <Text component="span" color="dimmed" weight="normal">
                         Titel:{" "}
                       </Text>
-                      {movie_title}
+                      {show?.movie_title}
                     </Text>
                     <Text mt="md" weight="bold" my={4}>
                       <Text
@@ -70,17 +68,17 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
                       >
                         Datum:{" "}
                       </Text>
-                      {dayjs(date).format("dd. DD.MM.YYYY")}{" "}
+                      {dayjs(show?.date).format("dd. DD.MM.YYYY")}{" "}
                     </Text>
-                    <Text mt="md" my={0}>
+                    <Text mt="md" my={0} weight="bold">
                       <Text component="span" color="dimmed" weight="normal">
                         Uhrzeit:{" "}
                       </Text>
-                      {(time as string).slice(0, 5)}
+                      {show?.time?.slice(0, 5)}
                     </Text>
-                    {movie_poster && (
+                    {show?.movie_poster && (
                       <Image
-                        src={movie_poster}
+                        src={show?.movie_poster}
                         alt=""
                         height={398}
                         mt="md"
