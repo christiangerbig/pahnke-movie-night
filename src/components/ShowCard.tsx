@@ -21,7 +21,6 @@ const ShowCard = ({
 
   const handleClick = (event: any, id: string) => {
     setSelectedShow(id);
-    console.log(id);
     void router.push("/");
   };
 

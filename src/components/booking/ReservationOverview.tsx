@@ -10,13 +10,13 @@ import { Box, Button, Table, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 // dayjs
 import dayjs from "../../dayjs.config";
+// api
+import { deleteReservation } from "../../api/deleteReservation";
+import { fetchReservations } from "../../api/fetchReservations";
 // types
 import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { ReservationWithShow } from "~/lib/general.types";
-
-import { deleteReservation } from "../../api/deleteReservation";
-import { fetchReservations } from "../../api/fetchReservations";
 
 interface ReservationOverviewProps {
   user: object;
