@@ -47,8 +47,8 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
   }, [user]);
 
   return (
-    <Box>
-      <Container size="xl" mt="4rem">
+    <Box component="main">
+      <Container size="lg" mt="4rem">
         <ShowsOverview />
         <ReservationsOverview />
         <Flex mt="5rem" justify="end">

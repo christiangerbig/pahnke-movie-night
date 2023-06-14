@@ -26,8 +26,7 @@ const Seat = ({ seatNumber, children }: SeatProps) => {
   const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
   const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
-  // click handler
-  const handleClick = () => {
+  const handleSelectSeat = () => {
     if (freeSeats.includes(seatNumber)) {
       if (selectedSeats.includes(seatNumber)) {
         removeSelectedSeat(seatNumber);
@@ -41,9 +40,9 @@ const Seat = ({ seatNumber, children }: SeatProps) => {
     <Popover opened={opened}>
       <Popover.Target>
         <PathGroup
-          onClick={handleClick}
           onMouseEnter={open}
           onMouseLeave={close}
+          onClick={handleSelectSeat}
         >
           {children}
         </PathGroup>

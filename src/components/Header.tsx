@@ -47,9 +47,9 @@ export const Header = () => {
             Admim-Bereich
           </Button>
           <Button
-            onClick={() => void handleLogout()}
             variant="default"
             size="xs"
+            onClick={() => void handleLogout()}
           >
             Logout
           </Button>

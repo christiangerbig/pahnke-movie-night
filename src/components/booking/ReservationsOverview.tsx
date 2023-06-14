@@ -8,7 +8,6 @@ import {
 } from "../../hooks/useCinemaStore";
 // mantine
 import { Box, Button, Table, Title, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 // dayjs
 import dayjs from "../../dayjs.config";
@@ -85,8 +84,9 @@ const ReservationOverview = () => {
 
   // hook tableElements change
   useEffect(() => {
-    // cancellation check
+    // delete
     const handleDeleteReservation = (event: any, showDate: string) => {
+      // cancellation check
       modals.openConfirmModal({
         title: "Stornierung",
         centered: true,
@@ -109,12 +109,6 @@ const ReservationOverview = () => {
             });
           deleteReservation(reservationIDs)
             .then((): void => {
-              notifications.show({
-                title: "",
-                message: "Die Reservierung wurde storniert.",
-                color: "green",
-                autoClose: 5000,
-              });
               fetchReservations()
                 .then((updatedReservations): void => {
                   setReservations(updatedReservations as ReservationWithShow[]);

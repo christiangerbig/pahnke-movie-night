@@ -1,4 +1,3 @@
-import { Clock3, CalendarDays, ArrowRight } from "lucide-react";
 // next
 import { useRouter } from "next/router";
 // zustand
@@ -10,6 +9,8 @@ import {
 import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
 // dayjs
 import dayjs from "../../dayjs.config";
+// components
+import { Clock3, CalendarDays, ArrowRight } from "lucide-react";
 // types
 import type { Show } from "~/lib/general.types";
 
@@ -22,7 +23,7 @@ const ShowCard = ({
   const router = useRouter();
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
-  const handleClick = (event: any, id: string) => {
+  const handleToHomePage = (event: any, id: string) => {
     setSelectedShow(id);
     void router.push("/");
   };
@@ -71,14 +72,14 @@ const ShowCard = ({
             </Group>
             <Button
               onClick={(event) => {
-                handleClick(event, id.toString());
+                handleToHomePage(event, id.toString());
               }}
               variant="light"
               color="blue"
               radius="md"
               size="xs"
             >
-              <Text mr="0.8rem">Zur Buchung</Text>
+              <Text mr="0.8rem">Jetzt buchen</Text>
               <ArrowRight size="1rem" />
             </Button>
           </Flex>

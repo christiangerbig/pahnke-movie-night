@@ -200,7 +200,7 @@ const ReservationForm = () => {
       return;
     }
 
-    // booking normal
+    // booking
     if (selectedSeats[0]) {
       const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
         setReservations(updatedReservations);
