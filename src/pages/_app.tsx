@@ -5,6 +5,7 @@ import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 // styles
 import "~/styles/globals.css";
 // dayjs
@@ -38,7 +39,9 @@ const App = ({
         }}
       >
         <Notifications />
-        <Component {...pageProps} />
+        <ModalsProvider>
+          <Component {...pageProps} />
+        </ModalsProvider>
       </MantineProvider>
     </SessionContextProvider>
   );

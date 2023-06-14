@@ -19,11 +19,11 @@ import dayjs from "../dayjs.config";
 // components
 import PushhLogo from "~/components/PushhLogo";
 import ReservationOverview from "~/components/booking/ReservationOverview";
+import ShowsOverview from "~/components/ShowsOverview";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
-import ShowsOverview from "~/components/ShowsOverview";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -50,14 +50,16 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
     <Box>
       <Container size="xl" mt="4rem">
         <ShowsOverview />
-        <ReservationOverview user={user} />
-        <Flex px="md" align="center" gap="sm">
-          <Text color="dimmed" size="xs" mb={2}>
-            Powered by
-          </Text>
-          <Box h={40} opacity={0.5}>
-            <PushhLogo />
-          </Box>
+        <ReservationOverview />
+        <Flex mt="5rem" justify="end">
+          <Flex px="md" align="center" gap="sm">
+            <Text color="dimmed" size="xs" mb={2}>
+              Powered by
+            </Text>
+            <Box h={40} opacity={0.5}>
+              <PushhLogo />
+            </Box>
+          </Flex>
         </Flex>
       </Container>
     </Box>

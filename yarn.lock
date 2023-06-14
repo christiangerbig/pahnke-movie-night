@@ -280,6 +280,13 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-6.0.10.tgz#3f4383034f7c8508708abc31dd3d56b93f1e3a6b"
   integrity sha512-rxH5/CxmUs1mUZAj27Fza4SH07HV1XyrL7L9wwhZdMLg+oDEaAs8BMz8lsOIHOCro9ZDh+Mm7QAbEW8HcvmYJg==
 
+"@mantine/modals@^6.0.13":
+  version "6.0.13"
+  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-6.0.13.tgz#c6e9abf558b20eb2cc2cbde49f45f1c144d61139"
+  integrity sha512-R/FfH+vzk1iKxl/HDgUC0CXZI7zvQ79J+VUSw9eQcNWgSTx9IwrDbFeEtWC2SvVNaCYmMSxgadCbgjKsaeqzWA==
+  dependencies:
+    "@mantine/utils" "6.0.13"
+
 "@mantine/next@^6.0.10":
   version "6.0.10"
   resolved "https://registry.yarnpkg.com/@mantine/next/-/next-6.0.10.tgz#4d5f2f30dabbeaff08a00c388b54420b95477aab"

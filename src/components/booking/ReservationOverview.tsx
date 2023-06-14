@@ -7,8 +7,9 @@ import {
   selectSetReservations,
 } from "../../hooks/useCinemaStore";
 // mantine
-import { Box, Button, Table, Title } from "@mantine/core";
+import { Box, Button, Table, Title, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
 // dayjs
 import dayjs from "../../dayjs.config";
 // api
@@ -82,36 +83,52 @@ const ReservationOverview = () => {
 
   // hook tableElements change
   useEffect(() => {
+    // cancellation check
     const handleDeleteReservation = (event: any, showDate: string) => {
-      const cancellationReservations = userReservations.filter(
-        (reservation) => {
-          return reservation.show.date === showDate;
+      modals.openConfirmModal({
+        title: "Stornierung",
+        centered: true,
+        children: (
+          <Text size="sm">Soll(en) die Reservierung(en) storniert werden?</Text>
+        ),
+        labels: { confirm: "Stornieren", cancel: "Nein, lass' mal" },
+        confirmProps: { color: "red" },
+        onCancel: () => {
+          return;
         },
-      );
+        // cancellation
+        onConfirm: () => {
+          const cancellationReservations = userReservations.filter(
+            (reservation) => {
+              return reservation.show.date === showDate;
+            },
+          );
 
-      const reservationIDs = cancellationReservations.map((reservation) => {
-        return reservation.id;
-      });
-
-      deleteReservation(reservationIDs)
-        .then((): void => {
-          notifications.show({
-            title: "",
-            message: "Die Reservierung wurde gelöscht.",
-            color: "green",
-            autoClose: 5000,
+          const reservationIDs = cancellationReservations.map((reservation) => {
+            return reservation.id;
           });
-          fetchReservations()
-            .then((updatedReservations): void => {
-              setReservations(updatedReservations as ReservationWithShow[]);
+
+          deleteReservation(reservationIDs)
+            .then((): void => {
+              notifications.show({
+                title: "",
+                message: "Die Reservierung wurde storniert.",
+                color: "green",
+                autoClose: 5000,
+              });
+              fetchReservations()
+                .then((updatedReservations): void => {
+                  setReservations(updatedReservations as ReservationWithShow[]);
+                })
+                .catch((err) => {
+                  console.log("Fehler:", err);
+                });
             })
             .catch((err) => {
               console.log("Fehler:", err);
             });
-        })
-        .catch((err) => {
-          console.log("Fehler:", err);
-        });
+        },
+      });
     };
 
     setTableRows(
@@ -147,7 +164,7 @@ const ReservationOverview = () => {
 
   return (
     <Box>
-      <Title fz="lg" mb="1rem">
+      <Title fz="xl" mt="5rem" mb="1rem">
         Meine Reservierungen
       </Title>
       <Table>
