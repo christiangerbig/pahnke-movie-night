@@ -1,4 +1,3 @@
-import { CornerDownLeft } from "lucide-react";
 // next
 import { useRouter } from "next/router";
 // zustand
@@ -7,8 +6,9 @@ import Link from "next/link";
 // supabase
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, Button, Title, Flex } from "@mantine/core";
+import { Box, Button, Title, Flex, Group } from "@mantine/core";
 // components
+import { CornerDownLeft } from "lucide-react";
 // import PushhLogo from "./PushhLogo";
 // types
 import type { User } from "@supabase/auth-helpers-nextjs";
@@ -42,10 +42,18 @@ export const Header = () => {
 
         {/* <PushhLogo /> */}
         <Title order={4}>Hallo {(user as User).email}</Title>
-
-        <Button onClick={() => void handleLogout()} variant="default" size="xs">
-          Logout
-        </Button>
+        <Group>
+          <Button variant="default" size="xs" component={Link} href="/admin">
+            Admim-Bereich
+          </Button>
+          <Button
+            onClick={() => void handleLogout()}
+            variant="default"
+            size="xs"
+          >
+            Logout
+          </Button>
+        </Group>
       </Flex>
     </Box>
   );

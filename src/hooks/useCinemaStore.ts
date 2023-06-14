@@ -72,7 +72,7 @@ export const useCinemaStore = create<CinemaState>((set) => ({
     },
     removeSelectedSeat: (selectedSeat: number) =>
       set(({ selectedSeats }) => ({
-        selectedSeats: selectedSeats.filter((item) => item !== selectedSeat),
+        selectedSeats: selectedSeats.filter((seat) => seat !== selectedSeat),
       })),
     resetSelectedSeats: () => set({ selectedSeats: [] }),
     setIsGuest: (isGuest) => set({ isGuest }),

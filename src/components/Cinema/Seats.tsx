@@ -22,8 +22,8 @@ const Seats = () => {
       element?.setAttribute("aria-disabled", "");
     }
 
-    freeSeats.map((entry) => {
-      const selectorString = `[data-seat='${entry}']`;
+    freeSeats.map((freeSeat) => {
+      const selectorString = `[data-seat='${freeSeat}']`;
       const element = document.querySelector(selectorString);
       element?.toggleAttribute("aria-disabled");
     });

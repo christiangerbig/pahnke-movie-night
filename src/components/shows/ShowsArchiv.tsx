@@ -1,7 +1,7 @@
 // mantine
 import { Table } from "@mantine/core";
 // dayjs
-import dayjs from "../dayjs.config";
+import dayjs from "../../dayjs.config";
 // types
 import type { Database } from "~/lib/database.types";
 
@@ -9,7 +9,7 @@ interface ShowsTableProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
-const ShowsTable = ({ shows }: ShowsTableProps) => {
+const ShowsArchiv = ({ shows }: ShowsTableProps) => {
   return (
     <Table>
       <thead>
@@ -30,4 +30,4 @@ const ShowsTable = ({ shows }: ShowsTableProps) => {
   );
 };
 
-export default ShowsTable;
+export default ShowsArchiv;

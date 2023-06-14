@@ -1,5 +1,5 @@
 // zustand
-import { useCinemaStore, selectShows } from "../hooks/useCinemaStore";
+import { useCinemaStore, selectShows } from "../../hooks/useCinemaStore";
 // mantine
 import { Box, Title } from "@mantine/core";
 // components
@@ -10,9 +10,7 @@ const ShowsOverview = () => {
 
   return (
     <Box>
-      <Title fz="xl" mt="5rem" mb="1rem">
-        Shows
-      </Title>
+      <Title mb="2rem">Shows</Title>
       {shows.map(
         (show): JSX.Element => (
           <ShowCard key={show.id} show={show} />

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Image as ImageIcon, UploadCloud, XCircle } from "lucide-react";
 // next
 import Image from "next/image";
 // supabase
@@ -11,7 +10,9 @@ import { notifications } from "@mantine/notifications";
 import { DatePickerInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 // dayjs
-import dayjs from "../dayjs.config";
+import dayjs from "../../dayjs.config";
+// components
+import { Image as ImageIcon, UploadCloud, XCircle } from "lucide-react";
 // types
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";

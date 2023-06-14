@@ -15,6 +15,8 @@ import dayjs from "../../dayjs.config";
 // api
 import { deleteReservation } from "../../api/deleteReservation";
 import { fetchReservations } from "../../api/fetchReservations";
+// components
+import { Trash } from "lucide-react";
 // types
 import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
@@ -98,16 +100,13 @@ const ReservationOverview = () => {
         },
         // cancellation
         onConfirm: () => {
-          const cancellationReservations = userReservations.filter(
-            (reservation) => {
+          const reservationIDs = userReservations
+            .filter((reservation) => {
               return reservation.show.date === showDate;
-            },
-          );
-
-          const reservationIDs = cancellationReservations.map((reservation) => {
-            return reservation.id;
-          });
-
+            })
+            .map((reservation) => {
+              return reservation.id;
+            });
           deleteReservation(reservationIDs)
             .then((): void => {
               notifications.show({
@@ -149,9 +148,12 @@ const ReservationOverview = () => {
             <td>{guestSurname}</td>
             {!isGuest ? (
               <Button
-                onClick={(event) => handleDeleteReservation(event, showDate)}
-                variant="default"
+                color="red"
+                leftIcon={<Trash size={16} />}
+                variant="outline"
+                radius="md"
                 size="xs"
+                onClick={(event) => handleDeleteReservation(event, showDate)}
               >
                 Stornieren
               </Button>
@@ -164,7 +166,7 @@ const ReservationOverview = () => {
 
   return (
     <Box>
-      <Title fz="xl" mt="5rem" mb="1rem">
+      <Title mt="6rem" mb="2rem">
         Meine Reservierungen
       </Title>
       <Table>

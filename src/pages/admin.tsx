@@ -1,4 +1,3 @@
-import { CornerDownLeft } from "lucide-react";
 // next
 import Link from "next/link";
 // mantine
@@ -8,8 +7,9 @@ import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // dayjs
 import "dayjs/locale/de";
 // components
-import AddShowForm from "~/components/AddShowForm";
-import ShowsTable from "~/components/ShowsTable";
+import { CornerDownLeft } from "lucide-react";
+import ShowAddForm from "~/components/shows/ShowAddForm";
+import ShowsArchiv from "~/components/shows/ShowsArchiv";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
@@ -36,9 +36,11 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
               </Box>
               <Title>Show Archiv</Title>
             </Flex>
-            <Button onClick={open}>Show hinzufügen</Button>
+            <Button variant="default" size="xs" onClick={open}>
+              Show hinzufügen
+            </Button>
           </Flex>
-          <ShowsTable shows={shows} />
+          <ShowsArchiv shows={shows} />
         </Container>
       </Box>
       <Modal
@@ -47,7 +49,7 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
         title="Neue Show hinzufügen"
         size="xl"
       >
-        <AddShowForm />
+        <ShowAddForm />
       </Modal>
     </>
   );

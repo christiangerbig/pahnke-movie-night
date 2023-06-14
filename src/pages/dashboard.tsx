@@ -18,8 +18,8 @@ import {
 import dayjs from "../dayjs.config";
 // components
 import PushhLogo from "~/components/PushhLogo";
-import ReservationOverview from "~/components/booking/ReservationOverview";
-import ShowsOverview from "~/components/ShowsOverview";
+import ReservationsOverview from "~/components/booking/ReservationsOverview";
+import ShowsOverview from "~/components/shows/ShowsOverview";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
@@ -50,7 +50,7 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
     <Box>
       <Container size="xl" mt="4rem">
         <ShowsOverview />
-        <ReservationOverview />
+        <ReservationsOverview />
         <Flex mt="5rem" justify="end">
           <Flex px="md" align="center" gap="sm">
             <Text color="dimmed" size="xs" mb={2}>
