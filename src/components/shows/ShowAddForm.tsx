@@ -41,8 +41,6 @@ const AddShowForm = () => {
       .from("posters")
       .upload(value.name, value);
 
-    console.log(data);
-
     return { data, error };
   };
 
@@ -83,7 +81,7 @@ const AddShowForm = () => {
       "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
 
     const { data, error } = await supabaseAuthClient.from("shows").insert({
-      date: values.date.toString(),
+      date: dayjs(values.date).format("YYYY-MM-DD").toString(),
       movie_title: values.title,
       movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
     });
@@ -94,13 +92,13 @@ const AddShowForm = () => {
         message: error.message,
         color: "red",
       });
+    } else {
+      notifications.show({
+        title: "Yeah!",
+        message: "Show wurde hinzugefügt",
+        color: "green",
+      });
     }
-
-    notifications.show({
-      title: "Yeah!",
-      message: "Show wurde hinzugefügt",
-      color: "green",
-    });
 
     return data;
   };
@@ -178,7 +176,9 @@ const AddShowForm = () => {
           )}
         </Box>
 
-        <Button type="submit">Speichern</Button>
+        <Button type="submit" color="indigo">
+          Speichern
+        </Button>
       </Stack>
     </form>
   );

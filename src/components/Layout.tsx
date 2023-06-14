@@ -43,7 +43,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
           <Navbar width={{ base: 300 }} pt="md" bg="dark.9">
             <Flex direction="column" h="100%">
               <Navbar.Section sx={{ flex: "1 1 0%" }} px="md">
-                <Text size="md" weight={500} color="dimmed" mb="sm">
+                <Text size="sm" weight={500} color="dimmed" mb="sm">
                   Vorstellung wählen
                 </Text>
                 <ReservationForm />

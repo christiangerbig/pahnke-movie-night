@@ -11,7 +11,7 @@ const ReservationDisplay = () => {
 
   return (
     <Flex gap={8} align="center">
-      <Text component="span" color="dimmed" size="sm">
+      <Text component="span" color="dimmed" size="xs">
         Ausgewählte Plätze:
       </Text>
       <Text weight="bold">

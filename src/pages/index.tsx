@@ -17,24 +17,24 @@ const HomePage = () => {
             <Flex gap="xl" align="center">
               <Flex align="center" gap="sm">
                 <ColorSwatch color="red" size={20} />
-                <Text component="span" size="sm">
+                <Text component="span" size="xs">
                   Freie Plätze
                 </Text>
               </Flex>
               <Flex align="center" gap="sm">
                 <ColorSwatch color="orange" size={20} />
-                <Text component="span" size="sm">
+                <Text component="span" size="xs">
                   Ausgewählte Plätze
                 </Text>
               </Flex>
               <Flex align="center" gap="sm">
                 <ColorSwatch color="grey" size={20} />
-                <Text component="span" size="sm">
+                <Text component="span" size="xs">
                   Belegte Plätze
                 </Text>
               </Flex>
             </Flex>
-            <Flex px="md" align="center" gap="sm">
+            <Flex px="md" align="center" gap="xs">
               <Text color="dimmed" size="xs" mb={2}>
                 Powered by
               </Text>

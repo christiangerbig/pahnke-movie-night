@@ -20,10 +20,10 @@ const SeatSVG = () => {
         <Seats />
         <MovieScreen />
         <foreignObject
-          width="500"
-          height="260"
+          width="480"
+          height="270"
           mask="url(#screen)"
-          transform="translate(142,115)"
+          transform="translate(149,130)"
         >
           <iframe
             width="100%"
@@ -50,8 +50,8 @@ const SeatSVG = () => {
         <mask id="screen">
           <path
             fill="#fff"
-            d="M156.95 136.34h463.98v219.01H156.95z"
-            transform="translate(-142,-115)"
+            d="M156.95 136.34h464v261H156.95z"
+            transform="translate(-149,-130)"
           />
         </mask>
       </svg>

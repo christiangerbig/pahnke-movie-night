@@ -287,6 +287,7 @@ const ReservationForm = () => {
               placeholder="Wähle eine Show aus..."
               w="100%"
               variant="filled"
+              size="xs"
               bg="dark.9"
               {...form.getInputProps("show")}
               onChange={(value) => {
@@ -299,6 +300,7 @@ const ReservationForm = () => {
               label="Ich möchte einen Gast mitbringen"
               ref={checkboxRef}
               color="indigo"
+              size="xs"
               {...form.getInputProps("isGuest")}
               onChange={() => {
                 form.setValues({ isGuest: !isGuest });
@@ -310,12 +312,14 @@ const ReservationForm = () => {
                 <TextInput
                   label="Vorname Gast"
                   placeholder="Vorname"
+                  size="xs"
                   withAsterisk
                   {...form.getInputProps("guestFirstName")}
                 />
                 <TextInput
                   label="Nachname Gast"
                   placeholder="NachName"
+                  size="xs"
                   withAsterisk
                   {...form.getInputProps("guestSurname")}
                 />
@@ -326,6 +330,7 @@ const ReservationForm = () => {
           <Button
             type="submit"
             w="100%"
+            size="xs"
             disabled={selectedSeats.length === 0}
             color="indigo"
           >

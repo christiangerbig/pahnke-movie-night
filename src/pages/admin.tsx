@@ -34,9 +34,9 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
               >
                 <CornerDownLeft />
               </Box>
-              <Title>Show Archiv</Title>
+              <Title order={3}>Show Archiv</Title>
             </Flex>
-            <Button variant="default" size="xs" onClick={open}>
+            <Button size="xs" color="indigo" onClick={open}>
               Show hinzufügen
             </Button>
           </Flex>
