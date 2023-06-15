@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 // next
 import { useRouter } from "next/router";
 // zustand
@@ -17,9 +18,16 @@ import type { Database } from "~/lib/database.types";
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 export const Header = () => {
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const router = useRouter();
   // zustand
   const user = useCinemaStore(selectUser);
+
+  // hook user change
+  useEffect(() => {
+    (user as User).user_metadata &&
+      setIsAdmin((user as User).user_metadata.admin as boolean);
+  }, [user]);
 
   const handleLogout = async () => {
     const { error } = await supabaseAuthClient.auth.signOut();
@@ -32,20 +40,23 @@ export const Header = () => {
   return (
     <Box h="100%" px="md">
       <Flex justify="space-between" align="center" h="100%">
-        <Box
-          component={Link}
-          href="/dashboard"
-          sx={{ lineHeight: 0, color: "#C1C2C5" }}
-        >
-          <CornerDownLeft />
-        </Box>
-
-        {/* <PushhLogo /> */}
-        <Title order={4}>Hallo {(user as User).email}</Title>
         <Group>
-          <Button variant="default" size="xs" component={Link} href="/admin">
-            Admim-Bereich
-          </Button>
+          <Box
+            component={Link}
+            href="/dashboard"
+            sx={{ lineHeight: 0, color: "#C1C2C5" }}
+          >
+            <CornerDownLeft />
+          </Box>
+          {/* <PushhLogo /> */}
+          <Title order={4}>Hallo {(user as User).email}</Title>
+        </Group>
+        <Group>
+          {isAdmin ? (
+            <Button variant="default" size="xs" component={Link} href="/admin">
+              Admim-Bereich
+            </Button>
+          ) : null}
           <Button
             variant="default"
             size="xs"

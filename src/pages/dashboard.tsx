@@ -6,7 +6,13 @@ import {
   type User,
 } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, Container, Flex, Text } from "@mantine/core";
+import {
+  Box,
+  Container,
+  Flex,
+  Text,
+  Header as MantineHeader,
+} from "@mantine/core";
 // zustand
 import {
   useCinemaStore,
@@ -24,6 +30,7 @@ import ShowsOverview from "~/components/shows/ShowsOverview";
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import { Header } from "~/components/Header";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -48,6 +55,9 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
 
   return (
     <Box component="main">
+      <MantineHeader height={62} bg="dark.9">
+        <Header />
+      </MantineHeader>
       <Container size="lg" mt="4rem">
         <ShowsOverview />
         <ReservationsOverview />
