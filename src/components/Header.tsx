@@ -19,9 +19,19 @@ export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 export const Header = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isDashboard, setIsDashboard] = useState<boolean>(true);
   const router = useRouter();
   // zustand
   const user = useCinemaStore(selectUser);
+
+  // hook component did mount
+  useEffect(() => {
+    if (router.asPath === "/dashboard") {
+      setIsDashboard(true);
+      return;
+    }
+    setIsDashboard(false);
+  }, []);
 
   // hook user change
   useEffect(() => {
@@ -41,13 +51,18 @@ export const Header = () => {
     <Box h="100%" px="md">
       <Flex justify="space-between" align="center" h="100%">
         <Group>
-          <Box
-            component={Link}
-            href="/dashboard"
-            sx={{ lineHeight: 0, color: "#C1C2C5" }}
-          >
-            <CornerDownLeft />
-          </Box>
+          {!isDashboard ? (
+            <Box
+              w="1.5rem"
+              component={Link}
+              href="/dashboard"
+              sx={{ lineHeight: 0, color: "#C1C2C5" }}
+            >
+              <CornerDownLeft />
+            </Box>
+          ) : (
+            <Box w="1.5rem" />
+          )}
           {/* <PushhLogo /> */}
           <Title order={4}>Hallo {(user as User).email}</Title>
         </Group>
