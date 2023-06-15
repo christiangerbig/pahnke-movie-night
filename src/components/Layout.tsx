@@ -36,7 +36,15 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       <AppShell
         padding={0}
         header={
-          <MantineHeader height={62} bg="dark.9">
+          <MantineHeader
+            height={62}
+            bg="dark.9"
+            sx={{
+              position: "fixed",
+              top: 0,
+              "z-index": 10,
+            }}
+          >
             <Header />
           </MantineHeader>
         }

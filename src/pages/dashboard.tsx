@@ -55,7 +55,15 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
 
   return (
     <Box component="main">
-      <MantineHeader height={62} bg="dark.9">
+      <MantineHeader
+        height={62}
+        bg="dark.9"
+        sx={{
+          position: "fixed",
+          top: 0,
+          "z-index": 10,
+        }}
+      >
         <Header />
       </MantineHeader>
       <Container size="lg" mt="4rem">
