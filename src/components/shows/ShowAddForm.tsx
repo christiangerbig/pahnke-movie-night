@@ -5,10 +5,12 @@ import Image from "next/image";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
 import { Box, TextInput, Text, Group, rem, Button, Stack } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { DatePickerInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+// zod
+import { z } from "zod";
 // dayjs
 import dayjs from "../../dayjs.config";
 // components
@@ -21,17 +23,41 @@ const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 const AddShowForm = () => {
   const [file, setFile] = useState<FileWithPath>();
+
+  // zod schema
+  const schema = z
+    .object({
+      title: z
+        .string()
+        .trim()
+        .min(1, { message: "Es muss ein Filmtitel angegeben werden" }),
+      date: z.date().min(new Date(), {
+        message: "Es muss ein Datum angegeben werden",
+      }),
+      youtubeLink: z
+        .string()
+        .trim()
+        .min(1, "Es muss ein Youtube-Link angegeben werden"),
+    })
+    .superRefine(({ youtubeLink }, ctx) => {
+      if (!youtubeLink.includes("https://www.youtube.com/watch?")) {
+        ctx.addIssue({
+          message: "Es muss sich um einen Youtube-Link handeln",
+          code: z.ZodIssueCode.custom,
+          path: ["youtubeLink"],
+        });
+      }
+    });
+
   // mantine hooks
   const form = useForm({
     initialValues: {
       title: "",
       date: dayjs().toDate(),
       poster: undefined as FileWithPath | undefined,
+      youtubeLink: "",
     },
-    validate: {
-      title: isNotEmpty("Es muss ein Filmtitel angegeben werden"),
-      date: isNotEmpty("Es muss ein Datum angegeben werden"),
-    },
+    validate: zodResolver(schema),
   });
 
   const getStorate = async (value?: FileWithPath) => {
@@ -66,6 +92,7 @@ const AddShowForm = () => {
   const handleSubmit = async (values: {
     date: Date;
     title: string;
+    youtubeLink: string;
     poster: FileWithPath | undefined;
   }) => {
     const { data: storageData, error: storageError } = await getStorate(
@@ -84,6 +111,7 @@ const AddShowForm = () => {
       date: dayjs(values.date).format("YYYY-MM-DD").toString(),
       movie_title: values.title,
       movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
+      movie_description: values.youtubeLink,
     });
 
     if (error) {
@@ -93,6 +121,7 @@ const AddShowForm = () => {
         color: "red",
       });
     } else {
+      form.reset();
       notifications.show({
         title: "Yeah!",
         message: "Show wurde hinzugefügt",
@@ -120,6 +149,13 @@ const AddShowForm = () => {
           locale="de"
           withAsterisk
           {...form.getInputProps("date")}
+        />
+
+        <TextInput
+          label="You tube link"
+          placeholder="Link ..."
+          withAsterisk
+          {...form.getInputProps("youtubeLink")}
         />
 
         <Box>
