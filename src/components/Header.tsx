@@ -10,7 +10,6 @@ import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { Box, Button, Title, Flex, Group } from "@mantine/core";
 // components
 import { CornerDownLeft } from "lucide-react";
-// import PushhLogo from "./PushhLogo";
 // types
 import type { User } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "~/lib/database.types";
@@ -63,8 +62,7 @@ export const Header = () => {
           ) : (
             <Box w="1.5rem" />
           )}
-          {/* <PushhLogo /> */}
-          <Title order={4}>Hallo {(user as User).email}</Title>
+          <Title order={4}>Moin {(user as User).email}</Title>
         </Group>
         <Group>
           {isAdmin ? (

@@ -1,7 +1,15 @@
 // next
 import { useRouter } from "next/router";
 // mantine
-import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
+import {
+  Card,
+  Group,
+  Image,
+  Text,
+  Button,
+  Flex,
+  Skeleton,
+} from "@mantine/core";
 // dayjs
 import dayjs from "../../dayjs.config";
 // components
@@ -22,58 +30,60 @@ const ShowCard = ({
   };
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder w="70%" mb="2rem">
-      <Flex direction="row" w="100%" gap="md">
-        <Card.Section ml="0rem">
-          <Image
-            src={movie_poster}
-            height="12rem"
-            width="8rem"
-            alt="movie poster"
-            radius="md"
-          />
-        </Card.Section>
+    <Card shadow="md" padding="lg" radius="md" withBorder bg="dark.9" mb="md">
+      <Flex direction="row" w="100%" gap="lg">
+        <Image
+          src={movie_poster}
+          height={150}
+          width="auto"
+          alt="movie poster"
+          radius="md"
+        />
         <Flex
           justify="space-between"
           align="flex-start"
           direction="column"
-          gap="md"
-          ml="2rem"
           w="100%"
         >
-          <Text size="xl" weight={800} w="8rem" mt="1rem">
+          <Text size={28} fw="bold">
             {movie_title}
           </Text>
           <Flex
             align="flex-center"
             justify="space-between"
             direction="row"
-            gap="lg"
             w="100%"
           >
-            <Group>
+            <Flex gap="xl">
               <Group>
-                <Clock3 size="1rem" />
-                <Text size="xs">{time?.slice(0, 5)}</Text>
+                <CalendarDays size={24} />
+                <Flex direction="column">
+                  <Text component="span" size="xs" color="dimmed">
+                    Datum
+                  </Text>
+                  <Text fw="bold">
+                    {dayjs(date).format("dd. DD.MM.YYYY").toString()}
+                  </Text>
+                </Flex>
               </Group>
-              <Group ml="3rem">
-                <CalendarDays size="1rem" />
-                <Text size="xs">
-                  {dayjs(date).format("dd. DD.MM.YYYY").toString()}
-                </Text>
+              <Group>
+                <Clock3 size={24} />
+                <Flex direction="column">
+                  <Text component="span" size="xs" color="dimmed">
+                    Uhrzeit
+                  </Text>
+                  <Text fw="bold">{time?.slice(0, 5)}</Text>
+                </Flex>
               </Group>
-            </Group>
+            </Flex>
             <Button
               onClick={() => {
                 handleToHomePage(id.toString());
               }}
-              variant="light"
-              color="blue"
-              radius="md"
-              size="xs"
+              color="indigo"
+              rightIcon={<ArrowRight size={16} />}
             >
-              <Text mr="0.8rem">Jetzt buchen</Text>
-              <ArrowRight size="1rem" />
+              Plätze buchen
             </Button>
           </Flex>
         </Flex>

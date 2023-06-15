@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import {
   createServerSupabaseClient,
   type User,
@@ -21,7 +22,6 @@ import PushhLogo from "~/components/PushhLogo";
 import Layout from "~/components/Layout";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
-import { useRouter } from "next/router";
 
 interface PropTypes {
   user: User;
@@ -30,12 +30,12 @@ interface PropTypes {
 }
 
 const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
+  const router = useRouter();
   // zustand
   const setUser = useCinemaStore(selectSetUser);
   const setShows = useCinemaStore(selectSetShows);
   const setReservations = useCinemaStore(selectSetReservations);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
-  const router = useRouter();
 
   // component did mount
   useEffect(() => {

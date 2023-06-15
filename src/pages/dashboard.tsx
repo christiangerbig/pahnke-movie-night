@@ -14,12 +14,7 @@ import {
   Header as MantineHeader,
 } from "@mantine/core";
 // zustand
-import {
-  useCinemaStore,
-  selectSetShows,
-  selectSetReservations,
-  selectSetUser,
-} from "../hooks/useCinemaStore";
+import { useCinemaStore, selectSetUser } from "../hooks/useCinemaStore";
 // dayjs
 import dayjs from "../dayjs.config";
 // components
@@ -31,27 +26,28 @@ import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 import { Header } from "~/components/Header";
+import AppLogo from "~/components/AppLogo";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
 interface PropTypes {
   user: User;
   shows: Database["public"]["Tables"]["shows"]["Row"][];
-  reservations: ReservationWithShow[];
+  userReservations: ReservationWithShow[];
 }
 
-const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
+const DashboardPage: NextPage<PropTypes> = ({
+  user,
+  shows,
+  userReservations,
+}) => {
   // zustand
   const setUser = useCinemaStore(selectSetUser);
-  const setShows = useCinemaStore(selectSetShows);
-  const setReservations = useCinemaStore(selectSetReservations);
 
   // component did mount
   useEffect(() => {
     setUser(user);
-    setShows(shows);
-    setReservations(reservations);
-  }, [user]);
+  }, [user, setUser]);
 
   return (
     <Box component="main">
@@ -66,10 +62,15 @@ const DashboardPage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
       >
         <Header />
       </MantineHeader>
-      <Container size="lg" mt="4rem">
-        <ShowsOverview />
-        <ReservationsOverview />
-        <Flex mt="5rem" justify="end">
+      <Container size="md" mt={80}>
+        <Flex h={220} justify="center" w="100%" my="xl">
+          <AppLogo />
+        </Flex>
+        <ShowsOverview shows={shows} />
+      </Container>
+      <Container size="md">
+        <ReservationsOverview reservations={userReservations} />
+        <Flex my="lg" justify="end">
           <Flex px="md" align="center" gap="sm">
             <Text color="dimmed" size="xs" mb={2}>
               Powered by
@@ -99,9 +100,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {},
     };
 
-  const { data: reservations } = await supabaseAuthServer
+  const { data: userReservations } = await supabaseAuthServer
     .from("reservations")
-    .select(`*, show!inner (*)`);
+    .select(`*, show(*)`)
+    .filter("user", "eq", session.user.id);
 
   const { data: shows } = await supabaseAuthServer
     .from("shows")
@@ -109,12 +111,21 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .gte("date", dayjs(new Date()).format("YYYY-MM-DD"))
     .order("date", { ascending: true });
 
+  const filteredUserReservations = (userReservations as ReservationWithShow[])
+    ?.sort((a, b) =>
+      a.show.date < b.show.date ? -1 : a.show.date > b.show.date ? 1 : 0,
+    )
+    .filter(
+      (reservation) =>
+        reservation.show.date >= dayjs(Date()).format("YYYY-MM-DD"),
+    );
+
   return {
     props: {
       initialSession: session,
       user: session.user,
       shows,
-      reservations,
+      userReservations: filteredUserReservations,
     },
   };
 };

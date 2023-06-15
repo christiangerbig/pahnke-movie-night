@@ -21,6 +21,8 @@ interface PropTypes {
 const AdminPage: NextPage<PropTypes> = ({ shows }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
+  console.log(shows);
+
   return (
     <>
       <Box component="main" my="xl">
@@ -78,7 +80,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       notFound: true,
     };
 
-  const { data: shows } = await supabaseAuthServer.from("shows").select();
+  const { data: shows } = await supabaseAuthServer.from("shows").select(`
+        *,
+        reservations ( id )
+  `);
 
   return {
     props: {
