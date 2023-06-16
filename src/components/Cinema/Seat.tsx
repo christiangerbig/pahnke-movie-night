@@ -1,0 +1,59 @@
+// zustand
+import {
+  useCinemaStore,
+  selectFreeSeats,
+  selectSelectedSeats,
+  selectAddSelectedSeat,
+  selectRemoveSelectedSeat,
+} from "../../hooks/useCinemaStore";
+// mantine
+import { Popover, Portal } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+// components
+import PathGroup from "./PathGroup";
+// types
+import type { PropsWithChildren } from "react";
+
+interface SeatProps extends PropsWithChildren {
+  seatNumber: number;
+}
+
+const Seat = ({ seatNumber, children }: SeatProps) => {
+  const [opened, { close, open }] = useDisclosure(false);
+  // zustand
+  const freeSeats = useCinemaStore(selectFreeSeats);
+  const selectedSeats = useCinemaStore(selectSelectedSeats);
+  const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
+  const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
+
+  const handleSelectSeat = () => {
+    if (freeSeats.includes(seatNumber)) {
+      if (selectedSeats.includes(seatNumber)) {
+        removeSelectedSeat(seatNumber);
+      } else {
+        addSelectedSeat(seatNumber);
+      }
+    }
+  };
+
+  return (
+    <Popover opened={opened}>
+      <Popover.Target>
+        <PathGroup
+          onMouseEnter={open}
+          onMouseLeave={close}
+          onClick={handleSelectSeat}
+        >
+          {children}
+        </PathGroup>
+      </Popover.Target>
+      <Portal>
+        <Popover.Dropdown>
+          Platznummer: <b>{seatNumber}</b>
+        </Popover.Dropdown>
+      </Portal>
+    </Popover>
+  );
+};
+
+export default Seat;

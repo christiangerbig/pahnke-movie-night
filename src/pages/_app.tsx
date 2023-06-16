@@ -1,13 +1,18 @@
 import { useState } from "react";
-import type { AppProps } from "next/app";
+// supabase
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import {
-  SessionContextProvider,
-  type Session,
-} from "@supabase/auth-helpers-react";
+// mantine
 import { MantineProvider } from "@mantine/core";
-
+import { Notifications } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
+// styles
 import "~/styles/globals.css";
+// dayjs
+import "~/dayjs.config";
+// types
+import type { AppProps } from "next/app";
+import type { Session } from "@supabase/auth-helpers-react";
 
 const App = ({
   Component,
@@ -25,9 +30,18 @@ const App = ({
         withNormalizeCSS
         theme={{
           colorScheme: "dark",
+
+          globalStyles: () => ({
+            body: {
+              backgroundColor: "#060606",
+            },
+          }),
         }}
       >
-        <Component {...pageProps} />
+        <Notifications />
+        <ModalsProvider>
+          <Component {...pageProps} />
+        </ModalsProvider>
       </MantineProvider>
     </SessionContextProvider>
   );
