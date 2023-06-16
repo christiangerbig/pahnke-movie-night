@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 // supabase
 import {
   createServerSupabaseClient,
@@ -43,45 +44,81 @@ const DashboardPage: NextPage<PropTypes> = ({
 }) => {
   // zustand
   const setUser = useCinemaStore(selectSetUser);
+  const [videoPlaying, setVideoPlaying] = useState(true);
 
   // component did mount
   useEffect(() => {
     setUser(user);
   }, [user, setUser]);
 
-  return (
-    <Box component="main">
-      <MantineHeader
-        height={62}
-        bg="dark.9"
-        sx={{
-          position: "fixed",
-          top: 0,
-          "z-index": 10,
-        }}
+  if (videoPlaying)
+    return (
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ delay: 3.2 }}
       >
-        <Header />
-      </MantineHeader>
-      <Container size="md" mt={80}>
-        <Flex h={220} justify="center" w="100%" my="xl">
-          <AppLogo />
-        </Flex>
-        <ShowsOverview shows={shows} />
-      </Container>
-      <Container size="md">
-        <ReservationsOverview reservations={userReservations} />
-        <Flex my="lg" justify="end">
-          <Flex px="md" align="center" gap="sm">
-            <Text color="dimmed" size="xs" mb={2}>
-              Powered by
-            </Text>
-            <Box h={40} opacity={0.5}>
-              <PushhLogo />
-            </Box>
+        <Box
+          pos="fixed"
+          top={0}
+          left={0}
+          h="100%"
+          sx={{ zIndex: 100 }}
+          bg="#060606"
+        >
+          <video
+            autoPlay
+            muted
+            style={{ height: "100%", width: "100%", objectFit: "cover" }}
+            onEnded={() => {
+              setVideoPlaying(false);
+            }}
+          >
+            <source src="/filmpalast_ludwigstraße_logo-animation.mp4"></source>
+          </video>
+        </Box>
+      </motion.div>
+    );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <Box component="main">
+        <MantineHeader
+          height={62}
+          bg="dark.9"
+          sx={{
+            position: "fixed",
+            top: 0,
+            "z-index": 10,
+          }}
+        >
+          <Header />
+        </MantineHeader>
+        <Container size="md" mt={80}>
+          <Flex h={220} justify="center" w="100%" my="xl">
+            <AppLogo />
           </Flex>
-        </Flex>
-      </Container>
-    </Box>
+          <ShowsOverview shows={shows} />
+        </Container>
+        <Container size="md">
+          <ReservationsOverview reservations={userReservations} />
+          <Flex my="lg" justify="end">
+            <Flex px="md" align="center" gap="sm">
+              <Text color="dimmed" size="xs" mb={2}>
+                Powered by
+              </Text>
+              <Box h={40} opacity={0.5}>
+                <PushhLogo />
+              </Box>
+            </Flex>
+          </Flex>
+        </Container>
+      </Box>
+    </motion.div>
   );
 };
 
