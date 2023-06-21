@@ -1,39 +1,58 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 // next
+import { useRouter } from "next/router";
 import Image from "next/image";
 // supabase
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
-import { Box, TextInput, Text, Group, rem, Button, Stack } from "@mantine/core";
+import {
+  Box,
+  TextInput,
+  Text,
+  Group,
+  rem,
+  Button,
+  Stack,
+  ActionIcon,
+} from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 // zod
 import { z } from "zod";
 // dayjs
 import dayjs from "../../dayjs.config";
 // components
-import { Image as ImageIcon, UploadCloud, XCircle } from "lucide-react";
+import { Image as ImageIcon, UploadCloud, XCircle, Clock3 } from "lucide-react";
 // types
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-const AddShowForm = () => {
+interface AddShowFormProps {
+  closeModal: () => void;
+}
+
+const AddShowForm = ({ closeModal }: AddShowFormProps) => {
+  const router = useRouter();
+  const ref = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<FileWithPath>();
 
   // zod schema
   const schema = z
     .object({
+      date: z.date().min(new Date(), {
+        message: "Es muss ein Datum angegeben werden",
+      }),
+      time: z
+        .string()
+        .min(4, { message: "Es muss ein Datum angegeben werden" }),
       title: z
         .string()
         .trim()
         .min(1, { message: "Es muss ein Filmtitel angegeben werden" }),
-      date: z.date().min(new Date(), {
-        message: "Es muss ein Datum angegeben werden",
-      }),
       youtubeLink: z
         .string()
         .trim()
@@ -53,6 +72,7 @@ const AddShowForm = () => {
   const form = useForm({
     initialValues: {
       title: "",
+      time: "",
       date: dayjs().toDate(),
       poster: undefined as FileWithPath | undefined,
       youtubeLink: "",
@@ -91,10 +111,12 @@ const AddShowForm = () => {
   // submit
   const handleSubmit = async (values: {
     date: Date;
+    time: string;
     title: string;
     youtubeLink: string;
     poster: FileWithPath | undefined;
   }) => {
+    console.log(values.poster);
     const { data: storageData, error: storageError } = await getStorate(
       values.poster,
     );
@@ -105,14 +127,20 @@ const AddShowForm = () => {
     }
 
     const storageUrl =
-      "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
+      // "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
+      "https://pkqfwvgswdthtmmgiaki.supabase.co/storage/v1/object/public/posters/";
 
-    const { data, error } = await supabaseAuthClient.from("shows").insert({
+    const entry = {
       date: dayjs(values.date).format("YYYY-MM-DD").toString(),
+      time: values.time,
       movie_title: values.title,
       movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
       movie_description: values.youtubeLink,
-    });
+    };
+
+    const { data, error } = await supabaseAuthClient
+      .from("shows")
+      .insert(entry);
 
     if (error) {
       notifications.show({
@@ -121,7 +149,8 @@ const AddShowForm = () => {
         color: "red",
       });
     } else {
-      form.reset();
+      closeModal();
+      void router.replace(router.asPath);
       notifications.show({
         title: "Yeah!",
         message: "Show wurde hinzugefügt",
@@ -135,20 +164,36 @@ const AddShowForm = () => {
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
       <Stack>
-        <TextInput
-          label="Filmtitel"
-          placeholder="Titel ..."
-          withAsterisk
-          {...form.getInputProps("title")}
-        />
-
         <DatePickerInput
           label="Datum"
           defaultValue={new Date()}
           valueFormat="DD. MMMM YYYY"
           locale="de"
+          maw="12rem"
           withAsterisk
           {...form.getInputProps("date")}
+        />
+
+        <TimeInput
+          label="Uhzeit"
+          ref={ref}
+          rightSection={
+            <ActionIcon
+              onClick={() => (ref.current as HTMLInputElement).showPicker()}
+            >
+              <Clock3 size="1rem" />
+            </ActionIcon>
+          }
+          maw="12rem"
+          withAsterisk
+          {...form.getInputProps("time")}
+        />
+
+        <TextInput
+          label="Filmtitel"
+          placeholder="Titel ..."
+          withAsterisk
+          {...form.getInputProps("title")}
         />
 
         <TextInput

@@ -1,16 +1,8 @@
 import { useRouter } from "next/router";
-import { useDisclosure } from "@mantine/hooks";
 // mantine
-import {
-  Box,
-  Button,
-  Table,
-  Text,
-  Title,
-  Card,
-  Modal,
-  Flex,
-} from "@mantine/core";
+import { Box, Button, Table, Text, Title, Card } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
 // dayjs
 import dayjs from "../../dayjs.config";
 // api
@@ -19,17 +11,56 @@ import { deleteReservation } from "../../api/deleteReservation";
 import { Trash } from "lucide-react";
 // types
 import type { ReservationWithShow } from "~/lib/general.types";
-import { useState } from "react";
-import { notifications } from "@mantine/notifications";
 
-interface PropTypes {
+interface ReservationOverviewProps {
   reservations: ReservationWithShow[];
 }
 
-const ReservationOverview: React.FC<PropTypes> = ({ reservations }) => {
+const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
   const router = useRouter();
-  const [opened, { open, close }] = useDisclosure(false);
-  const [reservationId, setReservationId] = useState<number[]>([]);
+
+  // cangel reservation
+  const cancelReservation = ({ show: { id } }: ReservationWithShow) => {
+    modals.openConfirmModal({
+      title: "Stornierung",
+      centered: true,
+      children: (
+        <Text size="sm">Solle(n) die Reservierungen storniert werden?</Text>
+      ),
+      labels: { confirm: "Ja", cancel: "Nein" },
+      confirmProps: { color: "red" },
+      onCancel: () => {
+        return;
+      },
+      onConfirm: () => {
+        const reservationIds = reservations
+          .filter((reservation) => {
+            return reservation.show.id === id;
+          })
+          .map((reservation) => {
+            return reservation.id;
+          });
+
+        deleteReservation(reservationIds)
+          .then((): void => {
+            void router.replace(router.asPath);
+            notifications.show({
+              title: "Stornierung erfolgreich",
+              message: "Reservierung wurde storniert!",
+              color: "green",
+            });
+          })
+          .catch((err: Error) => {
+            console.log("Fehler:", err);
+            notifications.show({
+              title: "Ups, ein Fehler ist aufgetreten!",
+              message: err.message,
+              color: "red",
+            });
+          });
+      },
+    });
+  };
 
   return (
     <>
@@ -56,28 +87,38 @@ const ReservationOverview: React.FC<PropTypes> = ({ reservations }) => {
               <tbody>
                 {reservations?.map((reservation) => (
                   <tr key={reservation.id}>
-                    <td>
-                      {dayjs(reservation.show.date)
-                        .format("DD. MMMM YYYY")
-                        .toString()}
-                    </td>
-                    <td>{reservation.show.movie_title}</td>
+                    {!reservation.is_guest ? (
+                      <td>
+                        {dayjs(reservation.show.date)
+                          .format("DD. MMMM YYYY")
+                          .toString()}
+                      </td>
+                    ) : (
+                      <td />
+                    )}
+                    {!reservation.is_guest ? (
+                      <td>{reservation.show.movie_title}</td>
+                    ) : (
+                      <td />
+                    )}
+
                     <td>{reservation.seat}</td>
                     <td>
                       {reservation.guest_firstname} {reservation.guest_surname}
                     </td>
                     <td style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <Button
-                        color="red"
-                        leftIcon={<Trash size={16} />}
-                        variant="outline"
-                        onClick={() => {
-                          setReservationId([reservation.id]);
-                          open();
-                        }}
-                      >
-                        Stornieren
-                      </Button>
+                      {!reservation.is_guest ? (
+                        <Button
+                          color="red"
+                          leftIcon={<Trash size={16} />}
+                          variant="outline"
+                          onClick={() => {
+                            cancelReservation(reservation);
+                          }}
+                        >
+                          Stornieren
+                        </Button>
+                      ) : null}
                     </td>
                   </tr>
                 ))}
@@ -87,46 +128,6 @@ const ReservationOverview: React.FC<PropTypes> = ({ reservations }) => {
           )}
         </Card>
       </Box>
-      <Modal
-        opened={opened}
-        onClose={close}
-        centered
-        title="Stornierung"
-        size="xl"
-      >
-        <Text size="sm">Soll(en) die Reservierung(en) storniert werden?</Text>
-        <Flex mt="xl" gap="md" justify="flex-end">
-          <Button variant="default" onClick={close}>
-            Nein, lass&apos; mal
-          </Button>
-          <Button
-            color="red"
-            onClick={() => {
-              deleteReservation(reservationId)
-                .then((): void => {
-                  void router.replace(router.asPath);
-                  notifications.show({
-                    title: "Stornierung erfolgreich",
-                    message: "Reservierung wurde storniert!",
-                    color: "green",
-                  });
-                })
-                .catch((err: Error) => {
-                  console.log("Fehler:", err);
-                  notifications.show({
-                    title: "Ups, ein Fehler ist aufgetreten!",
-                    message: err.message,
-                    color: "red",
-                  });
-                });
-
-              close();
-            }}
-          >
-            Ja, stornieren
-          </Button>
-        </Flex>
-      </Modal>
     </>
   );
 };

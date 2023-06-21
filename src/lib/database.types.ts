@@ -64,6 +64,7 @@ export interface Database {
           movie_poster: string | null;
           movie_title: string;
           time: string | null;
+          reservations: number[];
         };
         Insert: {
           created_at?: string | null;

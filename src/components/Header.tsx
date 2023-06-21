@@ -46,6 +46,8 @@ export const Header = () => {
     }
   };
 
+  console.log(user);
+
   return (
     <Box h="100%" px="md">
       <Flex justify="space-between" align="center" h="100%">

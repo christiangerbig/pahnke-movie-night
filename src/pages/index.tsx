@@ -50,6 +50,8 @@ const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
     }
   }, [user]);
 
+  console.log(shows);
+
   return (
     <Layout>
       <Box component="main">

@@ -49,7 +49,7 @@ const DashboardPage: NextPage<PropTypes> = ({
   // component did mount
   useEffect(() => {
     setUser(user);
-  }, [user, setUser]);
+  }, []);
 
   if (videoPlaying)
     return (

@@ -16,16 +16,18 @@ const ShowsArchiv = ({ shows }: ShowsTableProps) => {
         <thead>
           <tr>
             <th>Datum</th>
+            <th>Uhrzeit</th>
             <th>Filmtitel</th>
             <th>Besucher</th>
           </tr>
         </thead>
         <tbody>
-          {shows.map(({ id, date, movie_title }) => (
+          {shows.map(({ id, date, time, movie_title, reservations }) => (
             <tr key={id}>
               <td>{dayjs(date).format("DD. MMMM YYYY")}</td>
+              <td>{time?.slice(0, 5)}</td>
               <td>{movie_title}</td>
-              <td>2</td>
+              <td>{reservations.length}</td>
             </tr>
           ))}
         </tbody>

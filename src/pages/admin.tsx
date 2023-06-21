@@ -21,8 +21,6 @@ interface PropTypes {
 const AdminPage: NextPage<PropTypes> = ({ shows }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
-  console.log(shows);
-
   return (
     <>
       <Box component="main" my="xl">
@@ -38,7 +36,7 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
               </Box>
               <Title order={3}>Show Archiv</Title>
             </Flex>
-            <Button size="xs" color="indigo" onClick={open}>
+            <Button size="xs" variant="default" onClick={open}>
               Show hinzufügen
             </Button>
           </Flex>
@@ -51,7 +49,7 @@ const AdminPage: NextPage<PropTypes> = ({ shows }) => {
         title="Neue Show hinzufügen"
         size="xl"
       >
-        <ShowAddForm />
+        <ShowAddForm closeModal={close} />
       </Modal>
     </>
   );
@@ -80,10 +78,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       notFound: true,
     };
 
-  const { data: shows } = await supabaseAuthServer.from("shows").select(`
+  const { data: shows } = await supabaseAuthServer
+    .from("shows")
+    .select(
+      `
         *,
         reservations ( id )
-  `);
+  `,
+    )
+    .order("date", { ascending: true });
 
   return {
     props: {

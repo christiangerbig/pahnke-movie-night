@@ -1,15 +1,7 @@
 // next
 import { useRouter } from "next/router";
 // mantine
-import {
-  Card,
-  Group,
-  Image,
-  Text,
-  Button,
-  Flex,
-  Skeleton,
-} from "@mantine/core";
+import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
 // dayjs
 import dayjs from "../../dayjs.config";
 // components
