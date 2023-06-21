@@ -16,7 +16,7 @@ import type { Database } from "~/lib/database.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-export const Header = () => {
+const Header = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isDashboard, setIsDashboard] = useState<boolean>(true);
   const router = useRouter();
@@ -45,8 +45,6 @@ export const Header = () => {
       router.reload();
     }
   };
-
-  console.log(user);
 
   return (
     <Box h="100%" px="md">
@@ -84,3 +82,5 @@ export const Header = () => {
     </Box>
   );
 };
+
+export default Header;

@@ -5,7 +5,7 @@ interface ShowsTableProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
-const ShowsOverview: React.FC<ShowsTableProps> = ({ shows }) => {
+const ShowsOverview = ({ shows }: ShowsTableProps) => {
   return (
     <>
       {shows.map(

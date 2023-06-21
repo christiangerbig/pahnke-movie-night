@@ -7,7 +7,7 @@ import type { BoxProps } from "@mantine/core";
 const PathGroup = forwardRef<
   SVGGElement,
   {
-    onClick: (event: any) => void;
+    onClick: () => void;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
   } & BoxProps

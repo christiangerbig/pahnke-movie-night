@@ -20,16 +20,17 @@ import {
 import SeatSVG from "~/components/cinema/SeatSVG";
 import PushhLogo from "~/components/PushhLogo";
 import Layout from "~/components/Layout";
+// types
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 
-interface PropTypes {
+interface HomePageProps {
   user: User;
   shows: Database["public"]["Tables"]["shows"]["Row"][];
   reservations: ReservationWithShow[];
 }
 
-const HomePage: NextPage<PropTypes> = ({ user, shows, reservations }) => {
+const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   const router = useRouter();
   // zustand
   const setUser = useCinemaStore(selectSetUser);

@@ -109,17 +109,23 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   };
 
   // submit
-  const handleSubmit = async (values: {
+  interface HandleSubmitArgs {
     date: Date;
     time: string;
     title: string;
     youtubeLink: string;
     poster: FileWithPath | undefined;
-  }) => {
-    console.log(values.poster);
-    const { data: storageData, error: storageError } = await getStorate(
-      values.poster,
-    );
+  }
+
+  const handleSubmit = async ({
+    date,
+    time,
+    title,
+    youtubeLink,
+    poster,
+  }: HandleSubmitArgs) => {
+    console.log(poster);
+    const { data: storageData, error: storageError } = await getStorate(poster);
 
     if (storageError) {
       handleStorageError(storageError);
@@ -130,17 +136,13 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       // "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
       "https://pkqfwvgswdthtmmgiaki.supabase.co/storage/v1/object/public/posters/";
 
-    const entry = {
-      date: dayjs(values.date).format("YYYY-MM-DD").toString(),
-      time: values.time,
-      movie_title: values.title,
+    const { data, error } = await supabaseAuthClient.from("shows").insert({
+      date: dayjs(date).format("YYYY-MM-DD").toString(),
+      time: time,
+      movie_title: title,
       movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
-      movie_description: values.youtubeLink,
-    };
-
-    const { data, error } = await supabaseAuthClient
-      .from("shows")
-      .insert(entry);
+      movie_description: youtubeLink,
+    });
 
     if (error) {
       notifications.show({
@@ -256,7 +258,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
             </Dropzone>
           )}
         </Box>
-
         <Button type="submit" color="indigo">
           Speichern
         </Button>

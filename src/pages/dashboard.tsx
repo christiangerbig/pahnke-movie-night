@@ -19,6 +19,8 @@ import { useCinemaStore, selectSetUser } from "../hooks/useCinemaStore";
 // dayjs
 import dayjs from "../dayjs.config";
 // components
+import Header from "~/components/Header";
+import AppLogo from "~/components/AppLogo";
 import PushhLogo from "~/components/PushhLogo";
 import ReservationsOverview from "~/components/booking/ReservationsOverview";
 import ShowsOverview from "~/components/shows/ShowsOverview";
@@ -26,8 +28,6 @@ import ShowsOverview from "~/components/shows/ShowsOverview";
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
-import { Header } from "~/components/Header";
-import AppLogo from "~/components/AppLogo";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 

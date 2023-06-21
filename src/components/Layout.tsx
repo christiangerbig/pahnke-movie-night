@@ -20,12 +20,12 @@ import {
 // dayjs
 import dayjs from "dayjs";
 // components
-import { Header } from "./Header";
+import { CalendarDays, Clock3 } from "lucide-react";
 import ReservationForm from "./booking/ReservationForm";
+import Header from "./Header";
 // types
 import type { PropsWithChildren } from "react";
 import type { Show } from "~/lib/general.types";
-import { CalendarDays, Clock3 } from "lucide-react";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const selectedShowId = useCinemaStore(selectSelectedShow);

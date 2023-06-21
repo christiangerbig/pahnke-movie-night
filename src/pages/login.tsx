@@ -26,9 +26,7 @@ const supabaseClient = createBrowserSupabaseClient();
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  // supabase hooks
   const { session, isLoading } = useSessionContext();
-  // mantine hooks
   const form = useForm({
     initialValues: {
       email: "",

@@ -14,11 +14,11 @@ import ShowsArchiv from "~/components/shows/ShowsArchiv";
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
 
-interface PropTypes {
+interface AdminPageProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
-const AdminPage: NextPage<PropTypes> = ({ shows }) => {
+const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (

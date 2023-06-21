@@ -19,7 +19,6 @@ interface ReservationOverviewProps {
 const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
   const router = useRouter();
 
-  // cangel reservation
   const cancelReservation = ({ show: { id } }: ReservationWithShow) => {
     modals.openConfirmModal({
       title: "Stornierung",
@@ -34,11 +33,11 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
       },
       onConfirm: () => {
         const reservationIds = reservations
-          .filter((reservation) => {
-            return reservation.show.id === id;
+          .filter(({ show }) => {
+            return show.id === id;
           })
-          .map((reservation) => {
-            return reservation.id;
+          .map(({ id }) => {
+            return id;
           });
 
         deleteReservation(reservationIds)
@@ -85,43 +84,49 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                 </tr>
               </thead>
               <tbody>
-                {reservations?.map((reservation) => (
-                  <tr key={reservation.id}>
-                    {!reservation.is_guest ? (
-                      <td>
-                        {dayjs(reservation.show.date)
-                          .format("DD. MMMM YYYY")
-                          .toString()}
-                      </td>
-                    ) : (
-                      <td />
-                    )}
-                    {!reservation.is_guest ? (
-                      <td>{reservation.show.movie_title}</td>
-                    ) : (
-                      <td />
-                    )}
+                {reservations?.map((reservation) => {
+                  const {
+                    id,
+                    seat,
+                    is_guest,
+                    guest_firstname,
+                    guest_surname,
+                    show: { date, movie_title },
+                  } = reservation;
+                  return (
+                    <tr key={id}>
+                      {!is_guest ? (
+                        <td>
+                          {dayjs(date).format("DD. MMMM YYYY").toString()}
+                        </td>
+                      ) : (
+                        <td />
+                      )}
+                      {!is_guest ? <td>{movie_title}</td> : <td />}
 
-                    <td>{reservation.seat}</td>
-                    <td>
-                      {reservation.guest_firstname} {reservation.guest_surname}
-                    </td>
-                    <td style={{ display: "flex", justifyContent: "flex-end" }}>
-                      {!reservation.is_guest ? (
-                        <Button
-                          color="red"
-                          leftIcon={<Trash size={16} />}
-                          variant="outline"
-                          onClick={() => {
-                            cancelReservation(reservation);
-                          }}
-                        >
-                          Stornieren
-                        </Button>
-                      ) : null}
-                    </td>
-                  </tr>
-                ))}
+                      <td>{seat}</td>
+                      <td>
+                        {guest_firstname} {guest_surname}
+                      </td>
+                      <td
+                        style={{ display: "flex", justifyContent: "flex-end" }}
+                      >
+                        {!is_guest ? (
+                          <Button
+                            color="red"
+                            leftIcon={<Trash size={16} />}
+                            variant="outline"
+                            onClick={() => {
+                              cancelReservation(reservation);
+                            }}
+                          >
+                            Stornieren
+                          </Button>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                })}
                 <tr></tr>
               </tbody>
             </Table>
