@@ -56,6 +56,12 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
         .string()
         .trim()
         .min(1, "Es muss ein Youtube-Link angegeben werden"),
+      poster: z.object(
+        {
+          path: z.string(),
+        },
+        { required_error: "Ein Bild muss hochgeladen werden" },
+      ),
     })
     .superRefine(({ youtubeLink }, ctx) => {
       if (!youtubeLink.includes("https://www.youtube.com/watch?")) {
@@ -203,7 +209,10 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
 
         <Box>
           <Text size="sm" weight={500}>
-            Poster
+            Poster{" "}
+            <Text component="span" color="red">
+              *
+            </Text>
           </Text>
 
           {file ? (
@@ -226,6 +235,10 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
               maxSize={3 * 1024 ** 2}
               multiple={false}
               accept={IMAGE_MIME_TYPE}
+              sx={(theme) => ({
+                borderColor: form.errors.poster ? theme.colors.red : "none",
+                borderStyle: form.errors.poster ? "solid" : "none",
+              })}
             >
               <Group
                 position="center"
@@ -253,6 +266,9 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
               </Group>
             </Dropzone>
           )}
+          <Text component="div" color="red" size="xs" mt={4}>
+            {form.errors.poster}
+          </Text>
         </Box>
         <Button type="submit" color="indigo">
           Speichern
