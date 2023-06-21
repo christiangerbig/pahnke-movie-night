@@ -4,7 +4,7 @@ import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // types
 import type { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest) {
+export const middleware = async (req: NextRequest) => {
   const res = NextResponse.next();
   const supabase = createMiddlewareSupabaseClient({ req, res });
   const redirectUrl = req.nextUrl.clone();
@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
   }
 
   return res;
-}
+};
 
 export const config = {
   matcher: ["/", "/dashboard"],

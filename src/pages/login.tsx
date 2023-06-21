@@ -19,7 +19,7 @@ import { useViewportSize } from "@mantine/hooks";
 // helpers
 import { validateEmail } from "~/lib/validateEmail";
 // components
-import PushhLogo from "~/components/PushhLogo";
+import LogoPush from "~/components/LogoPushh";
 
 const supabaseClient = createBrowserSupabaseClient();
 
@@ -96,7 +96,7 @@ const LoginPage = () => {
             Powered by
           </Text>
           <Box h={40} opacity={0.5}>
-            <PushhLogo />
+            <LogoPush />
           </Box>
         </Flex>
       </Flex>

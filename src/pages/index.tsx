@@ -18,7 +18,7 @@ import {
 } from "../hooks/useCinemaStore";
 // components
 import SeatSVG from "~/components/cinema/SeatSVG";
-import PushhLogo from "~/components/PushhLogo";
+import LogoPush from "~/components/LogoPushh";
 import Layout from "~/components/Layout";
 // types
 import type { Database } from "~/lib/database.types";
@@ -38,7 +38,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   const setReservations = useCinemaStore(selectSetReservations);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
-  // component did mount
+  // hook user change
   useEffect(() => {
     setUser(user);
     setShows(shows);
@@ -50,8 +50,6 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
       setSelectedShow(router.query.show as string);
     }
   }, [user]);
-
-  console.log(shows);
 
   return (
     <Layout>
@@ -86,7 +84,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
                 Powered by
               </Text>
               <Box h={40} opacity={0.5}>
-                <PushhLogo />
+                <LogoPush />
               </Box>
             </Flex>
           </Flex>

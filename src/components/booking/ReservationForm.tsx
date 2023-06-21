@@ -33,22 +33,17 @@ import ReservationDisplay from "./ReservationDisplay";
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import { useRouter } from "next/router";
 
 interface ShowDateEntry {
   value: string;
   label: string;
 }
 
-interface HandleSubmitArgs {
-  show: string;
-  isGuest: boolean;
-  guestFirstName: string;
-  guestSurname: string;
-}
-
 const ReservationForm = () => {
   const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
   const [selectedFilm, setSelectedFilm] = useState<string>("");
+  const router = useRouter();
   const checkboxRef = useRef<HTMLInputElement>(null);
   // zustand
   const user = useCinemaStore(selectUser);
@@ -64,7 +59,7 @@ const ReservationForm = () => {
   const selectedShow = useCinemaStore(selectSelectedShow);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
-  // hook component did mount
+  // hook shows / selectedShow change
   useEffect(() => {
     setShowDates(
       shows.map(({ id, date, movie_title }): ShowDateEntry => {
@@ -139,7 +134,6 @@ const ReservationForm = () => {
       }
     });
 
-  // mantine form
   const form = useForm({
     initialValues: {
       show: selectedShow || "",
@@ -151,6 +145,13 @@ const ReservationForm = () => {
   });
 
   // submit
+  interface HandleSubmitArgs {
+    show: string;
+    isGuest: boolean;
+    guestFirstName: string;
+    guestSurname: string;
+  }
+
   const handleSubmit = ({
     show,
     isGuest,
@@ -160,10 +161,6 @@ const ReservationForm = () => {
     const resetReservationValues = () => {
       resetSelectedSeats();
       setIsGuest(false);
-      showDates[0] && setSelectedShow(showDates[0].value);
-      form.setValues({
-        show: showDates[0]?.value.toString(),
-      });
     };
 
     // booking invalid check
@@ -205,6 +202,8 @@ const ReservationForm = () => {
       const bookingCleanup = (updatedReservations: ReservationWithShow[]) => {
         setReservations(updatedReservations);
         resetReservationValues();
+        resetFreeSeats();
+        void router.replace(router.asPath);
         notifications.show({
           title: "",
           message:
@@ -217,7 +216,6 @@ const ReservationForm = () => {
           autoClose: 5000,
         });
       };
-
       const userReservation: Database["public"]["Tables"]["reservations"]["Insert"] =
         {
           seat: selectedSeats[0],
@@ -228,7 +226,6 @@ const ReservationForm = () => {
       if (!isGuest && !selectedSeats[1]) {
         addReservation(userReservation)
           .then(() => {
-            resetFreeSeats();
             fetchReservations()
               .then((updatedReservations): void => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);
@@ -257,7 +254,6 @@ const ReservationForm = () => {
         userReservations.push(guestReservation);
         addReservations(userReservations)
           .then(() => {
-            resetFreeSeats();
             fetchReservations()
               .then((updatedReservations): void => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);
@@ -294,6 +290,7 @@ const ReservationForm = () => {
                 setSelectedShow(value);
                 resetSelectedSeats();
                 value && form.setValues({ show: value });
+                void router.push(`/?show=${Number(value)}`);
               }}
             />
             <Checkbox

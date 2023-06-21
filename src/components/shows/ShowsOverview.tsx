@@ -1,4 +1,6 @@
+// components
 import ShowCard from "./ShowCard";
+// types
 import type { Database } from "../../lib/database.types";
 
 interface ShowsTableProps {

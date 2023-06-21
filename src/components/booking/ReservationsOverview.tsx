@@ -31,6 +31,7 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
       onCancel: () => {
         return;
       },
+      // Cancellation
       onConfirm: () => {
         const reservationIds = reservations
           .filter(({ show }) => {
@@ -39,7 +40,6 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
           .map(({ id }) => {
             return id;
           });
-
         deleteReservation(reservationIds)
           .then((): void => {
             void router.replace(router.asPath);
@@ -80,7 +80,7 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                   <th>Film</th>
                   <th>Platznummer(n)</th>
                   <th>Gast</th>
-                  <th></th>
+                  <th />
                 </tr>
               </thead>
               <tbody>

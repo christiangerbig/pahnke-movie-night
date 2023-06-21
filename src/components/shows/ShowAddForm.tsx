@@ -39,8 +39,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<FileWithPath>();
-
-  // zod schema test
   const schema = z
     .object({
       date: z.date().min(new Date(), {
@@ -67,8 +65,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
         });
       }
     });
-
-  // mantine hooks
   const form = useForm({
     initialValues: {
       title: "",
@@ -79,34 +75,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
     },
     validate: zodResolver(schema),
   });
-
-  const getStorate = async (value?: FileWithPath) => {
-    if (!value) return { data: null, error: null };
-
-    const { data, error } = await supabaseAuthClient.storage
-      .from("posters")
-      .upload(value.name, value);
-
-    return { data, error };
-  };
-
-  const handleStorageError = (error: Error & { error?: string }) => {
-    if (error.error === "Duplicate") {
-      notifications.show({
-        title: "Ups ...",
-        message: "Das Bild exisitert bereits unter diesem Namen.",
-        color: "red",
-      });
-    } else {
-      notifications.show({
-        title: "Ups ...",
-        message: error.message,
-        color: "red",
-      });
-    }
-
-    return;
-  };
 
   // submit
   interface HandleSubmitArgs {
@@ -124,8 +92,35 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
     youtubeLink,
     poster,
   }: HandleSubmitArgs) => {
-    console.log(poster);
-    const { data: storageData, error: storageError } = await getStorate(poster);
+    const getStorage = async (value?: FileWithPath) => {
+      if (!value) return { data: null, error: null };
+
+      const { data, error } = await supabaseAuthClient.storage
+        .from("posters")
+        .upload(value.name, value);
+
+      return { data, error };
+    };
+
+    const handleStorageError = (error: Error & { error?: string }) => {
+      if (error.error === "Duplicate") {
+        notifications.show({
+          title: "Ups ...",
+          message: "Das Bild exisitert bereits unter diesem Namen.",
+          color: "red",
+        });
+      } else {
+        notifications.show({
+          title: "Ups ...",
+          message: error.message,
+          color: "red",
+        });
+      }
+
+      return;
+    };
+
+    const { data: storageData, error: storageError } = await getStorage(poster);
 
     if (storageError) {
       handleStorageError(storageError);

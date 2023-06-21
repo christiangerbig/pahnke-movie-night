@@ -20,8 +20,8 @@ import { useCinemaStore, selectSetUser } from "../hooks/useCinemaStore";
 import dayjs from "../dayjs.config";
 // components
 import Header from "~/components/Header";
-import AppLogo from "~/components/AppLogo";
-import PushhLogo from "~/components/PushhLogo";
+import LogoApp from "~/components/LogoApp";
+import LogoPush from "~/components/LogoPushh";
 import ReservationsOverview from "~/components/booking/ReservationsOverview";
 import ShowsOverview from "~/components/shows/ShowsOverview";
 // types
@@ -100,7 +100,7 @@ const DashboardPage: NextPage<PropTypes> = ({
         </MantineHeader>
         <Container size="md" mt={80}>
           <Flex h={220} justify="center" w="100%" my="xl">
-            <AppLogo />
+            <LogoApp />
           </Flex>
           <ShowsOverview shows={shows} />
         </Container>
@@ -112,7 +112,7 @@ const DashboardPage: NextPage<PropTypes> = ({
                 Powered by
               </Text>
               <Box h={40} opacity={0.5}>
-                <PushhLogo />
+                <LogoPush />
               </Box>
             </Flex>
           </Flex>
