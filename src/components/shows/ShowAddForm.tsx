@@ -28,6 +28,7 @@ import { Image as ImageIcon, UploadCloud, XCircle, Clock3 } from "lucide-react";
 // types
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";
+import type { StorageData } from "~/lib/general.types";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -135,7 +136,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       date: dayjs(date).format("YYYY-MM-DD").toString(),
       time: time,
       movie_title: title,
-      movie_poster: storageData ? `${storageUrl}${storageData.path}` : null,
+      movie_poster: `${storageUrl}${(storageData as StorageData).path}`,
       movie_description: youtubeLink,
     });
 

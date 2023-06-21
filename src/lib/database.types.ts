@@ -61,7 +61,7 @@ export interface Database {
           date: string;
           id: number;
           movie_description: string | null;
-          movie_poster: string | null;
+          movie_poster: string;
           movie_title: string;
           time: string | null;
           reservations: number[];
@@ -71,7 +71,7 @@ export interface Database {
           date: string;
           id?: number;
           movie_description?: string | null;
-          movie_poster?: string | null;
+          movie_poster?: string;
           movie_title: string;
           time?: string | null;
         };
@@ -80,7 +80,7 @@ export interface Database {
           date?: string;
           id?: number;
           movie_description?: string | null;
-          movie_poster?: string | null;
+          movie_poster?: string;
           movie_title?: string;
           time?: string | null;
         };
