@@ -40,7 +40,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<FileWithPath>();
 
-  // zod schema
+  // zod schema test
   const schema = z
     .object({
       date: z.date().min(new Date(), {
