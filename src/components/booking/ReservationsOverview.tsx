@@ -1,10 +1,5 @@
-import { useRouter } from "next/router";
 // mantine
 import { Box, Table, Text, Title, Card } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { modals } from "@mantine/modals";
-// api
-import { deleteReservation } from "../../api/deleteReservation";
 // components
 import ReservationElement from "./ReservationElement";
 // types
@@ -15,50 +10,6 @@ interface ReservationOverviewProps {
 }
 
 const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
-  const router = useRouter();
-
-  const cancelReservation = ({ show: { id } }: ReservationWithShow) => {
-    modals.openConfirmModal({
-      title: "Stornierung",
-      centered: true,
-      children: (
-        <Text size="sm">Solle(n) die Reservierungen storniert werden?</Text>
-      ),
-      labels: { confirm: "Ja", cancel: "Nein" },
-      confirmProps: { color: "red" },
-      onCancel: () => {
-        return;
-      },
-      // Cancellation
-      onConfirm: () => {
-        const reservationIds = reservations
-          .filter(({ show }) => {
-            return show.id === id;
-          })
-          .map(({ id }) => {
-            return id;
-          });
-        deleteReservation(reservationIds)
-          .then((): void => {
-            void router.replace(router.asPath);
-            notifications.show({
-              title: "Stornierung erfolgreich",
-              message: "Reservierung wurde storniert!",
-              color: "green",
-            });
-          })
-          .catch((err: Error) => {
-            console.log("Fehler:", err);
-            notifications.show({
-              title: "Ups, ein Fehler ist aufgetreten!",
-              message: err.message,
-              color: "red",
-            });
-          });
-      },
-    });
-  };
-
   return (
     <>
       <Box my={72}>
@@ -87,10 +38,10 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                   return (
                     !is_guest && (
                       <ReservationElement
+                        key={reservation.id}
                         show={show}
                         reservations={reservations}
                         reservation={reservation}
-                        cancelReservation={cancelReservation}
                       />
                     )
                   );
