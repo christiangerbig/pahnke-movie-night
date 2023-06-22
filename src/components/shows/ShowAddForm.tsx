@@ -43,11 +43,11 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const schema = z
     .object({
       date: z.date().min(new Date(), {
-        message: "Es muss ein Datum angegeben werden",
+        message: "Es muss ein Datum mindestens von morgen angegeben werden",
       }),
       time: z
         .string()
-        .min(4, { message: "Es muss ein Datum angegeben werden" }),
+        .min(4, { message: "Es muss eine Uhzeit angegeben werden" }),
       title: z
         .string()
         .trim()
@@ -55,7 +55,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       youtubeLink: z
         .string()
         .trim()
-        .min(1, "Es muss ein Youtube-Link angegeben werden"),
+        .min(1, "Es muss ein geteilter Youtube-Link angegeben werden"),
       poster: z.object(
         {
           path: z.string(),
@@ -135,7 +135,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
     }
 
     const storageUrl =
-      // "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
       "https://pkqfwvgswdthtmmgiaki.supabase.co/storage/v1/object/public/posters/";
 
     const index = youtubeLink.search(".be/");
