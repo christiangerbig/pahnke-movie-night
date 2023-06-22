@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 // zustand
 import {
   selectSelectedShow,
@@ -24,14 +25,21 @@ import { CalendarDays, Clock3 } from "lucide-react";
 import ReservationForm from "./booking/ReservationForm";
 import Header from "./Header";
 // types
-import type { PropsWithChildren } from "react";
 import type { Show } from "~/lib/general.types";
+import type { PropsWithChildren } from "react";
+// zustand
 
-const Layout: React.FC<PropsWithChildren> = ({ children }) => {
+const Layout = ({ children }: PropsWithChildren) => {
+  const [show, setShow] = useState<Show>();
+  // zustand
+  const shows = useCinemaStore(selectShows);
   const selectedShowId = useCinemaStore(selectSelectedShow);
-  const show = useCinemaStore(selectShows).filter(
-    (show: Show) => show.id === Number(selectedShowId),
-  )[0];
+
+  useEffect(() => {
+    setShow(
+      shows.filter((show: Show) => show.id === Number(selectedShowId))[0],
+    );
+  }, [selectedShowId]);
 
   return (
     <>

@@ -64,9 +64,9 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       ),
     })
     .superRefine(({ youtubeLink }, ctx) => {
-      if (!youtubeLink.includes("https://www.youtube.com/watch?")) {
+      if (!youtubeLink.includes("https://youtu.be/")) {
         ctx.addIssue({
-          message: "Es muss sich um einen Youtube-Link handeln",
+          message: "Es muss sich um einen geteilten Youtube-Link handeln",
           code: z.ZodIssueCode.custom,
           path: ["youtubeLink"],
         });
@@ -138,12 +138,16 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       // "https://yzybkfpayferkdiafjdj.supabase.co/storage/v1/object/public/posters/";
       "https://pkqfwvgswdthtmmgiaki.supabase.co/storage/v1/object/public/posters/";
 
+    const index = youtubeLink.search(".be/");
+    const result = youtubeLink.slice(index + 4);
+    const playerString = `https://www.youtube-nocookie.com/embed/${result}?controls=1&autoplay=1&mute=1&loop=1&playlist=${result}`;
+
     const { data, error } = await supabaseAuthClient.from("shows").insert({
       date: dayjs(date).format("YYYY-MM-DD").toString(),
-      time: time,
+      time,
       movie_title: title,
       movie_poster: `${storageUrl}${(storageData as StorageData).path}`,
-      movie_description: youtubeLink,
+      movie_description: playerString,
     });
 
     if (error) {

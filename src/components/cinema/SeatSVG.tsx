@@ -1,13 +1,34 @@
+// react
+import { useEffect, useState } from "react";
 // mantine
 import { Flex } from "@mantine/core";
+// zustand
+import {
+  selectSelectedShow,
+  selectShows,
+  useCinemaStore,
+} from "~/hooks/useCinemaStore";
 // components
 import Defs from "./Defs";
 import Seats from "./Seats";
 import MovieScreen from "./MovieScreen";
 import CurtainLeft from "./CurtainLeft";
 import CurtainRight from "./CurtainRight";
+// types
+import type { Show } from "~/lib/general.types";
 
 const SeatSVG = () => {
+  const [show, setShow] = useState<Show>();
+  // zustand
+  const selectedShowId = useCinemaStore(selectSelectedShow);
+  const shows = useCinemaStore(selectShows);
+
+  useEffect(() => {
+    setShow(
+      shows.filter((show: Show) => show.id === Number(selectedShowId))[0],
+    );
+  }, [selectedShowId]);
+
   return (
     <Flex justify="center" sx={{ overflow: "hidden" }} h="100%">
       <svg
@@ -25,14 +46,19 @@ const SeatSVG = () => {
           mask="url(#screen)"
           transform="translate(149,130)"
         >
-          <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube-nocookie.com/embed/wxN1T1uxQ2g?controls=1&autoplay=1&mute=1&loop=1&playlist=wxN1T1uxQ2g"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          ></iframe>
+          {show && (
+            <iframe
+              width="100%"
+              height="100%"
+              // src="https://www.youtube-nocookie.com/embed/wxN1T1uxQ2g?controls=1&autoplay=1&mute=1&loop=1&playlist=wxN1T1uxQ2g"
+              // src={shows[1].movie_description as string}
+              // https://www.youtube.com/watch?v=oxYqUxQMzKo
+              src={show.movie_description as string}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            ></iframe>
+          )}
         </foreignObject>
         <CurtainLeft />
         <CurtainRight />
