@@ -1,14 +1,12 @@
 import { useRouter } from "next/router";
 // mantine
-import { Box, Button, Table, Text, Title, Card } from "@mantine/core";
+import { Box, Table, Text, Title, Card } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
-// dayjs
-import dayjs from "../../dayjs.config";
 // api
 import { deleteReservation } from "../../api/deleteReservation";
 // components
-import { Trash } from "lucide-react";
+import ReservationElement from "./ReservationElement";
 // types
 import type { ReservationWithShow } from "~/lib/general.types";
 
@@ -85,67 +83,15 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
               </thead>
               <tbody>
                 {reservations?.map((reservation) => {
-                  const {
-                    id,
-                    is_guest,
-                    show: { date, movie_title },
-                  } = reservation;
+                  const { is_guest, show } = reservation;
                   return (
                     !is_guest && (
-                      <tr key={id}>
-                        <td>
-                          {dayjs(date).format("DD. MMMM YYYY").toString()}
-                        </td>
-                        <td>{movie_title}</td>
-                        <td>
-                          {reservations
-                            ?.map((reservation: ReservationWithShow) =>
-                              reservation.show.date === date
-                                ? reservation.seat
-                                : null,
-                            )
-                            .filter((reservation) => reservation !== null)
-                            .join()}
-                        </td>
-                        <td>
-                          {/* {guest_firstname} {guest_surname} */}
-                          {reservations
-                            ?.map((reservation: ReservationWithShow) =>
-                              reservation.show.date === date
-                                ? reservation.is_guest
-                                  ? reservation.guest_firstname
-                                  : null
-                                : null,
-                            )
-                            .filter((reservation) => reservation !== null)}{" "}
-                          {reservations
-                            ?.map((reservation: ReservationWithShow) =>
-                              reservation.show.date === date
-                                ? reservation.is_guest
-                                  ? reservation.guest_surname
-                                  : null
-                                : null,
-                            )
-                            .filter((reservation) => reservation !== null)}
-                        </td>
-                        <td
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <Button
-                            color="red"
-                            leftIcon={<Trash size={16} />}
-                            variant="outline"
-                            onClick={() => {
-                              cancelReservation(reservation);
-                            }}
-                          >
-                            Stornieren
-                          </Button>
-                        </td>
-                      </tr>
+                      <ReservationElement
+                        show={show}
+                        reservations={reservations}
+                        reservation={reservation}
+                        cancelReservation={cancelReservation}
+                      />
                     )
                   );
                 })}
