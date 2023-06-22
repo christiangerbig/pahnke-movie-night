@@ -87,31 +87,53 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                 {reservations?.map((reservation) => {
                   const {
                     id,
-                    seat,
                     is_guest,
-                    guest_firstname,
-                    guest_surname,
                     show: { date, movie_title },
                   } = reservation;
                   return (
-                    <tr key={id}>
-                      {!is_guest ? (
+                    !is_guest && (
+                      <tr key={id}>
                         <td>
                           {dayjs(date).format("DD. MMMM YYYY").toString()}
                         </td>
-                      ) : (
-                        <td />
-                      )}
-                      {!is_guest ? <td>{movie_title}</td> : <td />}
-
-                      <td>{seat}</td>
-                      <td>
-                        {guest_firstname} {guest_surname}
-                      </td>
-                      <td
-                        style={{ display: "flex", justifyContent: "flex-end" }}
-                      >
-                        {!is_guest ? (
+                        <td>{movie_title}</td>
+                        <td>
+                          {reservations
+                            ?.map((reservation: ReservationWithShow) =>
+                              reservation.show.date === date
+                                ? reservation.seat
+                                : null,
+                            )
+                            .filter((reservation) => reservation !== null)
+                            .join()}
+                        </td>
+                        <td>
+                          {/* {guest_firstname} {guest_surname} */}
+                          {reservations
+                            ?.map((reservation: ReservationWithShow) =>
+                              reservation.show.date === date
+                                ? reservation.is_guest
+                                  ? reservation.guest_firstname
+                                  : null
+                                : null,
+                            )
+                            .filter((reservation) => reservation !== null)}{" "}
+                          {reservations
+                            ?.map((reservation: ReservationWithShow) =>
+                              reservation.show.date === date
+                                ? reservation.is_guest
+                                  ? reservation.guest_surname
+                                  : null
+                                : null,
+                            )
+                            .filter((reservation) => reservation !== null)}
+                        </td>
+                        <td
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
                           <Button
                             color="red"
                             leftIcon={<Trash size={16} />}
@@ -122,12 +144,11 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                           >
                             Stornieren
                           </Button>
-                        ) : null}
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                    )
                   );
                 })}
-                <tr></tr>
               </tbody>
             </Table>
           )}
