@@ -23,6 +23,7 @@ const SeatSVG = () => {
   const selectedShowId = useCinemaStore(selectSelectedShow);
   const shows = useCinemaStore(selectShows);
 
+  // hook selectedShowId change
   useEffect(() => {
     setShow(
       shows.filter((show: Show) => show.id === Number(selectedShowId))[0],
@@ -50,9 +51,6 @@ const SeatSVG = () => {
             <iframe
               width="100%"
               height="100%"
-              // src="https://www.youtube-nocookie.com/embed/wxN1T1uxQ2g?controls=1&autoplay=1&mute=1&loop=1&playlist=wxN1T1uxQ2g"
-              // src={shows[1].movie_description as string}
-              // https://www.youtube.com/watch?v=oxYqUxQMzKo
               src={show.movie_description as string}
               title="YouTube video player"
               frameBorder="0"

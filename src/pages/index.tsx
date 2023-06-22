@@ -38,7 +38,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   const setReservations = useCinemaStore(selectSetReservations);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
 
-  // hook user change
+  // hook component did mount
   useEffect(() => {
     setUser(user);
     setShows(shows);
@@ -49,7 +49,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
     } else {
       setSelectedShow(router.query.show as string);
     }
-  }, [user]);
+  }, []);
 
   return (
     <Layout>

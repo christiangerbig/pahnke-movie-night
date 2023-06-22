@@ -35,6 +35,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const shows = useCinemaStore(selectShows);
   const selectedShowId = useCinemaStore(selectSelectedShow);
 
+  // hook selectedShowId change
   useEffect(() => {
     setShow(
       shows.filter((show: Show) => show.id === Number(selectedShowId))[0],
