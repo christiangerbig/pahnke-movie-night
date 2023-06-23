@@ -12,7 +12,7 @@ interface ReservationOverviewProps {
 const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
   return (
     <>
-      <Box my={72}>
+      <Box my="4.5rem">
         <Title order={2} size="h2">
           🍿 Meine Reservierungen
         </Title>

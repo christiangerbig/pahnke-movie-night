@@ -27,6 +27,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { session, isLoading } = useSessionContext();
+
   const form = useForm({
     initialValues: {
       email: "",

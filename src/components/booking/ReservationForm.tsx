@@ -73,7 +73,6 @@ const ReservationForm = () => {
     );
 
     resetSelectedSeats();
-
     selectedShow && form.setValues({ show: selectedShow });
   }, [shows, selectedShow]);
 
@@ -86,7 +85,6 @@ const ReservationForm = () => {
 
       return null;
     });
-
     const freeSeats = [];
     for (let placeNumber = 1; placeNumber < 49; placeNumber++) {
       if (!reservedPlaceNumbers.includes(placeNumber)) {
@@ -94,7 +92,6 @@ const ReservationForm = () => {
       }
     }
     setFreeSeats(freeSeats);
-
     shows.map((show) => {
       if (show.id === Number(selectedShow)) {
         setSelectedFilm(show.movie_title);
@@ -102,7 +99,6 @@ const ReservationForm = () => {
     });
   }, [selectedShow, reservations]);
 
-  // zod schema
   const schema = z
     .object({
       show: z.string().trim().min(1, { message: "Bitte eine Show auswählen" }),

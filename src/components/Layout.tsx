@@ -27,7 +27,6 @@ import Header from "./Header";
 // types
 import type { Show } from "~/lib/general.types";
 import type { PropsWithChildren } from "react";
-// zustand
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [show, setShow] = useState<Show>();
@@ -48,7 +47,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         padding={0}
         header={
           <MantineHeader
-            height={62}
+            height="4rem"
             bg="dark.9"
             sx={{
               position: "fixed",
@@ -61,7 +60,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         }
         navbar={
           <Navbar
-            width={{ base: 300 }}
+            width={{ base: "18.5rem" }}
             pt="md"
             bg="#060606"
             sx={{ overflowY: "auto" }}

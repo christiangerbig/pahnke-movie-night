@@ -31,13 +31,13 @@ import type { ReservationWithShow } from "~/lib/general.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-interface PropTypes {
+interface DashboardPageProps {
   user: User;
   shows: Database["public"]["Tables"]["shows"]["Row"][];
   userReservations: ReservationWithShow[];
 }
 
-const DashboardPage: NextPage<PropTypes> = ({
+const DashboardPage: NextPage<DashboardPageProps> = ({
   user,
   shows,
   userReservations,
@@ -88,7 +88,7 @@ const DashboardPage: NextPage<PropTypes> = ({
     >
       <Box component="main">
         <MantineHeader
-          height={62}
+          height="4rem"
           bg="dark.9"
           sx={{
             position: "fixed",
@@ -98,8 +98,8 @@ const DashboardPage: NextPage<PropTypes> = ({
         >
           <Header />
         </MantineHeader>
-        <Container size="md" mt={80}>
-          <Flex h={220} justify="center" w="100%" my="xl">
+        <Container size="md" mt="5rem">
+          <Flex h="13.5rem" justify="center" w="100%" my="xl">
             <LogoApp />
           </Flex>
           <ShowsOverview shows={shows} />

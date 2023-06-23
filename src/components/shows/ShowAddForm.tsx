@@ -40,6 +40,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<FileWithPath>();
+
   const schema = z
     .object({
       date: z.date().min(new Date(), {
@@ -72,6 +73,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
         });
       }
     });
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -136,10 +138,9 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
 
     const storageUrl =
       "https://pkqfwvgswdthtmmgiaki.supabase.co/storage/v1/object/public/posters/";
-
     const index = youtubeLink.search(".be/");
-    const result = youtubeLink.slice(index + 4);
-    const playerString = `https://www.youtube-nocookie.com/embed/${result}?controls=1&autoplay=1&mute=1&loop=1&playlist=${result}`;
+    const mainYoutubeLink = youtubeLink.slice(index + 4);
+    const playerString = `https://www.youtube-nocookie.com/embed/${mainYoutubeLink}?controls=1&autoplay=1&mute=1&loop=1&playlist=${mainYoutubeLink}`;
 
     const { data, error } = await supabaseAuthClient.from("shows").insert({
       date: dayjs(date).format("YYYY-MM-DD").toString(),

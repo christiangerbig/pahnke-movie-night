@@ -1,4 +1,3 @@
-// next
 import { useRouter } from "next/router";
 // mantine
 import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
@@ -12,6 +11,7 @@ import type { Show } from "~/lib/general.types";
 interface ShowCardProps {
   show: Show;
 }
+
 const ShowCard = ({
   show: { id, movie_title, movie_poster, time, date },
 }: ShowCardProps) => {
@@ -26,7 +26,7 @@ const ShowCard = ({
       <Flex direction="row" w="100%" gap="lg">
         <Image
           src={movie_poster}
-          height={150}
+          height="9.4rem"
           width="auto"
           alt="movie poster"
           radius="md"
@@ -37,7 +37,7 @@ const ShowCard = ({
           direction="column"
           w="100%"
         >
-          <Text size={28} fw="bold">
+          <Text size="1.7rem" fw="bold">
             {movie_title}
           </Text>
           <Flex
@@ -48,7 +48,7 @@ const ShowCard = ({
           >
             <Flex gap="xl">
               <Group>
-                <CalendarDays size={24} />
+                <CalendarDays size="1.5rem" />
                 <Flex direction="column">
                   <Text component="span" size="xs" color="dimmed">
                     Datum
@@ -59,7 +59,7 @@ const ShowCard = ({
                 </Flex>
               </Group>
               <Group>
-                <Clock3 size={24} />
+                <Clock3 size="1.5rem" />
                 <Flex direction="column">
                   <Text component="span" size="xs" color="dimmed">
                     Uhrzeit
@@ -73,7 +73,7 @@ const ShowCard = ({
                 handleToHomePage(id.toString());
               }}
               color="indigo"
-              rightIcon={<ArrowRight size={16} />}
+              rightIcon={<ArrowRight size="1rem" />}
             >
               Plätze buchen
             </Button>

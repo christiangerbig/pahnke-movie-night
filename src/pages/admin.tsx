@@ -1,4 +1,3 @@
-// next
 import Link from "next/link";
 // mantine
 import { Box, Container, Title, Button, Modal, Flex } from "@mantine/core";

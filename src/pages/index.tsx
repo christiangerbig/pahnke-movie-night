@@ -1,11 +1,11 @@
 import { useEffect } from "react";
+// next
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import {
   createServerSupabaseClient,
   type User,
 } from "@supabase/auth-helpers-nextjs";
-import dayjs from "dayjs";
 // mantine
 import { Box, ColorSwatch, Container, Flex, Text } from "@mantine/core";
 // zustand
@@ -16,6 +16,8 @@ import {
   selectSetUser,
   selectSetSelectedShow,
 } from "../hooks/useCinemaStore";
+// dayjs
+import dayjs from "dayjs";
 // components
 import SeatSVG from "~/components/cinema/SeatSVG";
 import LogoPush from "~/components/LogoPushh";
@@ -61,29 +63,29 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
           <Flex justify="space-between">
             <Flex gap="xl" align="center">
               <Flex align="center" gap="sm">
-                <ColorSwatch color="red" size={20} />
+                <ColorSwatch color="red" size="1.25rem" />
                 <Text component="span" size="xs">
                   Freie Plätze
                 </Text>
               </Flex>
               <Flex align="center" gap="sm">
-                <ColorSwatch color="orange" size={20} />
+                <ColorSwatch color="orange" size="1.25rem" />
                 <Text component="span" size="xs">
                   Ausgewählte Plätze
                 </Text>
               </Flex>
               <Flex align="center" gap="sm">
-                <ColorSwatch color="grey" size={20} />
+                <ColorSwatch color="grey" size="1.25rem" />
                 <Text component="span" size="xs">
                   Belegte Plätze
                 </Text>
               </Flex>
             </Flex>
             <Flex px="md" align="center" gap="xs">
-              <Text color="dimmed" size="xs" mb={2}>
+              <Text color="dimmed" size="xs" mb="0.125rem">
                 Powered by
               </Text>
-              <Box h={40} opacity={0.5}>
+              <Box h="2.5rem" opacity={0.5}>
                 <LogoPush />
               </Box>
             </Flex>

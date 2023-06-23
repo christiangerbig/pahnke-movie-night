@@ -34,10 +34,12 @@ const ReservationElement = ({
       ),
       labels: { confirm: "Ja", cancel: "Nein" },
       confirmProps: { color: "red" },
+      // cancellation rejected
       onCancel: () => {
         return;
       },
-      // Cancellation
+
+      // cancellation confirmed
       onConfirm: () => {
         const reservationIds = reservations
           .filter(({ show }) => {
