@@ -48,14 +48,14 @@ const ShowCard = ({
             direction={isBreakpointSM ? "column" : "row"}
             w="100%"
           >
-            <Flex gap="xl">
+            <Flex gap="xl" mt={isBreakpointSM ? "2rem" : undefined}>
               <Group>
                 <CalendarDays size="1.5rem" />
                 <Flex direction="column">
                   <Text component="span" size="xs" color="dimmed">
                     Datum
                   </Text>
-                  <Text fw="bold">
+                  <Text size="sm" fw="bold">
                     {dayjs(date).format("dd. DD.MM.YYYY").toString()}
                   </Text>
                 </Flex>
@@ -66,7 +66,9 @@ const ShowCard = ({
                   <Text component="span" size="xs" color="dimmed">
                     Uhrzeit
                   </Text>
-                  <Text fw="bold">{time?.slice(0, 5)}</Text>
+                  <Text size="sm" fw="bold">
+                    {time?.slice(0, 5)}
+                  </Text>
                 </Flex>
               </Group>
             </Flex>
