@@ -74,7 +74,7 @@ const ShowCard = ({
               onClick={() => {
                 handleToHomePage(id.toString());
               }}
-              color="indigo"
+              color="blue.7"
               rightIcon={<ArrowRight size="1rem" />}
               mt={isBreakpointSM ? "1.5rem" : "auto"}
               w={isBreakpointSM ? "70%" : "25%"}

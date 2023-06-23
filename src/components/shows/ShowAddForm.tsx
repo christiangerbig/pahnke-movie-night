@@ -14,6 +14,7 @@ import {
   Button,
   Stack,
   ActionIcon,
+  Flex,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -29,6 +30,7 @@ import { Image as ImageIcon, UploadCloud, XCircle, Clock3 } from "lucide-react";
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";
 import type { StorageData } from "~/lib/general.types";
+import { useMediaQuery } from "@mantine/hooks";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -37,9 +39,11 @@ interface AddShowFormProps {
 }
 
 const AddShowForm = ({ closeModal }: AddShowFormProps) => {
+  const [file, setFile] = useState<FileWithPath>();
   const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<FileWithPath>();
+  // mantine
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   const schema = z
     .object({
@@ -274,9 +278,16 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
             {form.errors.poster}
           </Text>
         </Box>
-        <Button type="submit" color="indigo">
-          Speichern
-        </Button>
+        <Flex justify="flex-end">
+          <Button
+            w={isBreakpointSM ? "25%" : "15%"}
+            type="submit"
+            color="blue.7"
+            size="xs"
+          >
+            Speichern
+          </Button>
+        </Flex>
       </Stack>
     </form>
   );

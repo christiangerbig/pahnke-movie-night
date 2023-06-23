@@ -11,6 +11,7 @@ import { deleteReservation } from "../../api/deleteReservation";
 import { Trash } from "lucide-react";
 // types
 import type { ReservationWithShow, Show } from "~/lib/general.types";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ReservationElement {
   show: Show;
@@ -24,6 +25,8 @@ const ReservationElement = ({
   reservation,
 }: ReservationElement) => {
   const router = useRouter();
+  // mantine
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   const cancelReservation = ({ show: { id } }: ReservationWithShow) => {
     modals.openConfirmModal({
@@ -33,7 +36,12 @@ const ReservationElement = ({
         <Text size="sm">Solle(n) die Reservierungen storniert werden?</Text>
       ),
       labels: { confirm: "Ja", cancel: "Nein" },
-      confirmProps: { color: "red" },
+      cancelProps: isBreakpointSM
+        ? { w: "20%", size: "xs" }
+        : { w: "15%", size: "xs" },
+      confirmProps: isBreakpointSM
+        ? { w: "20%", size: "xs", color: "red" }
+        : { w: "15%", size: "xs", color: "red" },
       // cancellation rejected
       onCancel: () => {
         return;
@@ -70,7 +78,7 @@ const ReservationElement = ({
   };
 
   return (
-    <tr>
+    <tr style={isBreakpointSM ? { height: "8rem" } : { height: "5rem" }}>
       <td>{dayjs(date).format("DD. MMMM YYYY").toString()}</td>
       <td>{movie_title}</td>
       <td>
@@ -102,14 +110,27 @@ const ReservationElement = ({
           .filter((reservation) => reservation !== null)}
       </td>
       <td
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
+        style={
+          isBreakpointSM
+            ? {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                height: "inherit",
+              }
+            : {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                height: "inherit",
+              }
+        }
       >
         <Button
           color="red"
-          leftIcon={<Trash size={16} />}
+          leftIcon={<Trash size="1rem" />}
           variant="outline"
           size="xs"
           onClick={() => {

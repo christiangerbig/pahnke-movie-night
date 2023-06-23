@@ -69,7 +69,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
           <video
             autoPlay
             muted
-            style={{ height: "100%", width: "100%", objectFit: "cover" }}
+            style={{ height: "100%", width: "100%", objectFit: "scale-down" }}
             onEnded={() => {
               setVideoPlaying(false);
             }}

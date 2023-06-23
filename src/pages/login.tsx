@@ -84,10 +84,11 @@ const LoginPage = () => {
             <TextInput
               label="E-Mail"
               placeholder="meine@email.com"
+              size="xs"
               withAsterisk
               {...form.getInputProps("email")}
             />
-            <Button type="submit" fullWidth mt="xl" loading={loading}>
+            <Button type="submit" fullWidth mt="xl" loading={loading} size="xs">
               Einloggen
             </Button>
           </Paper>

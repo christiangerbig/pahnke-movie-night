@@ -34,6 +34,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
 import { useRouter } from "next/router";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ShowDateEntry {
   value: string;
@@ -58,6 +59,8 @@ const ReservationForm = () => {
   const setIsGuest = useCinemaStore(selectSetIsGuest);
   const selectedShow = useCinemaStore(selectSelectedShow);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
+  // mantine
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // hook shows / selectedShow change
   useEffect(() => {
@@ -320,15 +323,17 @@ const ReservationForm = () => {
             ) : null}
           </Flex>
           <ReservationDisplay />
-          <Button
-            type="submit"
-            w="100%"
-            size="xs"
-            disabled={selectedSeats.length === 0}
-            color="indigo"
-          >
-            Ticket(s) buchen
-          </Button>
+          <Flex justify="center" w="100%">
+            <Button
+              type="submit"
+              w={isBreakpointSM ? "30%" : "100%"}
+              size="xs"
+              disabled={selectedSeats.length === 0}
+              color="green.7"
+            >
+              Ticket(s) buchen
+            </Button>
+          </Flex>
         </Flex>
       </form>
     </Box>
