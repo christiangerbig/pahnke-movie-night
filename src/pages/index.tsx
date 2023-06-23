@@ -25,6 +25,7 @@ import Layout from "~/components/Layout";
 // types
 import type { Database } from "~/lib/database.types";
 import type { ReservationWithShow } from "~/lib/general.types";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface HomePageProps {
   user: User;
@@ -39,6 +40,8 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   const setShows = useCinemaStore(selectSetShows);
   const setReservations = useCinemaStore(selectSetReservations);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
+  // mantine
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // hook component did mount
   useEffect(() => {
@@ -54,9 +57,19 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   }, []);
 
   return (
-    <Layout>
+    <Flex
+      justify="center"
+      direction={isBreakpointSM ? "column" : "row"}
+      wrap={isBreakpointSM ? "wrap" : undefined}
+    >
+      <Layout />
       <Box component="main">
-        <Box h="calc(100vh - 120px)" sx={{ overflow: "hidden" }} mx="auto">
+        <Box
+          h="calc(100vh - 7.5rem)"
+          sx={{ overflow: "hidden" }}
+          mx="auto"
+          mt={isBreakpointSM ? "0" : "4rem"}
+        >
           <SeatSVG />
         </Box>
         <Container>
@@ -92,7 +105,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
           </Flex>
         </Container>
       </Box>
-    </Layout>
+    </Flex>
   );
 };
 

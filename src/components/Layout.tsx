@@ -27,12 +27,15 @@ import Header from "./Header";
 // types
 import type { Show } from "~/lib/general.types";
 import type { PropsWithChildren } from "react";
+import { useMediaQuery } from "@mantine/hooks";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [show, setShow] = useState<Show>();
   // zustand
   const shows = useCinemaStore(selectShows);
   const selectedShowId = useCinemaStore(selectSelectedShow);
+  // mantine
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // hook selectedShowId change
   useEffect(() => {
@@ -44,6 +47,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <AppShell
+        w="10rem"
         padding={0}
         header={
           <MantineHeader
@@ -60,12 +64,13 @@ const Layout = ({ children }: PropsWithChildren) => {
         }
         navbar={
           <Navbar
-            width={{ base: "18.5rem" }}
+            width={isBreakpointSM ? { base: "95%" } : { base: "18.5rem" }}
             pt="md"
+            mx={isBreakpointSM ? "md" : undefined}
             bg="#060606"
             sx={{ overflowY: "auto" }}
           >
-            <Flex direction="column" h="100%">
+            <Flex direction="column" h={isBreakpointSM ? "75%" : "100%"}>
               <Navbar.Section sx={{ flex: "1 1 0%" }} px="md">
                 <Text size="sm" weight={500} color="dimmed" mb="sm">
                   Vorstellung wählen
@@ -90,11 +95,11 @@ const Layout = ({ children }: PropsWithChildren) => {
                         {show?.time?.slice(0, 5)}
                       </Text>
                     </Flex>
-                    {show?.movie_poster && (
+                    {show?.movie_poster && !isBreakpointSM && (
                       <Image
                         src={show?.movie_poster}
                         alt=""
-                        height={398}
+                        height={isBreakpointSM ? "100rem" : "25rem"}
                         mt="md"
                         radius={8}
                       />
