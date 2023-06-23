@@ -27,7 +27,7 @@ const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
                 <tr>
                   <th>Datum</th>
                   <th>Film</th>
-                  <th>Platznummer(n)</th>
+                  <th>Platz</th>
                   <th>Gast</th>
                   <th />
                 </tr>

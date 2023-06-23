@@ -111,6 +111,7 @@ const ReservationElement = ({
           color="red"
           leftIcon={<Trash size={16} />}
           variant="outline"
+          size="xs"
           onClick={() => {
             cancelReservation(reservation);
           }}

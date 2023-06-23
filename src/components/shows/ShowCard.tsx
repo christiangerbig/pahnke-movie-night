@@ -7,6 +7,7 @@ import dayjs from "../../dayjs.config";
 import { Clock3, CalendarDays, ArrowRight } from "lucide-react";
 // types
 import type { Show } from "~/lib/general.types";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ShowCardProps {
   show: Show;
@@ -16,6 +17,7 @@ const ShowCard = ({
   show: { id, movie_title, movie_poster, time, date },
 }: ShowCardProps) => {
   const router = useRouter();
+  const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   const handleToHomePage = (id: string) => {
     void router.push(`/?show=${id}`);
@@ -43,7 +45,7 @@ const ShowCard = ({
           <Flex
             align="flex-center"
             justify="space-between"
-            direction="row"
+            direction={isBreakpointSM ? "column" : "row"}
             w="100%"
           >
             <Flex gap="xl">
@@ -74,6 +76,9 @@ const ShowCard = ({
               }}
               color="indigo"
               rightIcon={<ArrowRight size="1rem" />}
+              mt={isBreakpointSM ? "1.5rem" : "auto"}
+              w={isBreakpointSM ? "70%" : "25%"}
+              size="xs"
             >
               Plätze buchen
             </Button>

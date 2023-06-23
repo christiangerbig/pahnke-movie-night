@@ -111,7 +111,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
               <Text color="dimmed" size="xs" mb={2}>
                 Powered by
               </Text>
-              <Box h={40} opacity={0.5}>
+              <Box h="2.5rem" opacity={0.5}>
                 <LogoPush />
               </Box>
             </Flex>
