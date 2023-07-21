@@ -103,14 +103,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
                   </Text>
                 </Flex>
               </Flex>
-              <Flex px="md" align="center" gap="xs">
-                <Text color="dimmed" size="xs" mb="0.125rem">
-                  {homePage.logo.title}
-                </Text>
-                <Box h="2.5rem" opacity={0.5}>
-                  <LogoPush />
-                </Box>
-              </Flex>
+              <LogoPush />
             </Flex>
           </Container>
         </Box>

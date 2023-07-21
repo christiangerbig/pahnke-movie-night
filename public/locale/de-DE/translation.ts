@@ -2,9 +2,6 @@ const translation = {
   "de-DE": {
     loginPage: {
       title: "Willkommen",
-      logo: {
-        text: "Powered by",
-      },
       button: {
         submit: "Einloggen",
       },
@@ -25,9 +22,6 @@ const translation = {
         freeSeats: "Freie Plätze",
         selectedSeats: "Ausgewählte Plätze",
         occupiedSeats: "Belegte Plätze",
-      },
-      logo: {
-        title: "Powered by",
       },
     },
 
@@ -255,6 +249,10 @@ const translation = {
 
     layout: {
       text: "Vorstellung wählen",
+    },
+
+    logo: {
+      text: "Powered by",
     },
   },
 };
