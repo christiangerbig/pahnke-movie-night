@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 // mantine
 import { Box, Flex, Text } from "@mantine/core";
 // locales
-import translations from "../../public/locale/translations";
+import translations from "../../../public/locale/translations";
 // types
 import type { Locale } from "~/lib/general.types";
 

@@ -26,8 +26,8 @@ import dayjs from "../dayjs.config";
 import translations from "../../public/locale/translations";
 // components
 import NavigationBar from "~/components/NavigationBar";
-import LogoApp from "~/components/LogoApp";
-import LogoPush from "~/components/LogoPushh";
+import LogoApp from "~/components/logos/LogoApp";
+import LogoPush from "~/components/logos/LogoPushh";
 import ReservationsOverview from "~/components/booking/ReservationsOverview";
 import ShowsOverview from "~/components/shows/ShowsOverview";
 // types
@@ -127,14 +127,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
           <Container size="md">
             <ReservationsOverview reservations={userReservations} />
             <Flex my="lg" justify="end">
-              <Flex px="md" align="center" gap="sm">
-                <Text color="dimmed" size="xs" mb={2}>
-                  Powered by
-                </Text>
-                <Box h="2.5rem" opacity={0.5}>
-                  <LogoPush />
-                </Box>
-              </Flex>
+              <LogoPush />
             </Flex>
           </Container>
         </Box>

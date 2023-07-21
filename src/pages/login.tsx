@@ -14,7 +14,7 @@ import { validateEmail } from "~/lib/validateEmail";
 // locales
 import translations from "../../public/locale/translations";
 // components
-import LogoPush from "~/components/LogoPushh";
+import LogoPush from "~/components/logos/LogoPushh";
 // types
 import type { Locale } from "~/lib/general.types";
 

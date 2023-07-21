@@ -24,7 +24,7 @@ import dayjs from "dayjs";
 import translations from "../../public/locale/translations";
 // components
 import SeatSVG from "~/components/cinema/SeatSVG";
-import LogoPush from "~/components/LogoPushh";
+import LogoPush from "~/components/logos/LogoPushh";
 import Layout from "~/components/Layout";
 // types
 import type { Database } from "~/lib/database.types";

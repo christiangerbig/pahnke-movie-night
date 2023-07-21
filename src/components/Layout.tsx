@@ -20,6 +20,7 @@ import {
   Skeleton,
   Divider,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 // dayjs
 import dayjs from "dayjs";
 // locales
@@ -31,7 +32,6 @@ import NavigationBar from "./NavigationBar";
 // types
 import type { Show, Locale } from "~/lib/general.types";
 import type { PropsWithChildren } from "react";
-import { useMediaQuery } from "@mantine/hooks";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [show, setShow] = useState<Show>();
