@@ -44,7 +44,6 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const [file, setFile] = useState<FileWithPath>();
   const { replace, asPath, locale } = useRouter();
   const ref = useRef<HTMLInputElement>(null);
-  // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // Fetch component content for default language

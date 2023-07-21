@@ -49,13 +49,15 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   userReservations,
 }) => {
   const { locale } = useRouter();
-  // zustand
   const setUser = useCinemaStore(selectSetUser);
   const [videoPlaying, setVideoPlaying] = useState(true);
-  // Fetch component content for default language
-  const { dashboardPage } = translations[locale as Locale];
 
-  // component did mount
+  // Fetch component content for default language
+  const {
+    dashboardPage: { title },
+  } = translations[locale as Locale];
+
+  // hook component did mount
   useEffect(() => {
     setUser(user);
   }, []);
@@ -64,7 +66,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
     return (
       <>
         <Head>
-          <title>{dashboardPage.title}</title>
+          <title>{title}</title>
         </Head>
         <motion.div
           initial={{ opacity: 1 }}
@@ -97,7 +99,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   return (
     <>
       <Head>
-        <title>{dashboardPage.title}</title>
+        <title>{title}</title>
       </Head>
       <motion.div
         initial={{ opacity: 0 }}

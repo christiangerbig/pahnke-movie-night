@@ -25,14 +25,15 @@ interface SeatProps extends PropsWithChildren {
 const Seat = ({ seatNumber, children }: SeatProps) => {
   const { locale } = useRouter();
   const [opened, { close, open }] = useDisclosure(false);
-  // zustand
   const freeSeats = useCinemaStore(selectFreeSeats);
   const selectedSeats = useCinemaStore(selectSelectedSeats);
   const addSelectedSeat = useCinemaStore(selectAddSelectedSeat);
   const removeSelectedSeat = useCinemaStore(selectRemoveSelectedSeat);
 
   // Fetch component content for default language
-  const { seat } = translations[locale as Locale];
+  const {
+    seat: { tooltip },
+  } = translations[locale as Locale];
 
   const handleSelectSeat = () => {
     if (freeSeats.includes(seatNumber)) {
@@ -57,7 +58,7 @@ const Seat = ({ seatNumber, children }: SeatProps) => {
       </Popover.Target>
       <Portal>
         <Popover.Dropdown>
-          {seat.tooltip.text} <b>{seatNumber}</b>
+          {tooltip.text} <b>{seatNumber}</b>
         </Popover.Dropdown>
       </Portal>
     </Popover>

@@ -36,14 +36,14 @@ import { useMediaQuery } from "@mantine/hooks";
 const Layout = ({ children }: PropsWithChildren) => {
   const [show, setShow] = useState<Show>();
   const { locale } = useRouter();
-  // zustand
   const shows = useCinemaStore(selectShows);
   const selectedShowId = useCinemaStore(selectSelectedShow);
-  // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // Fetch component content for default language
-  const { layout } = translations[locale as Locale];
+  const {
+    layout: { text },
+  } = translations[locale as Locale];
 
   // hook selectedShowId change
   useEffect(() => {
@@ -81,7 +81,7 @@ const Layout = ({ children }: PropsWithChildren) => {
             <Flex direction="column" h={isBreakpointSM ? "75%" : "100%"}>
               <Navbar.Section sx={{ flex: "1 1 0%" }} px="md">
                 <Text size="sm" weight={500} color="dimmed" mb="sm">
-                  {layout.text}
+                  {text}
                 </Text>
                 <ReservationForm />
               </Navbar.Section>

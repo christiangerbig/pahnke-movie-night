@@ -24,9 +24,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const { push, locale } = useRouter();
   const { session, isLoading } = useSessionContext();
-  // Fetch component content for default language
-  const { loginPage } = translations[locale as Locale];
-
   const form = useForm({
     initialValues: {
       email: "",
@@ -37,20 +34,22 @@ const LoginPage = () => {
   });
   const { height } = useViewportSize();
 
+  // Fetch component content for default language
+  const {
+    loginPage: { title, button },
+  } = translations[locale as Locale];
+
   const handleLogin = async (email: string) => {
     setLoading(true);
-
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: "/login",
       },
     });
-
     if (!error) {
       void push("/verify-request");
     }
-
     setLoading(false);
   };
 
@@ -66,12 +65,12 @@ const LoginPage = () => {
   return (
     <>
       <Head>
-        <title>{loginPage.title}</title>
+        <title>{title}</title>
       </Head>
       <Box component="main">
         <Flex justify="center" align="center" direction="column" h={height}>
           <Title align="center" order={1}>
-            {loginPage.title}
+            {title}
           </Title>
           <form
             onSubmit={form.onSubmit((values) => void handleLogin(values.email))}
@@ -98,7 +97,7 @@ const LoginPage = () => {
                 loading={loading}
                 size="xs"
               >
-                {loginPage.button.submit}
+                {button.submit}
               </Button>
             </Paper>
           </form>

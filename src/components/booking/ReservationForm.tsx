@@ -49,7 +49,6 @@ const ReservationForm = () => {
   const [selectedFilm, setSelectedFilm] = useState<string>("");
   const { asPath, replace, push, locale } = useRouter();
   const checkboxRef = useRef<HTMLInputElement>(null);
-  // zustand
   const user = useCinemaStore(selectUser);
   const shows = useCinemaStore(selectShows);
   const reservations = useCinemaStore(selectReservations);
@@ -62,7 +61,6 @@ const ReservationForm = () => {
   const setIsGuest = useCinemaStore(selectSetIsGuest);
   const selectedShow = useCinemaStore(selectSelectedShow);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
-  // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   // Fetch component content for default language

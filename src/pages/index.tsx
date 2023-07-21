@@ -38,15 +38,16 @@ interface HomePageProps {
 
 const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   const { query, locale } = useRouter();
-  // Fetch component content for default language
-  const { homePage } = translations[locale as Locale];
-  // zustand
   const setUser = useCinemaStore(selectSetUser);
   const setShows = useCinemaStore(selectSetShows);
   const setReservations = useCinemaStore(selectSetReservations);
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
-  // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
+
+  // Fetch component content for default language
+  const {
+    homePage: { title, legend },
+  } = translations[locale as Locale];
 
   // hook component did mount
   useEffect(() => {
@@ -64,7 +65,7 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   return (
     <>
       <Head>
-        <title>{homePage.title}</title>
+        <title>{title}</title>
       </Head>
       <Flex
         justify="center"
@@ -87,19 +88,19 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
                 <Flex align="center" gap="sm">
                   <ColorSwatch color="red" size="1.25rem" />
                   <Text component="span" size="xs">
-                    {homePage.legend.freeSeats}
+                    {legend.freeSeats}
                   </Text>
                 </Flex>
                 <Flex align="center" gap="sm">
                   <ColorSwatch color="orange" size="1.25rem" />
                   <Text component="span" size="xs">
-                    {homePage.legend.selectedSeats}
+                    {legend.selectedSeats}
                   </Text>
                 </Flex>
                 <Flex align="center" gap="sm">
                   <ColorSwatch color="grey" size="1.25rem" />
                   <Text component="span" size="xs">
-                    {homePage.legend.occupiedSeats}
+                    {legend.occupiedSeats}
                   </Text>
                 </Flex>
               </Flex>

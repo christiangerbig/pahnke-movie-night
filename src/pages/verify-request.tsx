@@ -12,19 +12,22 @@ import type { Locale } from "~/lib/general.types";
 const VerifyRequestPage = () => {
   const { locale } = useRouter();
   const { height } = useViewportSize();
+
   // Fetch component content for default language
-  const { verifyRequestPage } = translations[locale as Locale];
+  const {
+    verifyRequestPage: { title, text },
+  } = translations[locale as Locale];
 
   return (
     <>
       <Head>
-        <title>{verifyRequestPage.title}</title>
+        <title>{title}</title>
       </Head>
       <Box component="main">
         <Flex justify="center" align="center" direction="column" h={height}>
           <Paper withBorder shadow="md" p="2.5rem" radius="md">
             <Text align="center" size="xl">
-              {verifyRequestPage.text}
+              {text}
             </Text>
           </Paper>
         </Flex>

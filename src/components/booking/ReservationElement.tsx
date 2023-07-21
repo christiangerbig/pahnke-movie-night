@@ -27,7 +27,6 @@ const ReservationElement = ({
   reservation,
 }: ReservationElement) => {
   const { asPath, replace, locale } = useRouter();
-  // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
   //  Fetch component content for default language
@@ -51,7 +50,6 @@ const ReservationElement = ({
       onCancel: () => {
         return;
       },
-
       // cancellation confirmed
       onConfirm: () => {
         const reservationIds = reservations

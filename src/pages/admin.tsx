@@ -13,7 +13,7 @@ import translations from "../../public/locale/translations";
 // components
 import { CornerDownLeft } from "lucide-react";
 import ShowAddForm from "~/components/shows/ShowAddForm";
-import ShowsArchiv from "~/components/shows/ShowsArchiv";
+import ShowsArchiv from "~/components/shows/ShowsArchive";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
@@ -26,13 +26,16 @@ interface AdminPageProps {
 const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
   const { locale } = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
+
   // Fetch component content for default language
-  const { adminPage } = translations[locale as Locale];
+  const {
+    adminPage: { title, button, modal },
+  } = translations[locale as Locale];
 
   return (
     <>
       <Head>
-        <title>{adminPage.title}</title>
+        <title>{title}</title>
       </Head>
       <Box component="main" my="xl">
         <Container>
@@ -45,21 +48,16 @@ const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
               >
                 <CornerDownLeft />
               </Box>
-              <Title order={3}>{adminPage.title}</Title>
+              <Title order={3}>{title}</Title>
             </Flex>
             <Button size="xs" variant="default" onClick={open}>
-              {adminPage.button.addShow}
+              {button.addShow}
             </Button>
           </Flex>
           <ShowsArchiv shows={shows} />
         </Container>
       </Box>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title={adminPage.modal.title}
-        size="xl"
-      >
+      <Modal opened={opened} onClose={close} title={modal.title} size="xl">
         <ShowAddForm closeModal={close} />
       </Modal>
     </>

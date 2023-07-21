@@ -36,7 +36,7 @@ const translation = {
     },
 
     navigationBar: {
-      text: "Moin",
+      text: "Hi",
       button: {
         admin: "Admin area",
         language: "German",
@@ -52,7 +52,7 @@ const translation = {
       schemaTexts: {
         show: {
           requirements: {
-            Message: "Select a show",
+            message: "Select a show",
           },
         },
         guestFirstName: {
@@ -228,7 +228,7 @@ const translation = {
       },
     },
 
-    showsArchiv: {
+    showsArchive: {
       table: {
         header: {
           date: {

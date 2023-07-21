@@ -17,17 +17,17 @@ const ShowsArchiv = ({ shows }: ShowsTableProps) => {
   const { locale } = useRouter();
 
   // Fetch component content for default language
-  const { showsArchiv } = translations[locale as Locale];
+  const { showsArchive } = translations[locale as Locale];
 
   return (
     <Card bg="dark.9">
       <Table>
         <thead>
           <tr>
-            <th>{showsArchiv.table.header.date.text}</th>
-            <th>{showsArchiv.table.header.time.text}</th>
-            <th>{showsArchiv.table.header.film.text}</th>
-            <th>{showsArchiv.table.header.guests.text}</th>
+            <th>{showsArchive.table.header.date.text}</th>
+            <th>{showsArchive.table.header.time.text}</th>
+            <th>{showsArchive.table.header.film.text}</th>
+            <th>{showsArchive.table.header.guests.text}</th>
           </tr>
         </thead>
         <tbody>

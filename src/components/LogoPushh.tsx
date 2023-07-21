@@ -11,12 +11,14 @@ const LogoPush = () => {
   const { locale } = useRouter();
 
   // Fetch component content for default language
-  const { logo } = translations[locale as Locale];
+  const {
+    logo: { text },
+  } = translations[locale as Locale];
 
   return (
     <Flex px="md" align="center" gap="xs">
       <Text color="dimmed" size="xs" mb="0.125rem">
-        {logo.text}
+        {text}
       </Text>
       <Box h="2.5rem" opacity={0.5}>
         <svg

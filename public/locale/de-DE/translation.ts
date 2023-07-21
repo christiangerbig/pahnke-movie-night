@@ -52,7 +52,7 @@ const translation = {
       schemaTexts: {
         show: {
           requirements: {
-            Message: "Bitte eine Show auswählen",
+            message: "Bitte eine Show auswählen",
           },
         },
         guestFirstName: {
@@ -228,7 +228,7 @@ const translation = {
       },
     },
 
-    showsArchiv: {
+    showsArchive: {
       table: {
         header: {
           date: {

@@ -22,11 +22,13 @@ export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 const NavigationBar = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isDashboard, setIsDashboard] = useState<boolean>(true);
-  const { asPath, reload, replace, pathname, locale } = useRouter();
+  const { asPath, replace, reload, pathname, locale } = useRouter();
   const user = useCinemaStore(selectUser);
 
   // Fetch component content for default language
-  const { navigationBar } = translations[locale as Locale];
+  const {
+    navigationBar: { text, button },
+  } = translations[locale as Locale];
 
   // hook component did mount
   useEffect(() => {
@@ -44,9 +46,14 @@ const NavigationBar = () => {
   }, [user]);
 
   const handleChangeLanguage = () => {
-    if (locale === "de-DE") replace(pathname, pathname, { locale: "en-US" });
-    else {
-      replace(pathname, pathname, { locale: "de-DE" });
+    if (locale === "de-DE") {
+      replace(pathname, pathname, { locale: "en-US" }).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      replace(pathname, pathname, { locale: "de-DE" }).catch((err) => {
+        console.log(err);
+      });
     }
   };
 
@@ -75,7 +82,7 @@ const NavigationBar = () => {
             <Box w="1.5rem" />
           )}
           <Title order={4}>
-            {navigationBar.text} {(user as User).email}
+            {text} {(user as User).email}
           </Title>
         </Group>
         <Group>
@@ -84,11 +91,11 @@ const NavigationBar = () => {
             size="xs"
             onClick={() => void handleChangeLanguage()}
           >
-            {navigationBar.button.language}
+            {button.language}
           </Button>
           {isAdmin ? (
             <Button variant="default" size="xs" component={Link} href="/admin">
-              {navigationBar.button.admin}
+              {button.admin}
             </Button>
           ) : null}
           <Button
@@ -96,7 +103,7 @@ const NavigationBar = () => {
             size="xs"
             onClick={() => void handleLogout()}
           >
-            {navigationBar.button.logout}
+            {button.logout}
           </Button>
         </Group>
       </Flex>

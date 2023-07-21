@@ -19,7 +19,6 @@ import type { Show } from "~/lib/general.types";
 
 const SeatSVG = () => {
   const [show, setShow] = useState<Show>();
-  // zustand
   const selectedShowId = useCinemaStore(selectSelectedShow);
   const shows = useCinemaStore(selectShows);
 
