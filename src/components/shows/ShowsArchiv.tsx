@@ -24,10 +24,10 @@ const ShowsArchiv = ({ shows }: ShowsTableProps) => {
       <Table>
         <thead>
           <tr>
-            <th>{showsArchiv.table.header.date}</th>
-            <th>{showsArchiv.table.header.time}</th>
-            <th>{showsArchiv.table.header.film}</th>
-            <th>{showsArchiv.table.header.guests}</th>
+            <th>{showsArchiv.table.header.date.text}</th>
+            <th>{showsArchiv.table.header.time.text}</th>
+            <th>{showsArchiv.table.header.film.text}</th>
+            <th>{showsArchiv.table.header.guests.text}</th>
           </tr>
         </thead>
         <tbody>

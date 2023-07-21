@@ -112,6 +112,8 @@ const HomePage: NextPage<HomePageProps> = ({ user, shows, reservations }) => {
   );
 };
 
+export default HomePage;
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Create authenticated Supabase Client
   const supabaseAuthServer = createServerSupabaseClient<Database>(ctx);
@@ -144,5 +146,3 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   };
 };
-
-export default HomePage;

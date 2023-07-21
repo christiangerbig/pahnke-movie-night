@@ -91,12 +91,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { data: shows } = await supabaseAuthServer
     .from("shows")
-    .select(
-      `
-        *,
-        reservations ( id )
-  `,
-    )
+    .select(`*, reservations ( id )`)
     .order("date", { ascending: true });
 
   return {
