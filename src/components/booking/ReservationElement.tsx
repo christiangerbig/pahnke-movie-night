@@ -3,15 +3,17 @@ import { useRouter } from "next/router";
 import { Text, Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
+import { useMediaQuery } from "@mantine/hooks";
 // dayjs
 import dayjs from "../../dayjs.config";
 // api
 import { deleteReservation } from "../../api/deleteReservation";
+// locales
+import translations from "../../../public/locale/translations";
 // components
 import { Trash } from "lucide-react";
 // types
-import type { ReservationWithShow, Show } from "~/lib/general.types";
-import { useMediaQuery } from "@mantine/hooks";
+import type { Locale, ReservationWithShow, Show } from "~/lib/general.types";
 
 interface ReservationElement {
   show: Show;
@@ -24,17 +26,20 @@ const ReservationElement = ({
   reservations,
   reservation,
 }: ReservationElement) => {
-  const router = useRouter();
+  const { asPath, replace, locale } = useRouter();
   // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
+
+  //  Fetch component content for default language
+  const {
+    reservationElement: { cancellation, button },
+  } = translations[locale as Locale];
 
   const cancelReservation = ({ show: { id } }: ReservationWithShow) => {
     modals.openConfirmModal({
       title: "Stornierung",
       centered: true,
-      children: (
-        <Text size="sm">Solle(n) die Reservierungen storniert werden?</Text>
-      ),
+      children: <Text size="sm">{cancellation.securityQuestion}</Text>,
       labels: { confirm: "Ja", cancel: "Nein" },
       cancelProps: isBreakpointSM
         ? { w: "20%", size: "xs" }
@@ -58,17 +63,17 @@ const ReservationElement = ({
           });
         deleteReservation(reservationIds)
           .then((): void => {
-            void router.replace(router.asPath);
+            void replace(asPath);
             notifications.show({
-              title: "Stornierung erfolgreich",
-              message: "Reservierung wurde storniert!",
+              title: cancellation.confirmNotification.title,
+              message: cancellation.confirmNotification.message,
               color: "green",
             });
           })
           .catch((err: Error) => {
             console.log("Fehler:", err);
             notifications.show({
-              title: "Ups, ein Fehler ist aufgetreten!",
+              title: cancellation.errorNotification.title,
               message: err.message,
               color: "red",
             });
@@ -137,7 +142,7 @@ const ReservationElement = ({
             cancelReservation(reservation);
           }}
         >
-          Stornieren
+          {button.cancel}
         </Button>
       </td>
     </tr>

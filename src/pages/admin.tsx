@@ -1,10 +1,15 @@
+// next
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Head from "next/head";
 // mantine
 import { Box, Container, Title, Button, Modal, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // dayjs
 import "dayjs/locale/de";
+// locales
+import translations from "../../public/locale/translations";
 // components
 import { CornerDownLeft } from "lucide-react";
 import ShowAddForm from "~/components/shows/ShowAddForm";
@@ -12,16 +17,23 @@ import ShowsArchiv from "~/components/shows/ShowsArchiv";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
+import type { Locale } from "~/lib/general.types";
 
 interface AdminPageProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
 const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
+  const { locale } = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
+  // Fetch component content for default language
+  const { adminPage } = translations[locale as Locale];
 
   return (
     <>
+      <Head>
+        <title>{adminPage.title}</title>
+      </Head>
       <Box component="main" my="xl">
         <Container>
           <Flex align="center" justify="space-between" mb="xl">
@@ -33,10 +45,10 @@ const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
               >
                 <CornerDownLeft />
               </Box>
-              <Title order={3}>Show Archiv</Title>
+              <Title order={3}>{adminPage.title}</Title>
             </Flex>
             <Button size="xs" variant="default" onClick={open}>
-              Show hinzufügen
+              {adminPage.button.addShow}
             </Button>
           </Flex>
           <ShowsArchiv shows={shows} />
@@ -45,7 +57,7 @@ const AdminPage: NextPage<AdminPageProps> = ({ shows }) => {
       <Modal
         opened={opened}
         onClose={close}
-        title="Neue Show hinzufügen"
+        title={adminPage.modal.title}
         size="xl"
       >
         <ShowAddForm closeModal={close} />

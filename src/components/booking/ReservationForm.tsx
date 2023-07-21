@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+// next
+import { useRouter } from "next/router";
 // zustand
 import {
   useCinemaStore,
@@ -23,18 +25,19 @@ import { fetchReservations } from "~/api/fetchReservations";
 import { Box, Select, Button, TextInput, Checkbox, Flex } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import { useMediaQuery } from "@mantine/hooks";
 // zod
 import { z } from "zod";
 // dayjs
 import dayjs from "../../dayjs.config";
+// locales
+import translations from "../../../public/locale/translations";
 // components
 import ReservationDisplay from "./ReservationDisplay";
 // types
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "~/lib/database.types";
-import type { ReservationWithShow } from "~/lib/general.types";
-import { useRouter } from "next/router";
-import { useMediaQuery } from "@mantine/hooks";
+import type { ReservationWithShow, Locale } from "~/lib/general.types";
 
 interface ShowDateEntry {
   value: string;
@@ -44,7 +47,7 @@ interface ShowDateEntry {
 const ReservationForm = () => {
   const [showDates, setShowDates] = useState<ShowDateEntry[]>([]);
   const [selectedFilm, setSelectedFilm] = useState<string>("");
-  const router = useRouter();
+  const { asPath, replace, push, locale } = useRouter();
   const checkboxRef = useRef<HTMLInputElement>(null);
   // zustand
   const user = useCinemaStore(selectUser);
@@ -61,6 +64,11 @@ const ReservationForm = () => {
   const setSelectedShow = useCinemaStore(selectSetSelectedShow);
   // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
+
+  // Fetch component content for default language
+  const {
+    reservationForm: { schemaTexts, preselection, booking, button },
+  } = translations[locale as Locale];
 
   // hook shows / selectedShow change
   useEffect(() => {
@@ -104,21 +112,24 @@ const ReservationForm = () => {
 
   const schema = z
     .object({
-      show: z.string().trim().min(1, { message: "Bitte eine Show auswählen" }),
+      show: z
+        .string()
+        .trim()
+        .min(1, { message: schemaTexts.show.requirements.message }),
       isGuest: z.boolean().optional(),
       guestFirstName: z
         .string()
-        .min(2, { message: "Mindestens 2 Zeichen" })
+        .min(2, { message: schemaTexts.guestFirstName.requirements.message1 })
         .or(z.literal("")),
       guestSurname: z
         .string()
-        .min(2, { message: "Mindestens 2 Zeichen" })
+        .min(2, { message: schemaTexts.guestSurname.requirements.message1 })
         .or(z.literal("")),
     })
     .superRefine(({ isGuest, guestFirstName, guestSurname }, ctx) => {
       if (isGuest && !guestFirstName) {
         ctx.addIssue({
-          message: "Bitte einen Vornamen angeben",
+          message: schemaTexts.guestFirstName.requirements.message2,
           code: z.ZodIssueCode.custom,
           path: ["guestFirstName"],
         });
@@ -126,7 +137,7 @@ const ReservationForm = () => {
 
       if (isGuest && !guestSurname) {
         ctx.addIssue({
-          message: "Bitte einen Nachnamen angeben",
+          message: schemaTexts.guestSurname.requirements.message2,
           code: z.ZodIssueCode.custom,
           path: ["guestSurname"],
         });
@@ -165,8 +176,8 @@ const ReservationForm = () => {
     // booking invalid check
     if (isGuest && selectedSeats.length === 1) {
       notifications.show({
-        title: "Ungültige Reservierung!",
-        message: "Bitte noch einen Platz für den Gast angeben.",
+        title: booking.invalid.errorNotification.title,
+        message: booking.invalid.errorNotification.message,
         color: "red",
         autoClose: 5000,
       });
@@ -188,8 +199,8 @@ const ReservationForm = () => {
     if (isDoubleBooking) {
       resetReservationValues();
       notifications.show({
-        title: "Doppelte Reservierung!",
-        message: "Nur eine Buchung pro Vorstellung möglich.",
+        title: booking.doublet.errorNotification.title,
+        message: booking.doublet.errorNotification.message,
         color: "red",
         autoClose: 5000,
       });
@@ -202,15 +213,13 @@ const ReservationForm = () => {
         setReservations(updatedReservations);
         resetReservationValues();
         resetFreeSeats();
-        void router.replace(router.asPath);
+        void replace(asPath);
         notifications.show({
           title: "",
           message:
-            selectedSeats[0] && !selectedSeats[1]
-              ? `Platz ${selectedSeats[0].toString()} für den Film "${selectedFilm}" wurde gebucht.`
-              : selectedSeats[0] && selectedSeats[1]
-              ? `Plätze ${selectedSeats[0].toString()} und ${selectedSeats[1].toString()} für den Film "${selectedFilm}" wurden gebucht.`
-              : "Es ist ein Fehler aufgetreten.",
+            selectedSeats.length !== 0
+              ? `${booking.correct.confirmNotification.message}`
+              : `${booking.correct.confirmNotification.errorMessage}`,
           color: "green",
           autoClose: 5000,
         });
@@ -230,11 +239,11 @@ const ReservationForm = () => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);
               })
               .catch((err) => {
-                console.log("Fehler:", err);
+                console.log(booking.errorMessage2, err);
               });
           })
           .catch((err) => {
-            console.log("Fehler:", err);
+            console.log(booking.errorMessage1, err);
           });
       }
       // booking with guest
@@ -258,11 +267,11 @@ const ReservationForm = () => {
                 bookingCleanup(updatedReservations as ReservationWithShow[]);
               })
               .catch((err) => {
-                console.log("Fehler:", err);
+                console.log(booking.errorMessage2, err);
               });
           })
           .catch((err) => {
-            console.log("Fehler:", err);
+            console.log(booking.errorMessage1, err);
           });
       }
     }
@@ -279,7 +288,7 @@ const ReservationForm = () => {
           <Flex direction="column" w="100%" gap="md">
             <Select
               data={showDates}
-              placeholder="Wähle eine Show aus..."
+              placeholder={preselection.selectShow.placeholder}
               w="100%"
               variant="filled"
               size="xs"
@@ -289,11 +298,11 @@ const ReservationForm = () => {
                 setSelectedShow(value);
                 resetSelectedSeats();
                 value && form.setValues({ show: value });
-                void router.push(`/?show=${Number(value)}`);
+                void push(`/?show=${Number(value)}`);
               }}
             />
             <Checkbox
-              label="Ich möchte einen Gast mitbringen"
+              label={preselection.checkBoxGuest.label}
               ref={checkboxRef}
               color="indigo"
               size="xs"
@@ -306,15 +315,15 @@ const ReservationForm = () => {
             {form.values.isGuest ? (
               <Flex direction="column" gap="md">
                 <TextInput
-                  label="Vorname Gast"
-                  placeholder="Vorname"
+                  label={preselection.guest.firstName.label}
+                  placeholder={preselection.guest.firstName.placeholder}
                   size="xs"
                   withAsterisk
                   {...form.getInputProps("guestFirstName")}
                 />
                 <TextInput
-                  label="Nachname Gast"
-                  placeholder="NachName"
+                  label={preselection.guest.surname.label}
+                  placeholder={preselection.guest.surname.placeholder}
                   size="xs"
                   withAsterisk
                   {...form.getInputProps("guestSurname")}
@@ -331,7 +340,7 @@ const ReservationForm = () => {
               disabled={selectedSeats.length === 0}
               color="green.7"
             >
-              Ticket(s) buchen
+              {button.submit}
             </Button>
           </Flex>
         </Flex>

@@ -1,24 +1,33 @@
+import { useRouter } from "next/router";
 // mantine
 import { Card, Table } from "@mantine/core";
 // dayjs
 import dayjs from "../../dayjs.config";
+// locales
+import translations from "../../../public/locale/translations";
 // types
 import type { Database } from "~/lib/database.types";
+import type { Locale } from "~/lib/general.types";
 
 interface ShowsTableProps {
   shows: Database["public"]["Tables"]["shows"]["Row"][];
 }
 
 const ShowsArchiv = ({ shows }: ShowsTableProps) => {
+  const { locale } = useRouter();
+
+  // Fetch component content for default language
+  const { showsArchiv } = translations[locale as Locale];
+
   return (
     <Card bg="dark.9">
       <Table>
         <thead>
           <tr>
-            <th>Datum</th>
-            <th>Uhrzeit</th>
-            <th>Filmtitel</th>
-            <th>Besucher</th>
+            <th>{showsArchiv.table.header.date}</th>
+            <th>{showsArchiv.table.header.time}</th>
+            <th>{showsArchiv.table.header.film}</th>
+            <th>{showsArchiv.table.header.guests}</th>
           </tr>
         </thead>
         <tbody>

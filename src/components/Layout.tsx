@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+// next
+import { useRouter } from "next/router";
 // zustand
 import {
   selectSelectedShow,
@@ -20,22 +22,28 @@ import {
 } from "@mantine/core";
 // dayjs
 import dayjs from "dayjs";
+// locales
+import translations from "../../public/locale/translations";
 // components
 import { CalendarDays, Clock3 } from "lucide-react";
 import ReservationForm from "./booking/ReservationForm";
-import Header from "./Header";
+import NavigationBar from "./NavigationBar";
 // types
-import type { Show } from "~/lib/general.types";
+import type { Show, Locale } from "~/lib/general.types";
 import type { PropsWithChildren } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [show, setShow] = useState<Show>();
+  const { locale } = useRouter();
   // zustand
   const shows = useCinemaStore(selectShows);
   const selectedShowId = useCinemaStore(selectSelectedShow);
   // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
+
+  // Fetch component content for default language
+  const { layout } = translations[locale as Locale];
 
   // hook selectedShowId change
   useEffect(() => {
@@ -59,7 +67,7 @@ const Layout = ({ children }: PropsWithChildren) => {
               "z-index": 10,
             }}
           >
-            <Header />
+            <NavigationBar />
           </MantineHeader>
         }
         navbar={
@@ -73,7 +81,7 @@ const Layout = ({ children }: PropsWithChildren) => {
             <Flex direction="column" h={isBreakpointSM ? "75%" : "100%"}>
               <Navbar.Section sx={{ flex: "1 1 0%" }} px="md">
                 <Text size="sm" weight={500} color="dimmed" mb="sm">
-                  Vorstellung wählen
+                  {layout.text}
                 </Text>
                 <ReservationForm />
               </Navbar.Section>

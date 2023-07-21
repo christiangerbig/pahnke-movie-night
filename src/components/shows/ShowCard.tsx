@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
 // mantine
 import { Card, Group, Image, Text, Button, Flex } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 // dayjs
 import dayjs from "../../dayjs.config";
+// locales
+import translations from "../../../public/locale/translations";
 // components
 import { Clock3, CalendarDays, ArrowRight } from "lucide-react";
 // types
-import type { Show } from "~/lib/general.types";
-import { useMediaQuery } from "@mantine/hooks";
+import type { Locale, Show } from "~/lib/general.types";
 
 interface ShowCardProps {
   show: Show;
@@ -16,11 +18,14 @@ interface ShowCardProps {
 const ShowCard = ({
   show: { id, movie_title, movie_poster, time, date },
 }: ShowCardProps) => {
-  const router = useRouter();
+  const { push, locale } = useRouter();
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
 
+  // Fetch component content for default language
+  const { showCard } = translations[locale as Locale];
+
   const handleToHomePage = (id: string) => {
-    void router.push(`/?show=${id}`);
+    void push(`/?show=${id}`);
   };
 
   return (
@@ -53,7 +58,7 @@ const ShowCard = ({
                 <CalendarDays size="1.5rem" />
                 <Flex direction="column">
                   <Text component="span" size="xs" color="dimmed">
-                    Datum
+                    {showCard.date.text}
                   </Text>
                   <Text size="sm" fw="bold">
                     {dayjs(date).format("dd. DD.MM.YYYY").toString()}
@@ -64,7 +69,7 @@ const ShowCard = ({
                 <Clock3 size="1.5rem" />
                 <Flex direction="column">
                   <Text component="span" size="xs" color="dimmed">
-                    Uhrzeit
+                    {showCard.time.text}
                   </Text>
                   <Text size="sm" fw="bold">
                     {time?.slice(0, 5)}
@@ -82,7 +87,7 @@ const ShowCard = ({
               w={isBreakpointSM ? "70%" : "25%"}
               size="xs"
             >
-              Plätze buchen
+              {showCard.button.book}
             </Button>
           </Flex>
         </Flex>

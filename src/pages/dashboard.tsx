@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+// next
+import { useRouter } from "next/router";
+import Head from "next/head";
+// framer-motion
 import { motion } from "framer-motion";
 // supabase
 import {
@@ -18,8 +22,10 @@ import {
 import { useCinemaStore, selectSetUser } from "../hooks/useCinemaStore";
 // dayjs
 import dayjs from "../dayjs.config";
+// locales
+import translations from "../../public/locale/translations";
 // components
-import Header from "~/components/Header";
+import NavigationBar from "~/components/NavigationBar";
 import LogoApp from "~/components/LogoApp";
 import LogoPush from "~/components/LogoPushh";
 import ReservationsOverview from "~/components/booking/ReservationsOverview";
@@ -27,7 +33,7 @@ import ShowsOverview from "~/components/shows/ShowsOverview";
 // types
 import type { GetServerSideProps, NextPage } from "next";
 import type { Database } from "~/lib/database.types";
-import type { ReservationWithShow } from "~/lib/general.types";
+import type { ReservationWithShow, Locale } from "~/lib/general.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -42,9 +48,12 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   shows,
   userReservations,
 }) => {
+  const { locale } = useRouter();
   // zustand
   const setUser = useCinemaStore(selectSetUser);
   const [videoPlaying, setVideoPlaying] = useState(true);
+  // Fetch component content for default language
+  const { dashboardPage } = translations[locale as Locale];
 
   // component did mount
   useEffect(() => {
@@ -53,72 +62,82 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
 
   if (videoPlaying)
     return (
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ delay: 3.2 }}
-      >
-        <Box
-          pos="fixed"
-          top={0}
-          left={0}
-          h="100%"
-          sx={{ zIndex: 100 }}
-          bg="#060606"
+      <>
+        <Head>
+          <title>{dashboardPage.title}</title>
+        </Head>
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ delay: 3.2 }}
         >
-          <video
-            autoPlay
-            muted
-            style={{ height: "100%", width: "100%", objectFit: "scale-down" }}
-            onEnded={() => {
-              setVideoPlaying(false);
-            }}
+          <Box
+            pos="fixed"
+            top={0}
+            left={0}
+            h="100%"
+            sx={{ zIndex: 100 }}
+            bg="#060606"
           >
-            <source src="/filmpalast_ludwigstraße_logo-animation.mp4"></source>
-          </video>
-        </Box>
-      </motion.div>
+            <video
+              autoPlay
+              muted
+              style={{ height: "100%", width: "100%", objectFit: "scale-down" }}
+              onEnded={() => {
+                setVideoPlaying(false);
+              }}
+            >
+              <source src="/filmpalast_ludwigstraße_logo-animation.mp4"></source>
+            </video>
+          </Box>
+        </motion.div>
+      </>
     );
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      <Box component="main">
-        <MantineHeader
-          height="4rem"
-          bg="dark.9"
-          sx={{
-            position: "fixed",
-            top: 0,
-            "z-index": 10,
-          }}
-        >
-          <Header />
-        </MantineHeader>
-        <Container size="md" mt="5rem">
-          <Flex h="13.5rem" justify="center" w="100%" my="xl">
-            <LogoApp />
-          </Flex>
-          <ShowsOverview shows={shows} />
-        </Container>
-        <Container size="md">
-          <ReservationsOverview reservations={userReservations} />
-          <Flex my="lg" justify="end">
-            <Flex px="md" align="center" gap="sm">
-              <Text color="dimmed" size="xs" mb={2}>
-                Powered by
-              </Text>
-              <Box h="2.5rem" opacity={0.5}>
-                <LogoPush />
-              </Box>
+    <>
+      <Head>
+        <title>{dashboardPage.title}</title>
+      </Head>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Box component="main">
+          <MantineHeader
+            height="4rem"
+            bg="dark.9"
+            sx={{
+              position: "fixed",
+              top: 0,
+              "z-index": 10,
+            }}
+          >
+            <NavigationBar />
+          </MantineHeader>
+          <Container size="md" mt="5rem">
+            <Flex h="13.5rem" justify="center" w="100%" my="xl">
+              <LogoApp />
             </Flex>
-          </Flex>
-        </Container>
-      </Box>
-    </motion.div>
+            <ShowsOverview shows={shows} />
+          </Container>
+          <Container size="md">
+            <ReservationsOverview reservations={userReservations} />
+            <Flex my="lg" justify="end">
+              <Flex px="md" align="center" gap="sm">
+                <Text color="dimmed" size="xs" mb={2}>
+                  Powered by
+                </Text>
+                <Box h="2.5rem" opacity={0.5}>
+                  <LogoPush />
+                </Box>
+              </Flex>
+            </Flex>
+          </Container>
+        </Box>
+      </motion.div>
+    </>
   );
 };
 

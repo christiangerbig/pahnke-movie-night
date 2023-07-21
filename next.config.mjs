@@ -3,6 +3,10 @@ import "./src/env.mjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  i18n: {
+    locales: ["en-US", "de-DE"],
+    defaultLocale: "de-DE",
+  },
   images: {
     remotePatterns: [
       {

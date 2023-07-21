@@ -8,24 +8,29 @@ import Link from "next/link";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 // mantine
 import { Box, Button, Title, Flex, Group } from "@mantine/core";
+// locales
+import translations from "../../public/locale/translations";
 // components
 import { CornerDownLeft } from "lucide-react";
 // types
 import type { User } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "~/lib/database.types";
+import type { Locale } from "~/lib/general.types";
 
 export const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
-const Header = () => {
+const NavigationBar = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isDashboard, setIsDashboard] = useState<boolean>(true);
-  const router = useRouter();
-  // zustand
+  const { asPath, reload, replace, pathname, locale } = useRouter();
   const user = useCinemaStore(selectUser);
+
+  // Fetch component content for default language
+  const { navigationBar } = translations[locale as Locale];
 
   // hook component did mount
   useEffect(() => {
-    if (router.asPath === "/dashboard") {
+    if (asPath === "/dashboard") {
       setIsDashboard(true);
       return;
     }
@@ -38,11 +43,18 @@ const Header = () => {
       setIsAdmin((user as User).user_metadata.admin as boolean);
   }, [user]);
 
+  const handleChangeLanguage = () => {
+    if (locale === "de-DE") replace(pathname, pathname, { locale: "en-US" });
+    else {
+      replace(pathname, pathname, { locale: "de-DE" });
+    }
+  };
+
   const handleLogout = async () => {
     const { error } = await supabaseAuthClient.auth.signOut();
 
     if (!error) {
-      router.reload();
+      reload();
     }
   };
 
@@ -62,12 +74,21 @@ const Header = () => {
           ) : (
             <Box w="1.5rem" />
           )}
-          <Title order={4}>Moin {(user as User).email}</Title>
+          <Title order={4}>
+            {navigationBar.text} {(user as User).email}
+          </Title>
         </Group>
         <Group>
+          <Button
+            variant="default"
+            size="xs"
+            onClick={() => void handleChangeLanguage()}
+          >
+            {navigationBar.button.language}
+          </Button>
           {isAdmin ? (
             <Button variant="default" size="xs" component={Link} href="/admin">
-              Admim-Bereich
+              {navigationBar.button.admin}
             </Button>
           ) : null}
           <Button
@@ -75,7 +96,7 @@ const Header = () => {
             size="xs"
             onClick={() => void handleLogout()}
           >
-            Logout
+            {navigationBar.button.logout}
           </Button>
         </Group>
       </Flex>
@@ -83,4 +104,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default NavigationBar;

@@ -20,17 +20,19 @@ import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { useMediaQuery } from "@mantine/hooks";
 // zod
 import { z } from "zod";
 // dayjs
 import dayjs from "../../dayjs.config";
+// locales
+import translations from "../../../public/locale/translations";
 // components
 import { Image as ImageIcon, UploadCloud, XCircle, Clock3 } from "lucide-react";
 // types
 import type { Database } from "~/lib/database.types";
 import type { FileWithPath } from "@mantine/dropzone";
-import type { StorageData } from "~/lib/general.types";
-import { useMediaQuery } from "@mantine/hooks";
+import type { Locale, StorageData } from "~/lib/general.types";
 
 const supabaseAuthClient = createBrowserSupabaseClient<Database>();
 
@@ -40,10 +42,15 @@ interface AddShowFormProps {
 
 const AddShowForm = ({ closeModal }: AddShowFormProps) => {
   const [file, setFile] = useState<FileWithPath>();
-  const router = useRouter();
+  const { replace, asPath, locale } = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   // mantine
   const isBreakpointSM = useMediaQuery("(max-width: 48rem)");
+
+  // Fetch component content for default language
+  const {
+    showAddForm: { schemaTexts, storage, preselection, addMovie },
+  } = translations[locale as Locale];
 
   const schema = z
     .object({
@@ -52,26 +59,26 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
       }),
       time: z
         .string()
-        .min(4, { message: "Es muss eine Uhzeit angegeben werden" }),
+        .min(4, { message: schemaTexts.time.requirements.message }),
       title: z
         .string()
         .trim()
-        .min(1, { message: "Es muss ein Filmtitel angegeben werden" }),
+        .min(1, { message: schemaTexts.title.requirements.message }),
       youtubeLink: z
         .string()
         .trim()
-        .min(1, "Es muss ein geteilter Youtube-Link angegeben werden"),
+        .min(1, { message: schemaTexts.link.requirements.message1 }),
       poster: z.object(
         {
           path: z.string(),
         },
-        { required_error: "Ein Bild muss hochgeladen werden" },
+        { required_error: schemaTexts.poster.requirements.message },
       ),
     })
     .superRefine(({ youtubeLink }, ctx) => {
       if (!youtubeLink.includes("https://youtu.be/")) {
         ctx.addIssue({
-          message: "Es muss sich um einen geteilten Youtube-Link handeln",
+          message: schemaTexts.link.requirements.message2,
           code: z.ZodIssueCode.custom,
           path: ["youtubeLink"],
         });
@@ -118,13 +125,13 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
     const handleStorageError = (error: Error & { error?: string }) => {
       if (error.error === "Duplicate") {
         notifications.show({
-          title: "Ups ...",
-          message: "Das Bild exisitert bereits unter diesem Namen.",
+          title: storage.doublet.errorNotification.title,
+          message: storage.doublet.errorNotification.message,
           color: "red",
         });
       } else {
         notifications.show({
-          title: "Ups ...",
+          title: storage.unknownError.errorNotification.title,
           message: error.message,
           color: "red",
         });
@@ -156,16 +163,16 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
 
     if (error) {
       notifications.show({
-        title: "Ups ...",
+        title: addMovie.errorNotification.title,
         message: error.message,
         color: "red",
       });
     } else {
       closeModal();
-      void router.replace(router.asPath);
+      void replace(asPath);
       notifications.show({
-        title: "Yeah!",
-        message: "Show wurde hinzugefügt",
+        title: addMovie.confirmNotification.title,
+        message: addMovie.confirmNotification.message,
         color: "green",
       });
     }
@@ -177,7 +184,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
     <form onSubmit={form.onSubmit((values) => void handleSubmit(values))}>
       <Stack>
         <DatePickerInput
-          label="Datum"
+          label={preselection.date.label}
           defaultValue={new Date()}
           valueFormat="DD. MMMM YYYY"
           locale="de"
@@ -187,7 +194,7 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
         />
 
         <TimeInput
-          label="Uhzeit"
+          label={preselection.time.label}
           ref={ref}
           rightSection={
             <ActionIcon
@@ -202,15 +209,15 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
         />
 
         <TextInput
-          label="Filmtitel"
-          placeholder="Titel ..."
+          label={preselection.title.label}
+          placeholder={preselection.title.placeholder}
           withAsterisk
           {...form.getInputProps("title")}
         />
 
         <TextInput
-          label="You tube link"
-          placeholder="Link ..."
+          label={preselection.link.label}
+          placeholder={preselection.link.placeholder}
           withAsterisk
           {...form.getInputProps("youtubeLink")}
         />
@@ -265,10 +272,10 @@ const AddShowForm = ({ closeModal }: AddShowFormProps) => {
 
                 <div>
                   <Text size="xl" inline>
-                    Drag&apos;n&apos;drop oder klicke um ein Bild auszuwählen
+                    {preselection.image.text}
                   </Text>
                   <Text size="sm" color="dimmed" inline mt={7}>
-                    Das Bild darf nicht größer als 5MB sein
+                    {preselection.image.errorMessage}
                   </Text>
                 </div>
               </Group>

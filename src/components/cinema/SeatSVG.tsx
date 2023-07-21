@@ -53,7 +53,6 @@ const SeatSVG = () => {
               height="100%"
               src={show.movie_description as string}
               title="YouTube video player"
-              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
           )}

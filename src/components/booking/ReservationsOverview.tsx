@@ -1,34 +1,44 @@
+import { useRouter } from "next/router";
 // mantine
 import { Box, Table, Text, Title, Card } from "@mantine/core";
+// locales
+import translations from "../../../public/locale/translations";
 // components
 import ReservationElement from "./ReservationElement";
 // types
-import type { ReservationWithShow } from "~/lib/general.types";
+import type { ReservationWithShow, Locale } from "~/lib/general.types";
 
 interface ReservationOverviewProps {
   reservations: ReservationWithShow[];
 }
 
 const ReservationOverview = ({ reservations }: ReservationOverviewProps) => {
+  const { locale } = useRouter();
+
+  //  Fetch component content for default language
+  const {
+    reservationOverview: { title, text, table },
+  } = translations[locale as Locale];
+
   return (
     <>
       <Box my="4.5rem">
         <Title order={2} size="h2">
-          🍿 Meine Reservierungen
+          🍿 {title}
         </Title>
         <Card bg="dark.9" pt={0} mt="xl" withBorder>
           {reservations?.length === 0 ? (
             <Text mt="md" w="full" align="center">
-              😔 Keine Reservierungen gefunden
+              😔 {text}
             </Text>
           ) : (
             <Table fontSize="md" verticalSpacing="md" highlightOnHover>
               <thead>
                 <tr>
-                  <th>Datum</th>
-                  <th>Film</th>
-                  <th>Platz</th>
-                  <th>Gast</th>
+                  <th>{table.header.date}</th>
+                  <th>{table.header.film}</th>
+                  <th>{table.header.seats}</th>
+                  <th>{table.header.guest}</th>
                   <th />
                 </tr>
               </thead>
